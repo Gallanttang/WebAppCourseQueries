@@ -1,6 +1,7 @@
 import Log from "../Util";
 import {IInsightFacade, InsightDataset, InsightDatasetKind} from "./IInsightFacade";
 import {InsightError, NotFoundError} from "./IInsightFacade";
+import * as jszip from "jszip";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -13,8 +14,47 @@ export default class InsightFacade implements IInsightFacade {
         Log.trace("InsightFacadeImpl::init()");
     }
 
+    /**
+     * Add a dataset to UBCInsight.
+     *
+     * @param id  The id of the dataset being added. Follows the format /^[^_]+$/
+     * @param content  The base64 content of the dataset. This content should be in the form of a serialized zip file.
+     * @param kind  The kind of the dataset
+     *
+     * @return Promise <string[]>
+     *
+     * The promise should fulfill on a successful add, reject for any failures.
+     * The promise should fulfill with a string array,
+     * containing the ids of all currently added datasets upon a successful add.
+     * The promise should reject with an InsightError describing the error.
+     *
+     * An id is invalid if it contains an underscore, or is only whitespace characters.
+     * If id is the same as the id of an already added dataset, the dataset should be rejected and not saved.
+     *
+     * After receiving the dataset, it should be processed into a data structure of
+     * your design. The processed data structure should be persisted to disk; your
+     * system should be able to load this persisted value into memory for answering
+     * queries.
+     *
+     * Ultimately, a dataset must be added or loaded from disk before queries can
+     * be successfully answered.
+     */
+
+    // change to string x.toString("base64")
+    // JSZip to unzip files
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        return Promise.reject("Not implemented.");
+        jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+          let doSomethingWithJSZip;
+          // todo iterate through files you want to read, and then load the contents of each file.
+          jszip.folder("test").forEach(function (relativePath, file){
+                let doSomethingForEachFile;
+          });
+            // todo then convert the contents to string
+            // todo process string content and save sections to data structure IF dataset is valid
+        }).catch((error: any) => {
+            throw new InsightError("Malformed base64");
+        });
+        return Promise.reject("Not implemented."); // stub: get rid of later
     }
 
     public removeDataset(id: string): Promise<string> {
