@@ -1,0 +1,18 @@
+{
+    "title": "Empty COLUMNS filter",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_instructor": "*bar*"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"COLUMNS must be a non-empty array"}
+}

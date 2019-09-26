@@ -1,0 +1,29 @@
+{
+    "title": "Invalid filter key",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "I": {
+                        "courses_instructor": "*bar*"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 95
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid filter key: I"}
+}

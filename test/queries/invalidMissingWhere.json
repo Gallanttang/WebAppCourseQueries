@@ -1,0 +1,15 @@
+{
+    "title": "Missing WHERE",
+    "query": {
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "course"
+            ],
+            "ORDER": "courses_dept"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Missing WHERE"}
+}

@@ -1,0 +1,28 @@
+{
+    "title": "SELECT dept, avg WHERE avg > -1 && avg < 5 ORDER by dept",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg": 100
+                    }
+                },
+                {
+                    "LT": {
+                        "courses_avg": 0
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_dept"
+        }
+    },
+    "isQueryValid": true,
+    "result":[]
+}

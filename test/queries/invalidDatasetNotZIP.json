@@ -1,0 +1,19 @@
+{
+    "title": "Running on invalid dataset that is not a zip",
+    "query": {
+        "WHERE": {
+            "LT": {
+                "invalid0_rank": 1
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "invalid0_rank",
+                "invalid0_result"
+            ],
+            "ORDER": "invalid0_rank"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":  "The dataset is not a zip file"}
+}

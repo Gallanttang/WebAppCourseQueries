@@ -1,0 +1,21 @@
+{
+    "title": "Empty EQ filter",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "EQ": {
+
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"EQ should only have 1 key, has 0"}
+}

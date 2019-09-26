@@ -1,0 +1,16 @@
+{
+    "title": "Result too large",
+    "query": {
+        "WHERE": {
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error": "The result is too big. Only queries with a maximum of 5000 results are supported."}
+}

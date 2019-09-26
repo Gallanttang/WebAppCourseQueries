@@ -1,0 +1,19 @@
+{
+    "title": "IS with invalid wildcard",
+    "query": {
+        "WHERE": {
+                "IS": {
+                    "courses_dept": "***"
+                }
+            },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_dept"
+        }
+    },
+    "isQueryValid": false,
+    "result":{"error":"Asterisks (*) can only be the first or last characters of input strings"}
+}

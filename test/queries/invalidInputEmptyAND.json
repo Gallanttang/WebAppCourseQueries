@@ -1,0 +1,21 @@
+{
+    "title": "Empty AND filter",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "AND": [
+
+                ]
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"AND must be a non-empty array"}
+}

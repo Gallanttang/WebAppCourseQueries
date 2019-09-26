@@ -1,0 +1,21 @@
+{
+    "title": "Invalid Type IS is an array not object",
+    "query": {
+        "WHERE": {
+            "IS": [
+                {
+                    "courses_instructor": "o"
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"IS must be object"}
+}

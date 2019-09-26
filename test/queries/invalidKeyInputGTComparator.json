@@ -1,0 +1,21 @@
+{
+    "title": "Invalid Key in GT detection",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "GT": {
+                    "courses_result": 95
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid key courses_result in GT"}
+}

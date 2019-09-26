@@ -1,0 +1,23 @@
+{
+    "title": "Invalid NOT values detection",
+    "query": {
+        "WHERE": {
+            "NOT":
+            {
+                "WHERE": {
+                    "courses_avg": 2
+                }
+            }
+
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid filter key: WHERE"}
+}

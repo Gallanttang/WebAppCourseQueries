@@ -1,0 +1,15 @@
+{
+    "title": "Missing Columns detection",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98
+            }
+        },
+        "OPTIONS": {
+
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"OPTIONS missing COLUMNS"}
+}

@@ -1,0 +1,17 @@
+{
+    "title": "Empty Column Detection",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept":"adhe"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"COLUMNS must be a non-empty array"}
+}

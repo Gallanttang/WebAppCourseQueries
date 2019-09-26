@@ -1,0 +1,23 @@
+{
+    "title": "SELECT dept, avg, WHERE avg < 3, ORDER by avg",
+    "query": {
+        "WHERE": {
+            "LT": {
+                "courses_avg": 3
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result":[
+        {"courses_dept":"frst","courses_avg":0},
+        {"courses_dept":"lfs","courses_avg":0},
+        {"courses_dept":"lfs","courses_avg":0},
+        {"courses_dept":"wood","courses_avg":1}]
+}

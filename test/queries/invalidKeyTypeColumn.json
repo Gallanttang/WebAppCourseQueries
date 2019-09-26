@@ -1,0 +1,19 @@
+{
+    "title": "Invalid Column values detection",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept":"adhe"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                1,
+                2
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid type of COLUMN key"}
+}

@@ -1,0 +1,25 @@
+{
+    "title": "Invalid Type NOT is an array not object",
+    "query": {
+        "WHERE": {
+            "NOT":
+                [
+                    {
+                    "LT":
+                        {
+                            "courses_avg": 2
+                        }
+                    }
+                ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"NOT must be object"}
+}

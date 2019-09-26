@@ -1,0 +1,19 @@
+{
+    "title": "Invalid Value Input GT COMPARATOR",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": "97"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid value type in GT, should be number"}
+}

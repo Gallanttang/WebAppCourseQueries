@@ -1,0 +1,32 @@
+{
+    "title": "SELECT dept, avg, instructor WHERE instructor == *bar* AND avg > 95, ORDER by avg",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_instructor": "*bar*"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 95
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {"courses_dept":"mine","courses_avg":95.44,"courses_instructor":"dunbar, w scott"},
+        {"courses_dept":"mine","courses_avg":95.6,"courses_instructor":"dunbar, w scott"}
+    ]
+}

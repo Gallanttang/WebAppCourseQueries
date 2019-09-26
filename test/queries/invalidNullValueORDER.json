@@ -1,0 +1,19 @@
+{
+    "title": "Invalid NULL ORDER values detection",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept": "adhe"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": null
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"ORDER cannot be null or undefined"}
+}

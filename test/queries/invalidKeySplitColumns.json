@@ -1,0 +1,22 @@
+{
+    "title": "Unexpected value in columns",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "IS": {
+                    "courses_instructor": "o"
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                0
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"key.split is not a function"}
+}

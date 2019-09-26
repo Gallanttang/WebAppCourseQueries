@@ -1,0 +1,19 @@
+{
+    "title": "Running on invalid dataset, no name",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "_dept": "adhe"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "_dept",
+                "_avg"
+            ],
+            "ORDER": "_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Referenced dataset cannot be empty string"}
+}

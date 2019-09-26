@@ -1,0 +1,20 @@
+{
+    "title": "AND cond not an array",
+    "query": {
+        "WHERE": {
+            "OR": {
+                "courses_dept": "adhe",
+                "courses_instructor": "cox, barbara"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_dept"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"OR must be a non-empty array"}
+}

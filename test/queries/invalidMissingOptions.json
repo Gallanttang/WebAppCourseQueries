@@ -1,0 +1,14 @@
+{
+    "title": "Missing WHERE",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "LT": {
+                    "courses_avg": 100
+                }
+            }
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Missing OPTION"}
+}

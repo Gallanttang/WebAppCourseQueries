@@ -1,0 +1,19 @@
+{
+    "title": "Wrong Input GT COMPARATOR",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_dept": "adhe"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid key type in GT"}
+}

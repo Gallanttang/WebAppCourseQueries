@@ -1,0 +1,19 @@
+{
+    "title": "Invalid Order values detection",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept": "adhe"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": 1
+        }
+    },
+    "isQueryValid": false,
+    "result":{"error":"Invalid ORDER type"}
+}

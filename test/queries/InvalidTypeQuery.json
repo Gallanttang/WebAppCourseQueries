@@ -1,0 +1,19 @@
+{
+    "title": "Invalid Type Query is an array not object",
+    "query": [{
+        "WHERE": {
+            "LT": {
+                "courses_avg": 2
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    }],
+    "isQueryValid": false,
+    "result": {"error":"Query must be object"}
+}

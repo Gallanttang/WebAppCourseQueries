@@ -1,0 +1,19 @@
+{
+    "title": "Running on missing dataset",
+    "query": {
+        "WHERE": {
+            "LT": {
+                "missing_rank": 1
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "missing_rank",
+                "missing_result"
+            ],
+            "ORDER": "missing_rank"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Referenced dataset \"missing\" not added yet"}
+}

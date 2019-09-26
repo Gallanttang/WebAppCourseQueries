@@ -1,0 +1,17 @@
+{
+    "title": "invalid Columns input detection",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses dept"
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Cannot read property 'GROUP' of undefined"}
+}

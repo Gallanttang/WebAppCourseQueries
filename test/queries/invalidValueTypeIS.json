@@ -1,0 +1,19 @@
+{
+    "title": "Invalid Input IS COMPARATOR",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept": 1
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid value type in IS, should be string"}
+}

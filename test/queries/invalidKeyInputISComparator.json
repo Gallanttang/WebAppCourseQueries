@@ -1,0 +1,21 @@
+{
+    "title": "Invalid Key in IS detection",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "IS": {
+                    "courses_result": "o"
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid key courses_result in IS"}
+}

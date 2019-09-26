@@ -1,0 +1,22 @@
+{
+    "title": "invalid WHERE excess input detection",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept": "adhe"
+            },
+            "EQ": {
+                "course_avg": 1
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"WHERE should only have 1 key, has 2"}
+}

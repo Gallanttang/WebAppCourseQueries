@@ -1,0 +1,27 @@
+{
+    "title": "Select WHERE NOT NOT avg < 1",
+    "query": {
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        },
+        "WHERE": {
+            "NOT":{
+                "NOT": {
+                    "LT":{
+                        "courses_avg": 1
+                    }
+                }
+            }
+        }
+    },
+    "isQueryValid": true,
+    "result":[
+        {"courses_dept":"frst","courses_avg":0},
+        {"courses_dept":"lfs","courses_avg":0},
+        {"courses_dept":"lfs","courses_avg":0}
+    ]
+}

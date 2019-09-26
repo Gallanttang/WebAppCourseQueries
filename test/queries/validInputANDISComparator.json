@@ -1,0 +1,47 @@
+{
+    "title": "SELECT dept, avg, instructor WHERE instructor == cox, barbara, ORDER by avg",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_instructor": "cox, barbara"
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "comm"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result":[
+        {"courses_dept":"comm","courses_avg":69.02,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":70.38,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":70.43,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":70.88,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":70.98,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":72.63,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":72.69,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":73.5,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":74.06,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":74.2,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":74.55,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":74.63,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":75.11,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":76.3,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":76.4,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":77.18,"courses_instructor":"cox, barbara"},
+        {"courses_dept":"comm","courses_avg":77.62,"courses_instructor":"cox, barbara"}
+    ]
+}

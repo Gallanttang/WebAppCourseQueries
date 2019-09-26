@@ -1,0 +1,19 @@
+{
+    "title": "Running on invalid dataset, JSON changed extension to ZIP",
+    "query": {
+        "WHERE": {
+            "LT": {
+                "invalid_rank": 1
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "invalid_rank",
+                "invalid_result"
+            ],
+            "ORDER": "invalid_rank"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":  "The zip file is invalid"}
+}

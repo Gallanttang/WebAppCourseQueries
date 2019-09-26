@@ -1,0 +1,21 @@
+{
+    "title": "Invalid Key in COLUMNS detection",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "LT": {
+                    "courses_avg": 95
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dep",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid key courses_dep in COLUMNS"}
+}
