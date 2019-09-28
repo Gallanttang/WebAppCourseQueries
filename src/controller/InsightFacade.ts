@@ -70,43 +70,48 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
-        Log.trace("In add dataset");
-        return jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-            // todo iterate through files you want to read, and then load the contents of each file.
-            try {
+        return new Promise<string[]>((resolve, reject) => {
+            jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+                // todo iterate through files you want to read, and then load the contents of each file.
                 result.folder("courses").forEach(function (relativePath, file) {
                     promisedFiles.push(file.async("text"));
                 });
-            } catch (err) {
-                return InsightError;
-            }
-        }).then(function () {
-            // todo then convert the contents to string
-            Log.trace("Processing promises");
-            Promise.all(promisedFiles).then(function (results) {
-                for (const result of results) {
-                    let processed = thisClass.parseFile(result);
-                    if (thisClass.parseFile(result) !== null) {
-                        validSections.push(processed);
+                // todo then convert the contents to string
+                Log.trace("Processing promises");
+                Promise.all(promisedFiles).then((results) => {
+                    for (let result0 in results) {
+                        let processed: any;
+                        try {
+                            processed = thisClass.parseFile(result0);
+                        } catch (err) {
+                            continue;
+                        } finally {
+                            if (processed !== null && typeof processed === "object") {
+                                validSections.push(processed);
+                            }
+                        }
                     }
-                }
+                }).then(function () {
+                    // todo process string content and save sections to data structure IF dataset is valid
+                    let validDataset = false;
+                    if (validSections.length !== 0) {
+                        for (const section in validSections) {
+                            if (thisClass.checkValidCourse(section)) {
+                                validDataset = true;
+                            }
+                        }
+                    }
+                    Log.trace("adding valid dataset " + validDataset);
+                    if (validDataset) {
+                        thisClass.addedDatasets.push(id);
+                        return resolve(thisClass.addedDatasets);
+                    } else {
+                        return reject(thisClass.addedDatasets);
+                    }
+                }).catch(() => Promise.reject(InsightError));
+            }).catch(() => {
+                return reject(InsightError);
             });
-        }).then(function () {
-            // todo process string content and save sections to data structure IF dataset is valid
-            let validDataset = false;
-            if (validSections.length !== 0) {
-                for (const section of validSections) {
-                    if (this.checkValidCourse(section)) {
-                        validDataset = true;
-                    }
-                }
-            }
-            if (validDataset) {
-                thisClass.addedDatasets.push(id);
-                return Promise.resolve(thisClass.addedDatasets);
-            } else {
-                return Promise.reject(thisClass.addedDatasets);
-            }
         });
     }
 
@@ -115,22 +120,24 @@ export default class InsightFacade implements IInsightFacade {
         try {
             JSObj = JSON.parse(text);
         } catch (err) {
-            return Promise.reject();
+            return null;
         }
         return JSObj;
     }
 
     public checkValidCourse(object: any): boolean {
         let hasValidSection: boolean = false;
-        if (!object.hasOwnProperty("result")) {
+        if (object["result"] === null) {
             return hasValidSection;
         } else if (object["result"].length === 0) {
             return hasValidSection;
         } else {
             for (const section in object["result"]) {
-                if (this.isSectionValid(section)) {
-                    hasValidSection = true;
-                    this.addSection(section);
+                if (typeof section === "object") {
+                    if (this.isSectionValid(section)) {
+                        hasValidSection = true;
+                        this.addSection(section);
+                    }
                 }
             }
             return hasValidSection;
