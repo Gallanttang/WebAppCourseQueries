@@ -1,6 +1,7 @@
 import Log from "../Util";
 import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError} from "./IInsightFacade";
 import * as jszip from "jszip";
+import {arrayify} from "tslint/lib/utils";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -70,23 +71,25 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
+        // todo iterate through files you want to read, and then load the contents of each file.
+        // todo then convert the contents to string
         return new Promise<string[]>((resolve, reject) => {
             jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-                // todo iterate through files you want to read, and then load the contents of each file.
                 result.folder("courses").forEach(function (relativePath, file) {
                     promisedFiles.push(file.async("text"));
                 });
-                // todo then convert the contents to string
                 Log.trace("Processing promises");
                 Promise.all(promisedFiles).then((results) => {
-                    for (let result0 in results) {
+                    let count: number = 0;
+                    for (let result0 of results) {
                         let processed: any;
                         try {
                             processed = thisClass.parseFile(result0);
+                            count += 1;
                         } catch (err) {
                             continue;
                         } finally {
-                            if (processed !== null && typeof processed === "object") {
+                            if (processed !== null) {
                                 validSections.push(processed);
                             }
                         }
@@ -94,21 +97,19 @@ export default class InsightFacade implements IInsightFacade {
                 }).then(function () {
                     // todo process string content and save sections to data structure IF dataset is valid
                     let validDataset = false;
-                    if (validSections.length !== 0) {
-                        for (const section in validSections) {
-                            if (thisClass.checkValidCourse(section)) {
-                                validDataset = true;
-                            }
+                    Log.trace("Number of valid courses: " + validSections.length);
+                    for (const section of validSections) {
+                        if (thisClass.checkValidCourse(section)) {
+                            validDataset = true;
                         }
                     }
-                    Log.trace("adding valid dataset " + validDataset);
                     if (validDataset) {
                         thisClass.addedDatasets.push(id);
                         return resolve(thisClass.addedDatasets);
                     } else {
                         return reject(thisClass.addedDatasets);
                     }
-                }).catch(() => Promise.reject(InsightError));
+                });
             }).catch(() => {
                 return reject(InsightError);
             });
@@ -127,13 +128,10 @@ export default class InsightFacade implements IInsightFacade {
 
     public checkValidCourse(object: any): boolean {
         let hasValidSection: boolean = false;
-        if (object["result"] === null) {
-            return hasValidSection;
-        } else if (object["result"].length === 0) {
-            return hasValidSection;
-        } else {
-            for (const section in object["result"]) {
-                if (typeof section === "object") {
+        if (object["result"] !== null) {
+            // Log.trace("In Check Valid Course: check for sections " + typeof object["result"] + object["result"]);
+            if (Array.isArray(object["result"])) {
+                for (const section of object["result"]) {
                     if (this.isSectionValid(section)) {
                         hasValidSection = true;
                         this.addSection(section);
@@ -145,7 +143,7 @@ export default class InsightFacade implements IInsightFacade {
     }
     private isSectionValid(section: any): boolean {
         let valid: boolean = true;
-        for (const key in Object.keys(this.coursevalidator)) {
+        for (const key of Object.keys(this.coursevalidator)) {
             if (!section.hasOwnProperty(this.coursevalidator[key])) {
                 valid = false;
                 return valid;
