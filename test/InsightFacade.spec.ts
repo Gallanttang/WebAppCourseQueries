@@ -85,8 +85,11 @@ describe("InsightFacade Add/Remove Dataset", function () {
             expect.fail(err, expected, "failed to add valid course dataset");
         } finally {
             expect(result).to.deep.equal(expected);
-            expect(await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses))
-                .to.equal("[Error: Invalid id used]");
+            try {
+                result0 = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
+            } catch (err) {
+                expect(result0).includes("Error");
+            }
         }
     });
 

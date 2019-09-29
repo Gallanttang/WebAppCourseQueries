@@ -1,6 +1,7 @@
 import Log from "../Util";
 import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError} from "./IInsightFacade";
 import * as jszip from "jszip";
+import * as fs from "fs";
 import {arrayify} from "tslint/lib/utils";
 
 /**
@@ -85,7 +86,6 @@ export default class InsightFacade implements IInsightFacade {
                     result.folder("courses").forEach(function (relativePath, file) {
                         promisedFiles.push(file.async("text"));
                     });
-                    Log.trace("Processing promises");
                     Promise.all(promisedFiles).then((results) => {
                         let count: number = 0;
                         for (let result0 of results) {
@@ -112,6 +112,10 @@ export default class InsightFacade implements IInsightFacade {
                         }
                         if (validDataset) {
                             thisClass.addedDatasets.push(id);
+                            fs.writeFile(id + ".json",
+                                JSON.stringify(thisClass.internalDataStructure),  (err) => {
+                                return reject(new InsightError("Failed to write " + id + " to memory"));
+                            });
                             return resolve(thisClass.addedDatasets);
                         } else {
                             return reject(new InsightError("Could not add invalid dataset"));
@@ -166,12 +170,14 @@ export default class InsightFacade implements IInsightFacade {
         const dept: string = section[this.coursevalidator["courses_dept"]];
         if (!this.internalDataStructure.hasOwnProperty(dept)) {
             this.internalDataStructure[dept] = {};
-            for (const key in Object.keys(this.coursevalidator)) {
-                this.internalDataStructure[dept][key] = [];
-                this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+            for (const key of Object.keys(this.coursevalidator)) {
+                if (key !== "courses_dept") {
+                    this.internalDataStructure[dept][key] = [];
+                    this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                }
             }
         } else {
-            for (const key in Object.keys(this.coursevalidator)) {
+            for (const key of Object.keys(this.coursevalidator)) {
                 this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
             }
         }
