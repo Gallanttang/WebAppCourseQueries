@@ -4,6 +4,7 @@ import {InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from ".
 import InsightFacade from "../src/controller/InsightFacade";
 import Log from "../src/Util";
 import TestUtil from "./TestUtil";
+import {type} from "os";
 // This should match the schema given to TestUtil.validate(..) in TestUtil.readTestQueries(..)
 // except 'filename' which is injected when the file is read.
 export interface ITestQuery {
@@ -84,13 +85,8 @@ describe("InsightFacade Add/Remove Dataset", function () {
             expect.fail(err, expected, "failed to add valid course dataset");
         } finally {
             expect(result).to.deep.equal(expected);
-            try {
-                result0 = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-            } catch (err0) {
-                expect(err0).to.be.instanceOf(InsightError);
-            } finally {
-                expect.fail(result0, id, "added an existing dataset");
-            }
+            expect(await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses))
+                .to.equal("[Error: Invalid id used]");
         }
     });
 

@@ -35,6 +35,7 @@ export default class InsightFacade implements IInsightFacade {
 
     private internalDataStructure: any = {};
     private addedDatasets: string[] = [];
+
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
     }
@@ -74,45 +75,52 @@ export default class InsightFacade implements IInsightFacade {
         // todo iterate through files you want to read, and then load the contents of each file.
         // todo then convert the contents to string
         return new Promise<string[]>((resolve, reject) => {
-            jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-                result.folder("courses").forEach(function (relativePath, file) {
-                    promisedFiles.push(file.async("text"));
-                });
-                Log.trace("Processing promises");
-                Promise.all(promisedFiles).then((results) => {
-                    let count: number = 0;
-                    for (let result0 of results) {
-                        let processed: any;
-                        try {
-                            processed = thisClass.parseFile(result0);
-                            count += 1;
-                        } catch (err) {
-                            continue;
-                        } finally {
-                            if (processed !== null) {
-                                validSections.push(processed);
+            const noUnderscore: boolean = id.includes("_");
+            const notWhiteSpace: boolean = (id.replace(/\s/g, "").length === 0);
+            const notAlreadyAdded: boolean = this.addedDatasets.some((s) => s === id);
+            if (noUnderscore || notWhiteSpace || notAlreadyAdded) {
+                return reject(new InsightError("Invalid id used"));
+            } else {
+                jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+                    result.folder("courses").forEach(function (relativePath, file) {
+                        promisedFiles.push(file.async("text"));
+                    });
+                    Log.trace("Processing promises");
+                    Promise.all(promisedFiles).then((results) => {
+                        let count: number = 0;
+                        for (let result0 of results) {
+                            let processed: any;
+                            try {
+                                processed = thisClass.parseFile(result0);
+                                count += 1;
+                            } catch (err) {
+                                continue;
+                            } finally {
+                                if (processed !== null) {
+                                    validSections.push(processed);
+                                }
                             }
                         }
-                    }
-                }).then(function () {
-                    // todo process string content and save sections to data structure IF dataset is valid
-                    let validDataset = false;
-                    Log.trace("Number of valid courses: " + validSections.length);
-                    for (const section of validSections) {
-                        if (thisClass.checkValidCourse(section)) {
-                            validDataset = true;
+                    }).then(function () {
+                        // todo process string content and save sections to data structure IF dataset is valid
+                        let validDataset = false;
+                        Log.trace("Number of valid courses: " + validSections.length);
+                        for (const section of validSections) {
+                            if (thisClass.checkValidCourse(section)) {
+                                validDataset = true;
+                            }
                         }
-                    }
-                    if (validDataset) {
-                        thisClass.addedDatasets.push(id);
-                        return resolve(thisClass.addedDatasets);
-                    } else {
-                        return reject(thisClass.addedDatasets);
-                    }
+                        if (validDataset) {
+                            thisClass.addedDatasets.push(id);
+                            return resolve(thisClass.addedDatasets);
+                        } else {
+                            return reject(new InsightError("Could not add invalid dataset"));
+                        }
+                    });
+                }).catch(() => {
+                    return reject(new InsightError("Invalid file cannot be added"));
                 });
-            }).catch(() => {
-                return reject(InsightError);
-            });
+            }
         });
     }
 
@@ -141,6 +149,7 @@ export default class InsightFacade implements IInsightFacade {
             return hasValidSection;
         }
     }
+
     private isSectionValid(section: any): boolean {
         let valid: boolean = true;
         for (const key of Object.keys(this.coursevalidator)) {
@@ -151,6 +160,7 @@ export default class InsightFacade implements IInsightFacade {
         }
         return valid;
     }
+
     // Adds a section to the internal data structure
     private addSection(section: any) {
         const dept: string = section[this.coursevalidator["courses_dept"]];
@@ -166,6 +176,7 @@ export default class InsightFacade implements IInsightFacade {
             }
         }
     }
+
     /**
      * Remove a dataset from UBCInsight.
      *
@@ -188,6 +199,7 @@ export default class InsightFacade implements IInsightFacade {
     public removeDataset(id: string): Promise<string> {
         return Promise.reject("Not implemented.");
     }
+
     /**
      * Perform a query on UBCInsight.
      *
@@ -201,9 +213,10 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should fulfill with an array of results.
      * The promise should reject with an InsightError describing the error.
      */
-    public performQuery(query: any): Promise <any[]> {
+    public performQuery(query: any): Promise<any[]> {
         return Promise.reject("Not implemented.");
     }
+
     /**
      * List all currently added datasets, their types, and number of rows.
      *
