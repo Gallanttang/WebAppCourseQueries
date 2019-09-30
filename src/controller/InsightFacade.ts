@@ -74,13 +74,11 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
-        // todo iterate through files you want to read, and then load the contents of each file.
-        // todo then convert the contents to string
         return new Promise<string[]>((resolve, reject) => {
             const noUnderscore: boolean = id.includes("_");
-            const notWhiteSpace: boolean = (id.replace(/\s/g, "").length === 0);
-            const notAlreadyAdded: boolean = this.addedDatasets.some((s) => s === id);
-            if (noUnderscore || notWhiteSpace || notAlreadyAdded) {
+            const notJustWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
+            const alreadyAdded: boolean = this.addedDatasets.some((s) => s === id);
+            if (noUnderscore || notJustWhiteSpace || alreadyAdded) {
                 return reject(new InsightError("Invalid id used"));
             } else {
                 let count: number = 0;
@@ -101,7 +99,6 @@ export default class InsightFacade implements IInsightFacade {
                             }
                         }
                     }).then(function () {
-                        // todo process string content and save sections to data structure IF dataset is valid
                         let validDataset = false;
                         for (const section of validSections) {
                             let valid: number = thisClass.checkValidCourse(section);
@@ -219,7 +216,7 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string> ((resolve, reject) => {
             const index = thisClass.addedDatasets.indexOf(id);
             const noUnderscore: boolean = id.includes("_");
-            const notWhiteSpace: boolean = (id.replace(/\s/g, "").length === 0);
+            const notWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
             if (noUnderscore || notWhiteSpace) {
                 return reject(new InsightError("Invalid id used, nothing could be removed"));
             } else if (index === -1) {
@@ -230,6 +227,12 @@ export default class InsightFacade implements IInsightFacade {
                         return reject(new InsightError("Dataset: " + id + " could not be removed"));
                     }
                     thisClass.addedDatasets.splice(index, 1);
+                    for (const i in thisClass.forListDS) {
+                        if (thisClass.forListDS[i]["id"] === id) {
+                            thisClass.forListDS.splice(Number(i), 1);
+                            break;
+                        }
+                    }
                     return resolve(id);
                 });
             }
