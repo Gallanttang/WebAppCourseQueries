@@ -1,5 +1,5 @@
 import Log from "../Util";
-import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError} from "./IInsightFacade";
+import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
 import * as jszip from "jszip";
 import * as fs from "fs";
 import {arrayify} from "tslint/lib/utils";
@@ -112,17 +112,16 @@ export default class InsightFacade implements IInsightFacade {
                         }
                         if (validDataset) {
                             thisClass.addedDatasets.push(id);
-                            fs.writeFile(id + ".json",
+                            fs.writeFile(__dirname + "/datasets/" + id + ".json",
                                 JSON.stringify(thisClass.internalDataStructure),  (err) => {
                                 return reject(new InsightError("Failed to write " + id + " to memory"));
                             });
+                            thisClass.internalDataStructure = {};
                             return resolve(thisClass.addedDatasets);
-                        } else {
-                            return reject(new InsightError("Could not add invalid dataset"));
-                        }
+                        } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
                     });
                 }).catch(() => {
-                    return reject(new InsightError("Invalid file cannot be added"));
+                    return reject(new InsightError("Invalid file " + id + "cannot be added"));
                 });
             }
         });
@@ -170,6 +169,9 @@ export default class InsightFacade implements IInsightFacade {
         const dept: string = section[this.coursevalidator["courses_dept"]];
         if (!this.internalDataStructure.hasOwnProperty(dept)) {
             this.internalDataStructure[dept] = {};
+            if (section["Section"] === "overall") {
+                section["Year"] = "1900";
+            }
             for (const key of Object.keys(this.coursevalidator)) {
                 if (key !== "courses_dept") {
                     this.internalDataStructure[dept][key] = [];
@@ -178,7 +180,9 @@ export default class InsightFacade implements IInsightFacade {
             }
         } else {
             for (const key of Object.keys(this.coursevalidator)) {
-                this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                if (key !== "courses_dept") {
+                    this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                }
             }
         }
     }
@@ -203,7 +207,28 @@ export default class InsightFacade implements IInsightFacade {
      * that subsequent queries for that id should fail unless a new addDataset happens first.
      */
     public removeDataset(id: string): Promise<string> {
-        return Promise.reject("Not implemented.");
+        const thisClass = this;
+        return new Promise<string> ((resolve, reject) => {
+            const index = thisClass.addedDatasets.indexOf(id);
+            const noUnderscore: boolean = id.includes("_");
+            const notWhiteSpace: boolean = (id.replace(/\s/g, "").length === 0);
+            const hasBeenAdded: boolean = this.addedDatasets.some((s) => s === id);
+            if (noUnderscore || notWhiteSpace) {
+                return reject(new InsightError("Invalid id used, nothing could be removed"));
+            } else if (hasBeenAdded) {
+                return reject(new NotFoundError("Dataset " + id + " was not found"));
+            } else {
+                fs.unlink(__dirname + "/datasets/" + id + ".json", (err) => {
+                    if (err) {
+                        return reject(new InsightError("Dataset: " + id + " could not be removed"));
+                    }
+                    if (index > -1) {
+                        thisClass.addedDatasets.splice(index, 1);
+                    }
+                    return resolve(id);
+                });
+            }
+        });
     }
 
     /**

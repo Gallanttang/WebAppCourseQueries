@@ -88,7 +88,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
             try {
                 result0 = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
             } catch (err) {
-                expect(result0).includes("Error");
+                expect(result0).to.include("Error");
             }
         }
     });
