@@ -95,56 +95,51 @@ describe("InsightFacade Add/Remove Dataset", function () {
     it("Should be impossible to add a non-existent dataset", async () => {
         const id: string = "dne";
         const expected: string[] = [];
-        let result: string[];
-        try {
-            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-        } catch (err) {
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result) => {
+            expect.fail(result, InsightError, "Managed to add a non-existing dataset");
+        }).catch((err) => {
             expect(err).to.be.instanceOf(InsightError);
-        }
+        });
     });
 
     it("Should be impossible to add a dataset with only whitespace", async () => {
         const id: string = "   ";
         const expected: string[] = [];
-        let result: string[];
-        try {
-            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-        } catch (err) {
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result) => {
+            expect.fail(result, InsightError, "Managed to add a dataset that is just whitespace");
+        }).catch((err) => {
             expect(err).to.be.instanceOf(InsightError);
-        }
+        });
     });
 
     it("Should be impossible to add a json", async () => {
         const id: string = "invalid0";
         const expected: string[] = [];
-        let result: string[];
-        try {
-            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-        } catch (err) {
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result) => {
+            expect.fail(result, InsightError, "Managed to add a dataset that is a json, not a zip");
+        }).catch((err) => {
             expect(err).to.be.instanceOf(InsightError);
-        }
+        });
     });
 
     it("Should be impossible to add an empty dataset", async () => {
         const id: string = "empty";
         const expected: string[] = [];
-        let result: string[];
-        try {
-            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-        } catch (err) {
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result) => {
+            expect.fail(result, InsightError, "Managed to add a dataset that is empty");
+        }).catch((err) => {
             expect(err).to.be.instanceOf(InsightError);
-        }
+        });
     });
 
     it("Should be impossible to add dataset with underscore", async () => {
         const id: string = "courses_";
         const expected: string[] = [];
-        let result: string[];
-        try {
-            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-        } catch (err) {
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result) => {
+            expect.fail(result, InsightError, "Managed to add a dataset with underscore in name");
+        }).catch((err) => {
             expect(err).to.be.instanceOf(InsightError);
-        }
+        });
     });
 
     it("Should remove a valid, existing dataset", async () => {

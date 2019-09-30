@@ -12,26 +12,14 @@ import {arrayify} from "tslint/lib/utils";
 
 export default class InsightFacade implements IInsightFacade {
     private coursevalidator: any = {
-        courses_dept: "Subject",
-        courses_id: "Course",
-        courses_avg: "Avg",
-        courses_instructor: "Professor",
-        courses_title: "Title",
-        courses_pass: "Pass",
-        courses_fail: "Fail",
-        courses_audit: "Audit",
-        courses_uuid: "id",
-        courses_year: "Year"
+        courses_dept: "Subject", courses_id: "Course", courses_avg: "Avg", courses_instructor: "Professor",
+        courses_title: "Title", courses_pass: "Pass", courses_fail: "Fail", courses_audit: "Audit",
+        courses_uuid: "id", courses_year: "Year"
     };
 
     private filters: any = {
-        gt: "GT",
-        lt: "LT",
-        eq: "EQ",
-        is: "IS",
-        not: "NOT",
-        and: "AND",
-        or: "OR"
+        gt: "GT", lt: "LT", eq: "EQ",
+        is: "IS", not: "NOT", and: "AND", or: "OR"
     };
 
     private internalDataStructure: any = {};
@@ -42,93 +30,64 @@ export default class InsightFacade implements IInsightFacade {
         Log.trace("InsightFacadeImpl::init()");
     }
 
-    /**
-     * Add a dataset to UBCInsight.
-     *
-     * @param id  The id of the dataset being added. Follows the format /^[^_]+$/
-     * @param content  The base64 content of the dataset. This content should be in the form of a serialized zip file.
-     * @param kind  The kind of the dataset
-     *
-     * @return Promise <string[]>
-     *
-     * The promise should fulfill on a successful add, reject for any failures.
-     * The promise should fulfill with a string array,
-     * containing the ids of all currently added datasets upon a successful add.
-     * The promise should reject with an InsightError describing the error.
-     *
-     * An id is invalid if it contains an underscore, or is only whitespace characters.
-     * If id is the same as the id of an already added dataset, the dataset should be rejected and not saved.
-     *
-     * After receiving the dataset, it should be processed into a data structure of
-     * your design. The processed data structure should be persisted to disk; your
-     * system should be able to load this persisted value into memory for answering
-     * queries.
-     *
-     * Ultimately, a dataset must be added or loaded from disk before queries can
-     * be successfully answered.
-     */
-
     // change to string x.toString("base64")
     // JSZip to unzip files
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
+        const idIsInvalid: boolean = id.includes("_") || (!id || id.length === 0 ||
+            /^\s*$/.test(id)) || this.addedDatasets.some((s) => s === id);
         return new Promise<string[]>((resolve, reject) => {
-            const noUnderscore: boolean = id.includes("_");
-            const notJustWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
-            const alreadyAdded: boolean = this.addedDatasets.some((s) => s === id);
-            if (noUnderscore || notJustWhiteSpace || alreadyAdded || this.alreadyInDisk(id)) {
-                Log.trace("about to reject");
-                return reject(new InsightError("Invalid id used"));
-            } else {
-                Log.trace("reached else clause");
-                let count: number = 0;
-                jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-                    result.folder("courses").forEach(function (relativePath, file) {
-                        promisedFiles.push(file.async("text"));
-                    });
-                    Promise.all(promisedFiles).then((results) => {
-                        for (let result0 of results) {
-                            let processed: any;
-                            try {
-                                processed = thisClass.parseFile(result0);
-                            } catch (err) { // ignore
-                            } finally {
-                                if (processed !== null) {
-                                    validSections.push(processed);
+            this.alreadyInDisk(id).then((isInDisk) => {
+                if (idIsInvalid || isInDisk) {
+                    return reject(new InsightError("Invalid id used"));
+                } else {
+                    let count: number = 0;
+                    jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+                        result.folder("courses").forEach(function (relativePath, file) {
+                            promisedFiles.push(file.async("text"));
+                        });
+                        Promise.all(promisedFiles).then((results) => {
+                            for (let result0 of results) {
+                                let processed: any;
+                                try { processed = thisClass.parseFile(result0); } catch (err) { // ignore
+                                } finally {
+                                    if (processed !== null) {
+                                        validSections.push(processed);
+                                    }
                                 }
                             }
-                        }
-                    }).then(function () {
-                        let validDataset = false;
-                        for (const section of validSections) {
-                            let valid: number = thisClass.checkValidCourse(section);
-                            if (valid !== 0) {
-                                validDataset = true;
-                                count += valid;
+                        }).then(function () {
+                            let validDataset = false;
+                            for (const section of validSections) {
+                                let valid: number = thisClass.checkValidCourse(section);
+                                if (valid !== 0) {
+                                    validDataset = true;
+                                    count += valid;
+                                }
                             }
-                        }
-                        if (validDataset) {
-                            if (thisClass.writeToMemory(id)) {
-                                thisClass.addedDatasets.push(id);
-                                thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                return resolve(thisClass.addedDatasets);
-                            } else {
-                                return reject(new InsightError("Could not write " + id + "to memory"));
-                            }
-                        } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
+                            if (validDataset) {
+                                if (thisClass.writeToMemory(id)) {
+                                    thisClass.addedDatasets.push(id);
+                                    thisClass.forListDS.push({id: id, kind: kind, numRows: count});
+                                    return resolve(thisClass.addedDatasets);
+                                } else {
+                                    return reject(new InsightError("Could not write " + id + "to memory"));
+                                }
+                            } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
+                        });
+                    }).catch(() => {
+                        return reject(new InsightError("Invalid file " + id + "cannot be added"));
                     });
-                }).catch(() => {
-                    return reject(new InsightError("Invalid file " + id + "cannot be added"));
-                });
-            }
+                }
+            });
         });
     }
 
     public alreadyInDisk(id: string): Promise<boolean> {
-        const path = __dirname + "/datasets/" + id + ".json";
-        return new Promise<boolean>((resolve, reject) => {
+        const path = "/data/" + id + ".json";
+        return new Promise<boolean>((resolve) => {
             fs.access(path, fs.constants.F_OK, (err) => {
                 if (err) {
                     Log.trace("error, therefore not in disk");
@@ -143,7 +102,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public writeToMemory(id: string): boolean {
-        fs.writeFile(__dirname + "/datasets/" + id + ".json",
+        fs.writeFile( "/data/" + id + ".json",
             JSON.stringify(this.internalDataStructure),  (err) => {
                 return false;
             });
@@ -237,25 +196,38 @@ export default class InsightFacade implements IInsightFacade {
             const notWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
             if (noUnderscore || notWhiteSpace) {
                 return reject(new InsightError("Invalid id used, nothing could be removed"));
-            } else if (!(this.alreadyInDisk(id))) {
-                // index === -1
-                Log.trace ("for remove, about to throw not found error");
+            } else if (index === -1) {
                 return reject(new NotFoundError("Dataset " + id + " was not found"));
             } else {
-                fs.unlink(__dirname + "/datasets/" + id + ".json", (err) => {
-                    if (err) {
-                        return reject(new InsightError("Dataset: " + id + " could not be removed"));
-                    }
-                    if (!(index === -1)) {
-                        thisClass.addedDatasets.splice(index, 1);
-                        for (const i in thisClass.forListDS) {
-                            if (thisClass.forListDS[i]["id"] === id) {
-                                thisClass.forListDS.splice(Number(i), 1);
-                                break;
+                this.alreadyInDisk(id).then((isInDisk) => {
+                    if (isInDisk) {
+                        fs.unlink("/data/" + id + ".json", (err) => {
+                            if (err) {
+                                return reject(new InsightError("Dataset: " + id + " could not be removed"));
+                            }
+                            if (!(index === -1)) {
+                                thisClass.addedDatasets.splice(index, 1);
+                                for (const i in thisClass.forListDS) {
+                                    if (thisClass.forListDS[i]["id"] === id) {
+                                        thisClass.forListDS.splice(Number(i), 1);
+                                        break;
+                                    }
+                                }
+                            }
+                            return resolve(id);
+                        });
+                    } else {
+                        if (!(index === -1)) {
+                            thisClass.addedDatasets.splice(index, 1);
+                            for (const i in thisClass.forListDS) {
+                                if (thisClass.forListDS[i]["id"] === id) {
+                                    thisClass.forListDS.splice(Number(i), 1);
+                                    break;
+                                }
                             }
                         }
+                        return reject(NotFoundError);
                     }
-                    return resolve(id);
                 });
             }
         });
