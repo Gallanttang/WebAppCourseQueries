@@ -36,6 +36,7 @@ export default class InsightFacade implements IInsightFacade {
 
     private internalDataStructure: any = {};
     private addedDatasets: string[] = [];
+    private forListDS: any[] = [];
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
@@ -82,19 +83,17 @@ export default class InsightFacade implements IInsightFacade {
             if (noUnderscore || notWhiteSpace || notAlreadyAdded) {
                 return reject(new InsightError("Invalid id used"));
             } else {
+                let count: number = 0;
                 jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                     result.folder("courses").forEach(function (relativePath, file) {
                         promisedFiles.push(file.async("text"));
                     });
                     Promise.all(promisedFiles).then((results) => {
-                        let count: number = 0;
                         for (let result0 of results) {
                             let processed: any;
                             try {
                                 processed = thisClass.parseFile(result0);
-                                count += 1;
-                            } catch (err) {
-                                continue;
+                            } catch (err) { // ignore
                             } finally {
                                 if (processed !== null) {
                                     validSections.push(processed);
@@ -105,18 +104,20 @@ export default class InsightFacade implements IInsightFacade {
                         // todo process string content and save sections to data structure IF dataset is valid
                         let validDataset = false;
                         for (const section of validSections) {
-                            if (thisClass.checkValidCourse(section)) {
+                            let valid: number = thisClass.checkValidCourse(section);
+                            if (valid !== 0) {
                                 validDataset = true;
+                                count += valid;
                             }
                         }
                         if (validDataset) {
-                            thisClass.addedDatasets.push(id);
-                            fs.writeFile(__dirname + "/datasets/" + id + ".json",
-                                JSON.stringify(thisClass.internalDataStructure),  (err) => {
-                                return reject(new InsightError("Failed to write " + id + " to memory"));
-                            });
-                            thisClass.internalDataStructure = {};
-                            return resolve(thisClass.addedDatasets);
+                            if (thisClass.writeToMemory(id)) {
+                                thisClass.addedDatasets.push(id);
+                                thisClass.forListDS.push({id: id, kind: kind, numRows: count});
+                                return resolve(thisClass.addedDatasets);
+                            } else {
+                                return reject(new InsightError("Could not write " + id + "to memory"));
+                            }
                         } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
                     });
                 }).catch(() => {
@@ -126,6 +127,14 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
+    public writeToMemory(id: string): boolean {
+        fs.writeFile(__dirname + "/datasets/" + id + ".json",
+            JSON.stringify(this.internalDataStructure),  (err) => {
+                return false;
+            });
+        this.internalDataStructure = {};
+        return true;
+    }
     public parseFile(text: any): any {
         let JSObj: any;
         try {
@@ -136,19 +145,19 @@ export default class InsightFacade implements IInsightFacade {
         return JSObj;
     }
 
-    public checkValidCourse(object: any): boolean {
-        let hasValidSection: boolean = false;
+    public checkValidCourse(object: any): number {
+        let numValidSection: number = 0;
         if (object["result"] !== null) {
             // Log.trace("In Check Valid Course: check for sections " + typeof object["result"] + object["result"]);
             if (Array.isArray(object["result"])) {
                 for (const section of object["result"]) {
                     if (this.isSectionValid(section)) {
-                        hasValidSection = true;
                         this.addSection(section);
+                        numValidSection += 1;
                     }
                 }
             }
-            return hasValidSection;
+            return numValidSection;
         }
     }
 
@@ -251,6 +260,8 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should fulfill an array of currently added InsightDatasets, and will only fulfill.
      */
     public listDatasets(): Promise<InsightDataset[]> {
-        return Promise.reject("Not implemented.");
+        return new Promise<InsightDataset[]>(((resolve) => {
+            return resolve(this.forListDS);
+        }));
     }
 }

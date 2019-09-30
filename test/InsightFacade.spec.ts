@@ -279,7 +279,7 @@ describe("InsightFacade listDataset", () => {
     it("Should list a valid dataset", async () => {
         const id: string = "courses";
         const expected: string[] = [id];
-        const ds: InsightDataset = {id: "courses", kind: InsightDatasetKind.Courses, numRows: 1};
+        const ds: InsightDataset = {id: "courses", kind: InsightDatasetKind.Courses, numRows: 64612};
         let expected0: InsightDataset[] = [ds];
         let result: InsightDataset[];
         let result0: string[];
