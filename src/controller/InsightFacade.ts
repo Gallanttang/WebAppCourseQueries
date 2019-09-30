@@ -104,7 +104,6 @@ export default class InsightFacade implements IInsightFacade {
                     }).then(function () {
                         // todo process string content and save sections to data structure IF dataset is valid
                         let validDataset = false;
-                        Log.trace("Number of valid courses: " + validSections.length);
                         for (const section of validSections) {
                             if (thisClass.checkValidCourse(section)) {
                                 validDataset = true;
@@ -212,19 +211,16 @@ export default class InsightFacade implements IInsightFacade {
             const index = thisClass.addedDatasets.indexOf(id);
             const noUnderscore: boolean = id.includes("_");
             const notWhiteSpace: boolean = (id.replace(/\s/g, "").length === 0);
-            const hasBeenAdded: boolean = this.addedDatasets.some((s) => s === id);
             if (noUnderscore || notWhiteSpace) {
                 return reject(new InsightError("Invalid id used, nothing could be removed"));
-            } else if (hasBeenAdded) {
+            } else if (index === -1) {
                 return reject(new NotFoundError("Dataset " + id + " was not found"));
             } else {
                 fs.unlink(__dirname + "/datasets/" + id + ".json", (err) => {
                     if (err) {
                         return reject(new InsightError("Dataset: " + id + " could not be removed"));
                     }
-                    if (index > -1) {
-                        thisClass.addedDatasets.splice(index, 1);
-                    }
+                    thisClass.addedDatasets.splice(index, 1);
                     return resolve(id);
                 });
             }

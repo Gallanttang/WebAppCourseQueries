@@ -4,7 +4,6 @@ import {InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from ".
 import InsightFacade from "../src/controller/InsightFacade";
 import Log from "../src/Util";
 import TestUtil from "./TestUtil";
-import {type} from "os";
 // This should match the schema given to TestUtil.validate(..) in TestUtil.readTestQueries(..)
 // except 'filename' which is injected when the file is read.
 export interface ITestQuery {
@@ -88,7 +87,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
             try {
                 result0 = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
             } catch (err) {
-                expect(result0).to.include("Error");
+                expect(err).to.be.instanceOf(InsightError);
             }
         }
     });
@@ -101,8 +100,6 @@ describe("InsightFacade Add/Remove Dataset", function () {
             result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
         } catch (err) {
             expect(err).to.be.instanceOf(InsightError);
-        } finally {
-            expect.fail(result, expected, "Added a non-existing course dataset");
         }
     });
 
@@ -114,8 +111,6 @@ describe("InsightFacade Add/Remove Dataset", function () {
             result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
         } catch (err) {
             expect(err).to.be.instanceOf(InsightError);
-        } finally {
-            expect.fail(result, expected, "Added a course dataset with an invalid parameter");
         }
     });
 
@@ -127,8 +122,6 @@ describe("InsightFacade Add/Remove Dataset", function () {
             result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
         } catch (err) {
             expect(err).to.be.instanceOf(InsightError);
-        } finally {
-            expect.fail(result, "", "Added a course json unexpectedly");
         }
     });
 
@@ -140,8 +133,6 @@ describe("InsightFacade Add/Remove Dataset", function () {
             result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
         } catch (err) {
             expect(err).to.be.instanceOf(InsightError);
-        } finally {
-            expect.fail(result, "", "Added a empty dataset unexpectedly");
         }
     });
 
@@ -149,13 +140,15 @@ describe("InsightFacade Add/Remove Dataset", function () {
         const id: string = "courses";
         const expected: string[] = [id];
         let result0: string;
-        try {
-            result0 = await insightFacade.removeDataset(id);
-        } catch (err) {
-            expect.fail(err, expected, "failed to add valid course dataset before attempting to remove");
-        } finally {
-            expect(result0).to.deep.equal(id);
-        }
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then(async (result) => {
+            try {
+                result0 = await insightFacade.removeDataset(id);
+            } catch (err) {
+                expect.fail(err, expected, "failed to add valid course dataset before attempting to remove");
+            } finally {
+                expect(result0).to.deep.equal(id);
+            }
+        });
     });
 
     it("Should be impossible to remove a non-existing dataset", async () => {
@@ -165,20 +158,16 @@ describe("InsightFacade Add/Remove Dataset", function () {
             result = await insightFacade.removeDataset(id);
         } catch (err) {
             expect(err).to.be.instanceOf(NotFoundError);
-        } finally {
-            expect.fail("", "", "Removed a non-existing dataset somehow");
         }
     });
 
     it("Should be impossible to remove a dataset with invalid input", async () => {
-        const id: string = "courses ";
+        const id: string = "  ";
         let result: string;
         try {
             result = await insightFacade.removeDataset(id);
         } catch (err) {
             expect(err).to.be.instanceOf(InsightError);
-        } finally {
-            expect.fail(result, "", "Removed a dataset using an invalid input somehow");
         }
     });
 });
