@@ -78,9 +78,11 @@ export default class InsightFacade implements IInsightFacade {
             const noUnderscore: boolean = id.includes("_");
             const notJustWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
             const alreadyAdded: boolean = this.addedDatasets.some((s) => s === id);
-            if (noUnderscore || notJustWhiteSpace || alreadyAdded) {
+            if (noUnderscore || notJustWhiteSpace || alreadyAdded || this.alreadyInDisk(id)) {
+                Log.trace("about to reject");
                 return reject(new InsightError("Invalid id used"));
             } else {
+                Log.trace("reached else clause");
                 let count: number = 0;
                 jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                     result.folder("courses").forEach(function (relativePath, file) {
@@ -121,6 +123,22 @@ export default class InsightFacade implements IInsightFacade {
                     return reject(new InsightError("Invalid file " + id + "cannot be added"));
                 });
             }
+        });
+    }
+
+    public alreadyInDisk(id: string): Promise<boolean> {
+        const path = __dirname + "/datasets/" + id + ".json";
+        return new Promise<boolean>((resolve, reject) => {
+            fs.access(path, fs.constants.F_OK, (err) => {
+                if (err) {
+                    Log.trace("error, therefore not in disk");
+                    return resolve(false);
+                    // if path is NOT accessible then it's NOT already in disk
+                } else {
+                    Log.trace("already in disk");
+                    return resolve(true);
+                }
+            });
         });
     }
 
@@ -219,18 +237,22 @@ export default class InsightFacade implements IInsightFacade {
             const notWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
             if (noUnderscore || notWhiteSpace) {
                 return reject(new InsightError("Invalid id used, nothing could be removed"));
-            } else if (index === -1) {
+            } else if (!(this.alreadyInDisk(id))) {
+                // index === -1
+                Log.trace ("for remove, about to throw not found error");
                 return reject(new NotFoundError("Dataset " + id + " was not found"));
             } else {
                 fs.unlink(__dirname + "/datasets/" + id + ".json", (err) => {
                     if (err) {
                         return reject(new InsightError("Dataset: " + id + " could not be removed"));
                     }
-                    thisClass.addedDatasets.splice(index, 1);
-                    for (const i in thisClass.forListDS) {
-                        if (thisClass.forListDS[i]["id"] === id) {
-                            thisClass.forListDS.splice(Number(i), 1);
-                            break;
+                    if (!(index === -1)) {
+                        thisClass.addedDatasets.splice(index, 1);
+                        for (const i in thisClass.forListDS) {
+                            if (thisClass.forListDS[i]["id"] === id) {
+                                thisClass.forListDS.splice(Number(i), 1);
+                                break;
+                            }
                         }
                     }
                     return resolve(id);
