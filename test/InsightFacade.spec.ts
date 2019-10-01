@@ -145,15 +145,13 @@ describe("InsightFacade Add/Remove Dataset", function () {
     it("Should remove a valid, existing dataset", async () => {
         const id: string = "courses";
         const expected: string[] = [id];
-        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then(async (returned) => {
+        return insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then(async (returned) => {
             expect(returned).to.be.deep.equal(expected);
-            insightFacade.removeDataset(id).then(async (result) => {
-                expect(result).to.deep.equal(id);
-            }).catch ((err) => {
-                expect.fail(err, expected, "Failed to remove valid course");
-            });
+            return insightFacade.removeDataset(id);
+        }).then(async (result) => {
+            expect(result).to.deep.equal(id);
         }).catch((err) => {
-            expect.fail(err, id, "Could not add valid course for test remove");
+            expect.fail(err, id, err);
         });
     });
 

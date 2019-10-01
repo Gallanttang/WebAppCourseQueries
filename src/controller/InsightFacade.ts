@@ -1,8 +1,9 @@
 import Log from "../Util";
 import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
+import "./MemoryManager";
 import * as jszip from "jszip";
+import MemoryManager from "./MemoryManager";
 import * as fs from "fs";
-import {arrayify} from "tslint/lib/utils";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -11,6 +12,7 @@ import {arrayify} from "tslint/lib/utils";
  */
 
 export default class InsightFacade implements IInsightFacade {
+    private memMan = new MemoryManager();
     private coursevalidator: any = {
         courses_dept: "Subject", courses_id: "Course", courses_avg: "Avg", courses_instructor: "Professor",
         courses_title: "Title", courses_pass: "Pass", courses_fail: "Fail", courses_audit: "Audit",
@@ -22,7 +24,6 @@ export default class InsightFacade implements IInsightFacade {
         is: "IS", not: "NOT", and: "AND", or: "OR"
     };
 
-    private internalDataStructure: any = {};
     private addedDatasets: string[] = [];
     private forListDS: any[] = [];
 
@@ -36,13 +37,11 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
-        const idIsInvalid: boolean = id.includes("_") || (!id || id.length === 0 ||
-            /^\s*$/.test(id)) || this.addedDatasets.some((s) => s === id);
+        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 ||
+            /^\s*$/.test(id) || this.addedDatasets.some((s) => s === id);
         return new Promise<string[]>((resolve, reject) => {
-            this.alreadyInDisk(id).then((isInDisk) => {
-                if (idIsInvalid || isInDisk) {
-                    return reject(new InsightError("Invalid id used"));
-                } else {
+            thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
+                if (idIsInvalid || isInDisk) { return reject(new InsightError("Invalid id used")); } else {
                     let count: number = 0;
                     jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                         result.folder("courses").forEach(function (relativePath, file) {
@@ -51,31 +50,33 @@ export default class InsightFacade implements IInsightFacade {
                         Promise.all(promisedFiles).then((results) => {
                             for (let result0 of results) {
                                 let processed: any;
-                                try { processed = thisClass.parseFile(result0); } catch (err) { // ignore
+                                try { processed = thisClass.memMan.parseFile(result0); } catch (err) { // ignore
                                 } finally {
-                                    if (processed !== null) {
-                                        validSections.push(processed);
-                                    }
+                                    if (processed !== null) { validSections.push(processed); }
                                 }
                             }
                         }).then(function () {
                             let validDataset = false;
                             for (const section of validSections) {
-                                let valid: number = thisClass.checkValidCourse(section);
+                                let valid: number = thisClass.memMan.checkValidCourse(section);
                                 if (valid !== 0) {
                                     validDataset = true;
                                     count += valid;
                                 }
                             }
                             if (validDataset) {
-                                if (thisClass.writeToMemory(id)) {
-                                    thisClass.addedDatasets.push(id);
-                                    thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                    return resolve(thisClass.addedDatasets);
-                                } else {
-                                    return reject(new InsightError("Could not write " + id + "to memory"));
-                                }
-                            } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
+                                thisClass.memMan.writeToMemory(id).then((successful) => {
+                                    if (successful) {
+                                        thisClass.addedDatasets.push(id);
+                                        thisClass.forListDS.push({id: id, kind: kind, numRows: count});
+                                        return resolve(thisClass.addedDatasets);
+                                    } else {
+                                        return reject(new InsightError("Could not write " + id + "to memory"));
+                                    }
+                                });
+                            } else {
+                                return reject(new InsightError("Could not add invalid dataset: " + id));
+                            }
                         });
                     }).catch(() => {
                         return reject(new InsightError("Invalid file " + id + "cannot be added"));
@@ -85,147 +86,29 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
-    public alreadyInDisk(id: string): Promise<boolean> {
-        const path = "/data/" + id + ".json";
-        return new Promise<boolean>((resolve) => {
-            fs.access(path, fs.constants.F_OK, (err) => {
-                if (err) {
-                    Log.trace("error, therefore not in disk");
-                    return resolve(false);
-                    // if path is NOT accessible then it's NOT already in disk
-                } else {
-                    Log.trace("already in disk");
-                    return resolve(true);
-                }
-            });
-        });
-    }
-
-    public writeToMemory(id: string): boolean {
-        fs.writeFile( "/data/" + id + ".json",
-            JSON.stringify(this.internalDataStructure),  (err) => {
-                return false;
-            });
-        this.internalDataStructure = {};
-        return true;
-    }
-    public parseFile(text: any): any {
-        let JSObj: any;
-        try {
-            JSObj = JSON.parse(text);
-        } catch (err) {
-            return null;
-        }
-        return JSObj;
-    }
-
-    public checkValidCourse(object: any): number {
-        let numValidSection: number = 0;
-        if (object["result"] !== null) {
-            // Log.trace("In Check Valid Course: check for sections " + typeof object["result"] + object["result"]);
-            if (Array.isArray(object["result"])) {
-                for (const section of object["result"]) {
-                    if (this.isSectionValid(section)) {
-                        this.addSection(section);
-                        numValidSection += 1;
-                    }
-                }
-            }
-            return numValidSection;
-        }
-    }
-
-    private isSectionValid(section: any): boolean {
-        let valid: boolean = true;
-        for (const key of Object.keys(this.coursevalidator)) {
-            if (!section.hasOwnProperty(this.coursevalidator[key])) {
-                valid = false;
-                return valid;
-            }
-        }
-        return valid;
-    }
-
-    // Adds a section to the internal data structure
-    private addSection(section: any) {
-        const dept: string = section[this.coursevalidator["courses_dept"]];
-        if (!this.internalDataStructure.hasOwnProperty(dept)) {
-            this.internalDataStructure[dept] = {};
-            if (section["Section"] === "overall") {
-                section["Year"] = "1900";
-            }
-            for (const key of Object.keys(this.coursevalidator)) {
-                if (key !== "courses_dept") {
-                    this.internalDataStructure[dept][key] = [];
-                    this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
-                }
-            }
-        } else {
-            for (const key of Object.keys(this.coursevalidator)) {
-                if (key !== "courses_dept") {
-                    this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Remove a dataset from UBCInsight.
-     *
-     * @param id  The id of the dataset to remove. Follows the format /^[^_]+$/
-     *
-     * @return Promise <string>
-     *
-     * The promise should fulfill upon a successful removal, reject on any error.
-     * Attempting to remove a dataset that hasn't been added yet counts as an error.
-     *
-     * An id is invalid if it contains an underscore, or is only whitespace characters.
-     *
-     * The promise should fulfill the id of the dataset that was removed.
-     * The promise should reject with a NotFoundError (if a valid id was not yet added)
-     * or an InsightError (invalid id or any other source of failure) describing the error.
-     *
-     * This will delete both disk and memory caches for the dataset for the id meaning
-     * that subsequent queries for that id should fail unless a new addDataset happens first.
-     */
     public removeDataset(id: string): Promise<string> {
         const thisClass = this;
-        return new Promise<string> ((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
             const index = thisClass.addedDatasets.indexOf(id);
-            const noUnderscore: boolean = id.includes("_");
-            const notWhiteSpace: boolean = (!id || id.length === 0 || /^\s*$/.test(id));
-            if (noUnderscore || notWhiteSpace) {
+            const validID: boolean = id && id.length >= 0 && !/^\s*$/.test(id) && !id.includes("_");
+            if (!validID) {
                 return reject(new InsightError("Invalid id used, nothing could be removed"));
             } else if (index === -1) {
                 return reject(new NotFoundError("Dataset " + id + " was not found"));
-            } else {
-                this.alreadyInDisk(id).then((isInDisk) => {
+            } else if (validID && index >= 0) {
+                this.memMan.alreadyInDisk(id).then((isInDisk) => {
                     if (isInDisk) {
-                        fs.unlink("/data/" + id + ".json", (err) => {
-                            if (err) {
-                                return reject(new InsightError("Dataset: " + id + " could not be removed"));
+                        thisClass.memMan.deleteFromMemory(id).then((successful) => {
+                            if (successful) {
+                                thisClass.updateDataset(index, id);
+                                resolve(id);
+                            } else {
+                                return reject(new InsightError
+                                ("Dataset " + id + " could not be deleted from memory"));
                             }
-                            if (!(index === -1)) {
-                                thisClass.addedDatasets.splice(index, 1);
-                                for (const i in thisClass.forListDS) {
-                                    if (thisClass.forListDS[i]["id"] === id) {
-                                        thisClass.forListDS.splice(Number(i), 1);
-                                        break;
-                                    }
-                                }
-                            }
-                            return resolve(id);
                         });
                     } else {
-                        if (!(index === -1)) {
-                            thisClass.addedDatasets.splice(index, 1);
-                            for (const i in thisClass.forListDS) {
-                                if (thisClass.forListDS[i]["id"] === id) {
-                                    thisClass.forListDS.splice(Number(i), 1);
-                                    break;
-                                }
-                            }
-                        }
+                        thisClass.updateDataset(index, id);
                         return reject(NotFoundError);
                     }
                 });
@@ -233,6 +116,15 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
+    private updateDataset(index: number, id: string) {
+        this.addedDatasets.splice(index, 1);
+        for (const i in this.forListDS) {
+            if (this.forListDS[Number(i)]["id"] === id) {
+                this.forListDS.splice(Number(i), 1);
+                break;
+            }
+        }
+    }
     /**
      * Perform a query on UBCInsight.
      *
