@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Referenced dataset cannot be empty string"}
+    "result": "InsightError"
 }

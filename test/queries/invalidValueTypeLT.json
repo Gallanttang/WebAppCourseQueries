@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid value type in LT, should be number"}
+    "result": "InsightError"
 }

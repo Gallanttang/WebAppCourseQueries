@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid value type in IS, should be string"}
+    "result": "InsightError"
 }

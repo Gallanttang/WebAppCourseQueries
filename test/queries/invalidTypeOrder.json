@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result":{"error":"Invalid ORDER type"}
+    "result": "InsightError"
 }

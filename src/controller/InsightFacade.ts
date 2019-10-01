@@ -139,72 +139,67 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should reject with an InsightError describing the error.
      */
     public performQuery(query: any): Promise<any[]> {
+        let that = this;
         return new Promise<any[]>((resolve, reject) => {
-            this.buildQueryTree(query).then((Node: any) => {
+            that.isQueryValid(query).then((result: any) => {
                 // now do something with the returned AST
                 return (reject("not implemented"));
+            }).catch((err: any) => {
+                return (reject(err));
             });
-            return (reject("not implemented"));
+            // return (reject("not implemented"));
         });
     }
 
     /**
-     * helper for performQuery
-     * @return Promise<node>
-     * the promise should fulfill with root node of query AST, or InsightError if query is invalid
+     * helper for PerformQuery
+     * @return Promise<any>
+     * the promise should fulfill with true if query is valid, InsightError if it isn't
      */
-    public buildQueryTree(query: any): Promise<any> {
+    public isQueryValid(query: any): Promise<any> {
+        const that = this;
         return new Promise<any>((resolve, reject) => {
             if (query != null && typeof query === "object") {
-                let root: any;
-                if (Object.keys(query) === ["WHERE", "OPTIONS"]) {
-                    root = new TreeNode(null);
+                if (that.equals(Object.keys(query), [ "WHERE", "OPTIONS" ])) {
                     if (query.key(0).hasOwnProperty) {
-                        root.children.push(this.buildQueryTreeFilters(query.key(0)));
+                        // there's stuff in the "WHERE", NEED TO RECURSE
+                        // todo need to write recursive function to check each filter in "WHERE"
                     } else {
-                        const bodyNode: TreeNode = new TreeNode("WHERE");
-                        const optionsNode: TreeNode = new TreeNode("OPTIONS");
-                        // todo NEED TO DO MORE WORK CHECKING & BREAKING DOWN OPTIONS
-                        // todo these values aren't useful. Need to think about what to store for "value" in TreeNodes
-                        root.children.push(bodyNode);
-                        root.childtren.push(optionsNode);
+                        // nothing in the "WHERE", all ok
                     }
+                    if (query.key(1).hasOwnProperty) {
+                        const value = query.key(1);
+                        if (that.equals(query[value], ["COLUMNS", "ORDER"]) || that.equals(query[value], ["COLUMNS"])) {
+                            // "OPTIONS" is formed correctly
+                        } else {
+                            return reject (new InsightError("malformed options structure"));
+                        }
+                    } else {
+                        return reject (new InsightError("options is missing columns"));
+                    }
+                    // at this point we know the query's valid, return true
+                    return resolve(true);
                 } else {
                     return reject (new InsightError("malformed query body structure"));
                 }
-                return resolve(root);
             } else {
-                return reject(new InsightError("cannot be null"));
+                return reject(new InsightError("query cannot be null"));
             }
         });
     }
-    /**
-     * helper for performQuery
-     * @return Promise<node>
-     * the promise should fulfill with root node of query AST, or InsightError if query is invalid
-     */
-    public buildQueryTreeFilters(query: any): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            if (query != null && typeof query === "object") {
-                if (Array.isArray(query)) {
-                    for (const val of query) {
-                        // do something for each val
-                    }
-                } else {
-                    for (const key of Object.keys(query)) {
-                        // todo write a helper that checks filter requirements
-                        // and then call it for each query[key]
-                        // do something for each key
+    public equals(keys: any, expected: any): boolean {
+            if (keys.length !== expected.length) {
+                return false;
+            } else {
+                // comparing each element of array
+                for (let i = 0; i < keys.length; i++) {
+                    if (keys[i] !== expected[i]) {
+                        return false;
                     }
                 }
-                return reject("not implemented");
-            } else if (typeof query === "string" || typeof query === "number") {
-                return reject("not implemented"); // stub, replace later
+                return true;
             }
-            return reject("not implemented");
-        });
     }
-
     /**
      * List all currently added datasets, their types, and number of rows.
      *

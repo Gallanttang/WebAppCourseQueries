@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":  "The dataset is not a zip file"}
+    "result": "InsightError"
 }

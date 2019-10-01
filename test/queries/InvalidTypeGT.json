@@ -17,5 +17,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error": "GT must be object"}
+    "result": "InsightError"
 }

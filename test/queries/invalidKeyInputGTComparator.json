@@ -17,5 +17,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid key courses_result in GT"}
+    "result": "InsightError"
 }

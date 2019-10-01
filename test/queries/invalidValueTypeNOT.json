@@ -19,5 +19,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid filter key: WHERE"}
+    "result": "InsightError"
 }

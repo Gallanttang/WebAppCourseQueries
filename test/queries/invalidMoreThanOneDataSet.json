@@ -24,5 +24,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Cannot query more than one dataset"}
+    "result": "InsightError"
 }

@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"ORDER cannot be null or undefined"}
+    "result": "InsightError"
 }

@@ -15,5 +15,5 @@
         }
     }],
     "isQueryValid": false,
-    "result": {"error":"Query must be object"}
+    "result": "InsightError"
 }

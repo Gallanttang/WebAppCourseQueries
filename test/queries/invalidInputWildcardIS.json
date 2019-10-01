@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result":{"error":"Asterisks (*) can only be the first or last characters of input strings"}
+    "result":"InsightError"
 }

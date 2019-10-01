@@ -14,5 +14,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"ORDER key must be in COLUMNS"}
+    "result": "InsightError"
 }
