@@ -1,7 +1,6 @@
 import {IInsightFacade, InsightError} from "./IInsightFacade";
 import * as fs from "fs";
 import Log from "../Util";
-import {promises} from "fs";
 
 export default class MemoryManager {
     private internalDataStructure: any = {};
@@ -33,9 +32,10 @@ export default class MemoryManager {
                 JSON.stringify(this.internalDataStructure),  (err) => {
                     if (err) {
                         return resolve(false);
+                    } else {
+                        this.internalDataStructure = {};
+                        return resolve(true);
                     }
-                    this.internalDataStructure = {};
-                    return resolve(true);
                 });
         }));
     }
