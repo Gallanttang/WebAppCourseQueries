@@ -3,6 +3,7 @@ import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFou
 import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
+import TreeNode from "./TreeNode";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -138,7 +139,70 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should reject with an InsightError describing the error.
      */
     public performQuery(query: any): Promise<any[]> {
-        return Promise.reject("Not implemented.");
+        return new Promise<any[]>((resolve, reject) => {
+            this.buildQueryTree(query).then((Node: any) => {
+                // now do something with the returned AST
+                return (reject("not implemented"));
+            });
+            return (reject("not implemented"));
+        });
+    }
+
+    /**
+     * helper for performQuery
+     * @return Promise<node>
+     * the promise should fulfill with root node of query AST, or InsightError if query is invalid
+     */
+    public buildQueryTree(query: any): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (query != null && typeof query === "object") {
+                let root: any;
+                if (Object.keys(query) === ["WHERE", "OPTIONS"]) {
+                    root = new TreeNode(null);
+                    if (query.key(0).hasOwnProperty) {
+                        root.children.push(this.buildQueryTreeFilters(query.key(0)));
+                    } else {
+                        const bodyNode: TreeNode = new TreeNode("WHERE");
+                        const optionsNode: TreeNode = new TreeNode("OPTIONS");
+                        // todo NEED TO DO MORE WORK CHECKING & BREAKING DOWN OPTIONS
+                        // todo these values aren't useful. Need to think about what to store for "value" in TreeNodes
+                        root.children.push(bodyNode);
+                        root.childtren.push(optionsNode);
+                    }
+                } else {
+                    return reject (new InsightError("malformed query body structure"));
+                }
+                return resolve(root);
+            } else {
+                return reject(new InsightError("cannot be null"));
+            }
+        });
+    }
+    /**
+     * helper for performQuery
+     * @return Promise<node>
+     * the promise should fulfill with root node of query AST, or InsightError if query is invalid
+     */
+    public buildQueryTreeFilters(query: any): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            if (query != null && typeof query === "object") {
+                if (Array.isArray(query)) {
+                    for (const val of query) {
+                        // do something for each val
+                    }
+                } else {
+                    for (const key of Object.keys(query)) {
+                        // todo write a helper that checks filter requirements
+                        // and then call it for each query[key]
+                        // do something for each key
+                    }
+                }
+                return reject("not implemented");
+            } else if (typeof query === "string" || typeof query === "number") {
+                return reject("not implemented"); // stub, replace later
+            }
+            return reject("not implemented");
+        });
     }
 
     /**
