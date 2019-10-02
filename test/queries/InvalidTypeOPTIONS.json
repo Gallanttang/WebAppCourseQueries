@@ -17,5 +17,5 @@
         ]
     },
     "isQueryValid": false,
-    "result": {"error": "OPTIONS must be object"}
+    "result": "InsightError"
 }

@@ -25,5 +25,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid filter key: I"}
+    "result": "InsightError"
 }

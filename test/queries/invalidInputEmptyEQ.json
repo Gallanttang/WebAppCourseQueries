@@ -17,5 +17,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"EQ should only have 1 key, has 0"}
+    "result": "InsightError"
 }

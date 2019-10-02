@@ -10,5 +10,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Missing OPTION"}
+    "result": "InsightError"
 }

@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid value type in EQ, should be number"}
+    "result": "InsightError"
 }

@@ -18,5 +18,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"key.split is not a function"}
+    "result": "InsightError"
 }

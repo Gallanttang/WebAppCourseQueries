@@ -13,5 +13,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"COLUMNS must be a non-empty array"}
+    "result": "InsightError"
 }

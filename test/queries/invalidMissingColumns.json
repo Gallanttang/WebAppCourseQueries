@@ -11,5 +11,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"OPTIONS missing COLUMNS"}
+    "result": "InsightError"
 }

@@ -16,5 +16,5 @@
         "HOW": "not valid"
     },
     "isQueryValid": false,
-    "result": {"error":"Excess keys in query"}
+    "result": "InsightError"
 }

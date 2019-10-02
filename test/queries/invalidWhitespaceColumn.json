@@ -13,5 +13,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Cannot read property 'GROUP' of undefined"}
+    "result": "InsightError"
 }

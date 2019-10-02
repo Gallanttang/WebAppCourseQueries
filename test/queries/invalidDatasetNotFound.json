@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Referenced dataset \"missing\" not added yet"}
+    "result": "InsightError"
 }

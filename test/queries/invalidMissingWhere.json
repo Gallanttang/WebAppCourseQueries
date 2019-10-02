@@ -11,5 +11,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Missing WHERE"}
+    "result": "InsightError"
 }

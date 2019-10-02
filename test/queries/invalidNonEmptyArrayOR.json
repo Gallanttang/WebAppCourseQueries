@@ -16,5 +16,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"OR must be a non-empty array"}
+    "result": "InsightError"
 }

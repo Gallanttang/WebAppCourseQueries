@@ -3,6 +3,7 @@ import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFou
 import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
+import TreeNode from "./TreeNode";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -137,9 +138,67 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should reject with an InsightError describing the error.
      */
     public performQuery(query: any): Promise<any[]> {
-        return Promise.reject("Not implemented.");
+        let that = this;
+        return new Promise<any[]>((resolve, reject) => {
+            that.isQueryValid(query).then((result: any) => {
+                // now do something with the returned AST
+                return (reject("not implemented"));
+            }).catch((err: any) => {
+                return (reject(err));
+            });
+            // return (reject("not implemented"));
+        });
     }
 
+    /**
+     * helper for PerformQuery
+     * @return Promise<any>
+     * the promise should fulfill with true if query is valid, InsightError if it isn't
+     */
+    public isQueryValid(query: any): Promise<any> {
+        const that = this;
+        return new Promise<any>((resolve, reject) => {
+            if (query != null && typeof query === "object") {
+                if (that.equals(Object.keys(query), [ "WHERE", "OPTIONS" ])) {
+                    if (query.key(0).hasOwnProperty) {
+                        // there's stuff in the "WHERE", NEED TO RECURSE
+                        // todo need to write recursive function to check each filter in "WHERE"
+                    } else {
+                        // nothing in the "WHERE", all ok
+                    }
+                    if (query.key(1).hasOwnProperty) {
+                        const value = query.key(1);
+                        if (that.equals(query[value], ["COLUMNS", "ORDER"]) || that.equals(query[value], ["COLUMNS"])) {
+                            // "OPTIONS" is formed correctly
+                        } else {
+                            return reject (new InsightError("malformed options structure"));
+                        }
+                    } else {
+                        return reject (new InsightError("options is missing columns"));
+                    }
+                    // at this point we know the query's valid, return true
+                    return resolve(true);
+                } else {
+                    return reject (new InsightError("malformed query body structure"));
+                }
+            } else {
+                return reject(new InsightError("query cannot be null"));
+            }
+        });
+    }
+    public equals(keys: any, expected: any): boolean {
+            if (keys.length !== expected.length) {
+                return false;
+            } else {
+                // comparing each element of array
+                for (let i = 0; i < keys.length; i++) {
+                    if (keys[i] !== expected[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+    }
     /**
      * List all currently added datasets, their types, and number of rows.
      *

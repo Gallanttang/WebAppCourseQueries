@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid key type in GT"}
+    "result":"InsightError"
 }

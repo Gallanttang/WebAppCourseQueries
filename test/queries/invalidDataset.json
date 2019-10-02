@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":  "The zip file is invalid"}
+    "result": "InsightError"
 }

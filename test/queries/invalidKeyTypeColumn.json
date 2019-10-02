@@ -15,5 +15,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error":"Invalid type of COLUMN key"}
+    "result": "InsightError"
 }

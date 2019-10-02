@@ -12,5 +12,5 @@
         }
     },
     "isQueryValid": false,
-    "result": {"error": "The result is too big. Only queries with a maximum of 5000 results are supported."}
+    "result": "InsightError"
 }
