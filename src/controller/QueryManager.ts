@@ -22,9 +22,16 @@ export default class QueryManager {
                     that.equals(Object.keys(query), ["OPTIONS", "WHERE"])) {
                     if (query["WHERE"].hasOwnProperty) {
                         // there's stuff in the "WHERE", NEED TO RECURSE
-                        if (!this.checkFilter(query["WHERE"], "WHERE", datasets)) {
-                            return false;
-                        }
+                        // if (!this.checkFilter(query["WHERE"], "WHERE", datasets)) {
+                        //     return false;
+                        // }
+                        that.checkFilter(query["WHERE"], "WHERE", datasets).then((result: any) => {
+                            if (!result) {
+                                return (reject(new InsightError("invalid filter(s)")));
+                            }
+                        }).catch((err: any) => {
+                            return (reject(new InsightError(err)));
+                        });
                     }
                     if (query["OPTIONS"].hasOwnProperty) {
                         const value = query.key(1);
