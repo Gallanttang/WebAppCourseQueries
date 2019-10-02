@@ -9,7 +9,6 @@ import MemoryManager from "./MemoryManager";
  * Method documentation is in IInsightFacade
  *
  */
-
 export default class InsightFacade implements IInsightFacade {
     private memMan = new MemoryManager();
     private coursevalidator: any = {
@@ -36,8 +35,8 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
-        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 ||
-            /^\s*$/.test(id) || this.addedDatasets.some((s) => s === id);
+        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^\s*$/.test(id) ||
+            this.addedDatasets.some((s) => s === id);
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (idIsInvalid || isInDisk) { return reject(new InsightError("Invalid id used")); } else {
@@ -49,9 +48,8 @@ export default class InsightFacade implements IInsightFacade {
                         Promise.all(promisedFiles).then((results) => {
                             for (let result0 of results) {
                                 let processed: any;
-                                try { processed = thisClass.memMan.parseFile(result0); } catch (err) { // ignore
-                                } finally {
-                                    if (processed !== null) { validSections.push(processed); }
+                                try { processed = this.memMan.parseFile(result0); } catch (err) { // ignore
+                                } finally { if (processed !== null) { validSections.push(processed); }
                                 }
                             }
                         }).then(function () {
@@ -124,6 +122,7 @@ export default class InsightFacade implements IInsightFacade {
             }
         }
     }
+
     /**
      * Perform a query on UBCInsight.
      *
