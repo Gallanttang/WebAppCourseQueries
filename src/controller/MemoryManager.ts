@@ -1,4 +1,3 @@
-import {IInsightFacade, InsightError} from "./IInsightFacade";
 import * as fs from "fs";
 import Log from "../Util";
 
