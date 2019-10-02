@@ -13,7 +13,6 @@ export default class QueryManager {
     * @return Promise<any>
     * the promise should fulfill with true if query is valid, InsightError if it isn't
     */
-
     public isQueryValid(query: any, datasets: any): Promise<any> {
         const that = this;
         return new Promise<any>((resolve, reject) => {

@@ -3,7 +3,6 @@ import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFou
 import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
-import TreeNode from "./TreeNode";
 import QueryManager from "./QueryManager";
 
 /**
