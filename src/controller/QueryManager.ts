@@ -73,95 +73,61 @@ export default class QueryManager {
 
     private checkFilter(filter: any, parent: string): Promise<any> {
         const that = this;
+        const listOfKeys: any[] = Object.keys(filter);
         return new Promise<any>((resolve, reject) => {
-            if (parent === "WHERE") {
-                this.checkIfMoreThanOneKey(filter, parent).then((result) => {
-                    if (result)  {
-                        return resolve(this.datasetToQuery);
-                    }
-                }).catch((err) => {
-                    return err;
-                });
+            if (parent === "WHERE" || "NOT") {
+                if (listOfKeys.length === 1) {
+                    return this.checkFilter(filter.listOfKeys[0], listOfKeys[0]);
+                } else {
+                    return reject(new InsightError("Expected WHERE to have 1 key got " + listOfKeys.length));
+                }
             } else if (parent === "IS") {
-                that.checkFilterSCOMPParent(filter).then((result) => {
-                    if (result) {
-                        return resolve(this.datasetToQuery);
-                    }
-                }).catch ((err) => {
-                    return reject(err);
-                });
+                return that.checkFilterSCOMPParent(filter);
 
             } else if (parent === "EQ" || parent === "GT" || parent === "LT") {
-                that.checkFilterMCOMPParent(filter, parent).then((result) => {
-                    return resolve(this.datasetToQuery);
-                }).catch((err) => {
-                    return reject(err);
-                });
+                return that.checkFilterMCOMPParent(filter);
             } else if (parent === "OR" || parent === "AND") {
                 if (Object.keys(filter).length < 1) {
                     return reject(new InsightError(parent + "expects at least one filter"));
-                    // for (const key of Object.keys(filter)) {
-                    //     that.checkFilter(filter[key], key).then((result) => {
-                    //         if (!result) {
-                    //             return reject(new InsightError());
-                    //         }
-                    //     }).catch((err: any) => {
-                    //         return (err);
-                    //     });
-                    // }
-                    // let ds: string = Object.keys(filter)[0].split("_", 1)[0];
-                    // if (ds !== dataset && typeof filter[Object.keys(filter)[0]] === "object") {
-                    //     return resolve(true);
-                    // } else {
-                    //     return reject(new InsightError(false));
-                    // }
                 } else {
-                    //
+                    return this.checkLogicComp(listOfKeys, filter);
                 }
             } else {
-                return reject(new InsightError(false));
+                return reject(new InsightError("Invalid filter: " + Object.keys(filter)[0] + " in " + parent));
             }
         });
     }
 
-    private checkIfMoreThanOneKey(filter: any, parent: string): Promise<any> {
+    private checkLogicComp(listOfFilterKeys: any, logic: any): Promise<any> {
+        let listOfPromises: any[] = [];
         return new Promise<any>((resolve, reject) => {
-            if (Object.keys(filter).length === 1) {
-                this.checkFilter(filter[Object.keys(filter)[0]], Object.keys(filter)[0])
-                    .then((result: any) => {
-                        return result;
-                    }).catch((err: any) => {
-                    return reject(err);
-                });
-            } else {
-                return reject(new InsightError("There is more than one filter in " + parent));
+            for (const filter of listOfFilterKeys) {
+                listOfPromises.push(this.checkFilter(logic.filter, filter));
             }
+            return Promise.all(listOfPromises);
         });
     }
     /*
     *  helper called by checkFilter, because checkFilter was getting too long
     *  should return true if filter is valid, otherwise return statement describing error
     */
-    private checkFilterMCOMPParent(filter: any, parent: string): Promise<any> {
+    private checkFilterMCOMPParent(filter: any): Promise<any> {
         let dataset: string = Object.keys(filter)[0].split("_", 1)[0];
+        const listOfKeys: any[] = Object.keys(filter);
+        if (this.datasetToQuery === "") {
+            this.datasetToQuery = dataset;
+        }
         return new Promise<any>((resolve, reject) => {
-            if (this.datasetToQuery === "") {
-                this.datasetToQuery = dataset;
-            }
-            if (Object.keys(filter).length !== 1) {
-                return reject(new InsightError(parent + " does not have only 1 key value pair"));
-
+            if (listOfKeys.length !== 1) {
+                return reject(new InsightError(parent + " expects 1 key found " + listOfKeys.length));
             }
             if (this.datasetToQuery !== dataset) {
-                return reject(new InsightError(dataset + " not does not match " + this.datasetToQuery));
+                return reject(new InsightError("Attempts to query more than one dataset"));
             }
             if (this.currentDS.includes(dataset)) {
-                return reject(new InsightError(dataset + " in " + parent + " was not found"));
+                return reject(new InsightError(dataset + " not contained"));
             }
-            if (typeof filter[Object.keys(filter)[0]] === "number") {
-                return reject(new InsightError(parent + " expected a number but got a "));
-            }
-            return resolve(true);
+            return this.checkKeys(listOfKeys[0], "number", filter);
         });
     }
     /*
@@ -170,12 +136,13 @@ export default class QueryManager {
     */
     private checkFilterSCOMPParent(filter: any): Promise<any> {
         const dataset = filter.key[0].split("_", 1)[0];
+        const listOfKeys: any[] = Object.keys(filter);
+        if (this.datasetToQuery === "") {
+            this.datasetToQuery = dataset;
+        }
         return new Promise<any>((resolve, reject) => {
-            if (this.datasetToQuery === "") {
-                this.datasetToQuery = dataset;
-            }
-            if (Object.keys(filter).length !== 1) {
-                return reject(new InsightError("IS filter expects 1 key, found " + Object.keys(filter).length));
+            if (listOfKeys.length !== 1) {
+                return reject(new InsightError("IS filter expects 1 key, found " + listOfKeys.length));
             }
             if (this.currentDS.includes(dataset)) {
                 return reject(new InsightError(dataset + " in IS was not found"));
@@ -183,24 +150,22 @@ export default class QueryManager {
             if (this.datasetToQuery !== dataset) {
                 return reject(new InsightError("Cannot query from more than one dataset"));
             }
-            if (typeof filter[Object.keys(filter)[0]] !== "string") {
-                return reject(new InsightError("IS expects a string, not " +
-                    typeof filter[Object.keys(filter)[0]]));
-            }
-            return resolve(true);
+            return this.checkKeys(listOfKeys[0], "string", filter);
         });
     }
 
-    private checkKeys(key: string, valueType: string, expected: string, filter: string): Promise<any> {
+    private checkKeys(key: string, expected: string, filter: any): Promise<any> {
+        let valueType: string = typeof filter[Object.keys(filter)[0]];
         return new Promise<any>((resolve, reject) => {
             if (this.coursevalidator.hasOwnProperty(key)) {
                 if (this.coursevalidator.key === valueType) {
                     if (expected === valueType) {
                         return resolve(this.datasetToQuery);
                     }
+                } else {
+                    return reject(new InsightError(filter + " expects " + expected +
+                        " but is called on " + valueType + " instead"));
                 }
-                return reject(new InsightError(filter + " expects " + expected +
-                    " but is called on " + valueType + " instead"));
             }
             return reject(new InsightError("Column " + key + " not found"));
         });

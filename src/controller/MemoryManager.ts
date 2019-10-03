@@ -92,14 +92,25 @@ export default class MemoryManager {
             }
             for (const key of Object.keys(this.coursevalidator)) {
                 if (key !== "courses_dept") {
-                    this.internalDataStructure[dept][key] = [];
-                    this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                    if (key === "courses_year") {
+                        this.internalDataStructure[dept][key] = [];
+                        this.internalDataStructure[dept][key].push(Number(section[this.coursevalidator[key]]));
+                    } else {
+                        this.internalDataStructure[dept][key] = [];
+                        this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                    }
                 }
             }
         } else {
             for (const key of Object.keys(this.coursevalidator)) {
                 if (key !== "courses_dept") {
-                    this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                    if (key === "courses_year") {
+                        this.internalDataStructure[dept][key].push(Number(section[this.coursevalidator[key]]));
+                    } else if (key === "courses_uuid") {
+                        this.internalDataStructure[dept][key].push(String(section[this.coursevalidator[key]]));
+                    } else {
+                        this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
+                    }
                 }
             }
         }
