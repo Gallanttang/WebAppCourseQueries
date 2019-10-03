@@ -24,11 +24,18 @@ export default class InsightFacade implements IInsightFacade {
         is: "IS", not: "NOT", and: "AND", or: "OR"
     };
 
-    private addedDatasets: string[] = [];
-    private forListDS: any[] = [];
+    private addedDatasets: string[];
+    private forListDS: any[];
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
+        this.addedDatasets = [];
+        this.forListDS = [];
+        this.initializerHelper(this.addedDatasets, this.forListDS);
+    }
+
+    private initializerHelper(addedDataset: any, forListDS: any) {
+        this.memMan.helpInitialize(addedDataset, forListDS);
     }
 
     // change to string x.toString("base64")
@@ -49,10 +56,7 @@ export default class InsightFacade implements IInsightFacade {
                         });
                         Promise.all(promisedFiles).then((results) => {
                             for (let result0 of results) {
-                                let processed: any;
-                                try { processed = this.memMan.parseFile(result0); } catch (err) { // ignore
-                                } finally { if (processed !== null) { validSections.push(processed); }
-                                }
+                                this.processFiles(result0, validSections);
                             }
                         }).then(function () {
                             let validDataset = false;
@@ -64,7 +68,7 @@ export default class InsightFacade implements IInsightFacade {
                                 }
                             }
                             if (validDataset) {
-                                thisClass.memMan.writeToMemory(id).then((successful) => {
+                                thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
                                     if (successful) {
                                         thisClass.addedDatasets.push(id);
                                         thisClass.forListDS.push({id: id, kind: kind, numRows: count});
@@ -85,6 +89,13 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
+    public processFiles (file: any, validSections: any[]) {
+        let processed: any;
+        try { processed = this.memMan.parseFile(file); } catch (err) { // ignore
+        } finally { if (processed !== null) { validSections.push(processed); }
+        }
+    }
+
     public removeDataset(id: string): Promise<string> {
         const thisClass = this;
         return new Promise<string>((resolve, reject) => {
@@ -95,9 +106,17 @@ export default class InsightFacade implements IInsightFacade {
             } else if (index === -1) {
                 return reject(new NotFoundError("Dataset " + id + " was not found"));
             } else if (validID && index >= 0) {
-                this.memMan.alreadyInDisk(id).then((isInDisk) => {
+                let dataset: any;
+                for (let ds of this.forListDS) {
+                    if (ds.id === id) {
+                        dataset = ds;
+                    }
+                }
+                this.memMan.alreadyInDisk(dataset.id + "_" + dataset.kind + "_" + dataset.numRows)
+                    .then((isInDisk) => {
                     if (isInDisk) {
-                        thisClass.memMan.deleteFromMemory(id).then((successful) => {
+                        thisClass.memMan.deleteFromMemory(dataset.id + "_" + dataset.kind + "_" + dataset.numRows)
+                            .then((successful) => {
                             if (successful) {
                                 thisClass.updateDataset(index, id);
                                 resolve(id);

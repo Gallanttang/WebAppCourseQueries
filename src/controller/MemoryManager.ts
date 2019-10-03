@@ -12,6 +12,14 @@ export default class MemoryManager {
         Log.trace("MemoryManager::init()");
     }
 
+    public helpInitialize(dataset: any, forListDS: any) {
+        fs.readdirSync("./data/").forEach((file) => {
+            let content: string[] = file.split("_", 3);
+            dataset.push(content[0]);
+            forListDS.push({id: content[0], kind: content[1], numRows: content[2]});
+        });
+    }
+
     public alreadyInDisk(id: string): Promise<boolean> {
         const path = "./data/" + id + ".json";
         return new Promise<boolean>((resolve) => {
