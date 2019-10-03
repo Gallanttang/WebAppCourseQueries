@@ -9,8 +9,25 @@ export default class Node {
         this.children = [];
     }
 
-    public AND(dataStructure: any): any {
-        return null;
+    /**
+     * @param dataStructure
+     * @param query
+     *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
+     */
+    public AND(dataStructure: any, query: any): Promise<any> {
+        return new Promise<string[]>((resolve, reject) => {
+            const childPromises: Array<Promise<number>> = [];
+            let result: any = {};
+            // query is going to be in form GT: {courses_avg: 98}
+            const datasetName = query.key[0].split("_", 1)[0]; // this will give courses
+            const columnName = query["GT"].split("_", 1)[1]; // this will give avg
+            const condition = columnName[Object.keys(columnName)[0]]; // this will give 98
+            // todo call appropriate child functions, might need to make a switch statement?
+            Promise.all(childPromises).then((results) => {
+                // todo concaternate results
+            });
+            return resolve(result);
+        });
     }
     public OR(dataStructure: any): any {
         return null;
@@ -24,13 +41,18 @@ export default class Node {
     public EQ(dataStructure: any): any {
         return null;
     }
-    public GT(dataStructure: any): any {
+    public GT(dataStructure: any, query: any): any {
         return null;
     }
+
+    /**
+     * @param dataStructure
+     * @param query
+     *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
+     */
     public IS(dataStructure: any, query: any): Promise<any> {
         return new Promise<string[]>((resolve, reject) => {
-            let result: any = [];
-            // todo oh fuck multiple indicies in different departments. must return key + index
+            let result: any = {};
             // query is going to be in format IS: { courses_instructor: "cox, barbara"}
             const columnName = query["IS"].split("_", 1)[1]; // this will give instructor
             const condition = columnName[Object.keys(columnName)[0]]; // this will give "cox, barbara"
@@ -47,15 +69,17 @@ export default class Node {
                 dataStructure[columnName].forEach((value: any, index: any) => result.push(index));
             } else {
                 for (const dept of dataStructure) {
+                    const deptResult: any = {};
                     const columns = dataStructure[Object.keys(dataStructure)[0]];
                     const relevantColumn = columns[columnName]; // returns value (array) of relevant column
                     relevantColumn.forEach((value: any, index: any) => {
                         if (value === reg) {
-                            result.push(index);
+                            deptResult.push(index);
                         }
                     });
+                    result.push({dept : deptResult});
                 }
-                return result;
+                return resolve(result);
             }
         });
     }
