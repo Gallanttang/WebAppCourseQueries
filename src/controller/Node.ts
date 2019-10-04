@@ -18,7 +18,7 @@ export default class Node {
     public AND(dataStructure: any, query: any): Promise<any> {
         const that = this;
         const childPromises: any = [];
-        return new Promise<string[]>((resolve, reject) => {
+        return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in form OR[GT: {courses_avg: 98}, ...]
             const childQuery = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
@@ -58,7 +58,7 @@ export default class Node {
     public OR(dataStructure: any, query: any): any {
         const that = this;
         const childPromises: any = [];
-        return new Promise<string[]>((resolve, reject) => {
+        return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in form AND[GT: {courses_avg: 98}, ...]
             const childQuery = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
@@ -91,16 +91,100 @@ export default class Node {
         });
     }
     public NOT(dataStructure: any, query: any): any {
-        return null;
+        let that = this;
+        return new Promise<string[]>((resolve) => {
+            let result: any = dataStructure;
+            // query is going to be in form NOT{GT: {courses_avg: 98}}
+            const childQuery = query["AND"]; // this will give GT
+            that.funcDictionary[childQuery](dataStructure, childQuery).then((childResult: any) => {
+                let restrictedCR = childResult as Record<string, any>;
+                let deptKeys = Object.keys(childResult);
+                for (const key of deptKeys) {
+                        // delete all elements which are returned by the childResult
+                    result[key] = result[key].filter((f: any) => restrictedCR[key].includes(f));
+                        // if any key becomes empty of all elements, delete it
+                    if (!result[key].hasOwnProperty) {
+                            result.splice(result[key].indexOf, 1);
+                    }
+                }
+            });
+            return resolve(result);
+        });
     }
     public LT(dataStructure: any, query: any): any {
-        return null;
+        return new Promise<string[]>((resolve) => {
+            let result: any = {};
+            // query is going to be in format EQ: { courses_avg: 99}
+            const columnName = query["IS"].split("_", 1)[1]; // this will give avg
+            const insideIS = query["IS"]; // will give "courses_avg"
+            const condition = query[insideIS]; // will give 99
+            if (columnName === "dept") {
+                dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
+            } else {
+                for (const dept of dataStructure) {
+                    const deptResult: any = [];
+                    const columns = dataStructure[Object.keys(dataStructure)[0]];
+                    const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                    relevantColumn.forEach((value: any, index: any) => {
+                        if (value <= condition) {
+                            deptResult.push(index);
+                        }
+                    });
+                    result.push({ [dept] : deptResult});
+                }
+                return resolve(result);
+            }
+        });
     }
     public EQ(dataStructure: any, query: any): any {
-        return null;
+        return new Promise<string[]>((resolve) => {
+            let result: any = {};
+            // query is going to be in format EQ: { courses_avg: 99}
+            const columnName = query["IS"].split("_", 1)[1]; // this will give avg
+            const insideIS = query["IS"]; // will give "courses_avg"
+            const condition = query[insideIS]; // will give 99
+            if (columnName === "dept") {
+                dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
+            } else {
+                for (const dept of dataStructure) {
+                    const deptResult: any = [];
+                    const columns = dataStructure[Object.keys(dataStructure)[0]];
+                    const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                    relevantColumn.forEach((value: any, index: any) => {
+                        if (value === condition) {
+                            deptResult.push(index);
+                        }
+                    });
+                    result.push({ [dept] : deptResult});
+                }
+                return resolve(result);
+            }
+        });
     }
     public GT(dataStructure: any, query: any): any {
-        return null;
+        return new Promise<string[]>((resolve) => {
+            let result: any = {};
+            // query is going to be in format GT: { courses_avg: 99}
+            const columnName = query["IS"].split("_", 1)[1]; // this will give avg
+            const insideIS = query["IS"]; // will give "courses_avg"
+            const condition = query[insideIS]; // will give 99
+            if (columnName === "dept") {
+                dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
+            } else {
+                for (const dept of dataStructure) {
+                    const deptResult: any = [];
+                    const columns = dataStructure[Object.keys(dataStructure)[0]];
+                    const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                    relevantColumn.forEach((value: any, index: any) => {
+                        if (value >= condition) {
+                            deptResult.push(index);
+                        }
+                    });
+                    result.push({ [dept] : deptResult});
+                }
+                return resolve(result);
+            }
+        });
     }
 
     /**
@@ -113,8 +197,9 @@ export default class Node {
             let result: any = {};
             // query is going to be in format IS: { courses_instructor: "cox, barbara"}
             const columnName = query["IS"].split("_", 1)[1]; // this will give instructor
-            const condition = columnName[Object.keys(columnName)[0]]; // this will give "cox, barbara"
+            const insideIS = query["IS"]; // will give courses_instructor
             const datasetName = query.key[0].split("_", 1)[0]; // this will give courses
+            const condition = query[insideIS]; // will give "cox, barbara"
             let reg: any;
             if (condition.charAt(0) === "*") {
                 reg = new RegExp("(.*)" + condition);
@@ -127,7 +212,7 @@ export default class Node {
                 dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
             } else {
                 for (const dept of dataStructure) {
-                    const deptResult: any = {};
+                    const deptResult: any = [];
                     const columns = dataStructure[Object.keys(dataStructure)[0]];
                     const relevantColumn = columns[columnName]; // returns value (array) of relevant column
                     relevantColumn.forEach((value: any, index: any) => {
