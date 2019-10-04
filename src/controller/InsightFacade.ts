@@ -161,7 +161,6 @@ export default class InsightFacade implements IInsightFacade {
     public performQuery(query: any): Promise<any[]> {
         let datasetToQuery: string;
         try {
-            Log.trace(this.addedDatasets);
             datasetToQuery = this.queryMan.isQueryValid(query);
         } catch (err) {
             return Promise.reject(err);
@@ -169,6 +168,7 @@ export default class InsightFacade implements IInsightFacade {
         let result: any;
         try { result = this.queryMan.doQuery(query, datasetToQuery); } catch (err) { return Promise.reject(err); }
         return Promise.resolve(result);
+        // return Promise.reject("NOT IMPLEMENTED");
     }
 
     public listDatasets(): Promise<InsightDataset[]> {
