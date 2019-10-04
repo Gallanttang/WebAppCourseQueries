@@ -3,7 +3,7 @@ import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFou
 import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
-import QueryManager from "./QueryManager";
+import QueryValidator from "./QueryValidator";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -25,13 +25,13 @@ export default class InsightFacade implements IInsightFacade {
 
     private addedDatasets: string[];
     private forListDS: any[];
-    private queryMan: QueryManager;
+    private queryMan: QueryValidator;
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.addedDatasets = [];
         this.forListDS = [];
         this.memMan = new MemoryManager();
-        this.queryMan = new QueryManager(this.addedDatasets);
+        this.queryMan = new QueryValidator(this.addedDatasets);
         this.initializerHelper(this.addedDatasets, this.forListDS);
     }
 

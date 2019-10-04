@@ -2,7 +2,7 @@ import Log from "../Util";
 import {InsightError, NotFoundError} from "./IInsightFacade";
 import {stringify} from "querystring";
 
-export default class QueryManager {
+export default class QueryValidator {
     private currentDS: string[] = [];
     private coursevalidator: any = {
         courses_dept: "string", courses_id: "string", courses_avg: "number",

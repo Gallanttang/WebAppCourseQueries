@@ -13,7 +13,7 @@ To do this, follow these steps; the specifics of each step (especially the first
 
 1. [Install git](https://git-scm.com/downloads) (v2.9+). After installing you should be able to execute `git --version` on the command line.
 
-1. [Install Node LTS](https://nodejs.org/en/download/) (v10.14.X), which will also install NPM (you should be able to execute `node --version` and `npm --version` on the command line).
+1. [Install ASTNode LTS](https://nodejs.org/en/download/) (v10.14.X), which will also install NPM (you should be able to execute `node --version` and `npm --version` on the command line).
 
 1. [Install Yarn](https://yarnpkg.com/en/docs/install) (v1.12+). You should be able to execute `yarn --version` afterwards.
 
