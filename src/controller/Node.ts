@@ -201,10 +201,12 @@ export default class Node {
             const datasetName = query.key[0].split("_", 1)[0]; // this will give courses
             const condition = query[insideIS]; // will give "cox, barbara"
             let reg: any;
-            if (condition.charAt(0) === "*") {
-                reg = new RegExp("(.*)" + condition);
+            if (condition.charAt(0) === "*" && condition.charAt(condition.length - 1) === "*") {
+                reg = new RegExp("(.*)" + condition + "(.*)");
             } else if (condition.charAt(condition.length - 1) === "*") {
                 reg = new RegExp(condition + "(.*)" );
+            } else if (condition.charAt(0) === "*") {
+                reg = new RegExp("(.*)" + condition);
             } else {
                 reg = new RegExp(condition);
             }

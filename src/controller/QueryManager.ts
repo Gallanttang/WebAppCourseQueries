@@ -112,14 +112,24 @@ export default class QueryManager {
     *  should return true if filter is valid, otherwise return statement describing error
     */
     private checkFilterMCOMPParent(filter: any): Promise<any> {
-        let dataset: string = Object.keys(filter)[0].split("_", 1)[0];
+        const dataset: string = Object.keys(filter)[0].split("_", 1)[0];
+        const mfield = filter.key[0].split("_", 1)[1];
         const listOfKeys: any[] = Object.keys(filter);
         if (this.datasetToQuery === "") {
             this.datasetToQuery = dataset;
         }
         return new Promise<any>((resolve, reject) => {
+            if (mfield.includes("_")) {
+                return reject (new InsightError("idstring cannot contain underscore"));
+            }
+            if (dataset === "") {
+                return reject(new InsightError("idstring cannot be empty"));
+            }
             if (listOfKeys.length !== 1) {
                 return reject(new InsightError(parent + " expects 1 key found " + listOfKeys.length));
+            }
+            if ([ "avg", "pass", "fail", "audit", "year"].indexOf(mfield) === -1) {
+                return reject(new InsightError("mfield must be  'avg' | 'pass' | 'fail' | 'audit' | 'year'"));
             }
             if (this.datasetToQuery !== dataset) {
                 return reject(new InsightError("Attempts to query more than one dataset"));
@@ -136,13 +146,23 @@ export default class QueryManager {
     */
     private checkFilterSCOMPParent(filter: any): Promise<any> {
         const dataset = filter.key[0].split("_", 1)[0];
+        const sfield = filter.key[0].split("_", 1)[1];
         const listOfKeys: any[] = Object.keys(filter);
         if (this.datasetToQuery === "") {
             this.datasetToQuery = dataset;
         }
         return new Promise<any>((resolve, reject) => {
+            if (sfield.includes("_")) {
+                return reject (new InsightError("idstring cannot contain underscore"));
+            }
+            if (dataset === "") {
+                return reject (new InsightError("idstring cannot be empty"));
+            }
             if (listOfKeys.length !== 1) {
                 return reject(new InsightError("IS filter expects 1 key, found " + listOfKeys.length));
+            }
+            if (["dept", "id", "instructor", "title", "uuid"].indexOf(sfield) === -1) {
+                return reject(new InsightError("sfield must be 'dept' | 'id' | 'instructor' | 'title' | 'uuid'"));
             }
             if (this.currentDS.includes(dataset)) {
                 return reject(new InsightError(dataset + " in IS was not found"));
@@ -150,7 +170,13 @@ export default class QueryManager {
             if (this.datasetToQuery !== dataset) {
                 return reject(new InsightError("Cannot query from more than one dataset"));
             }
-            return this.checkKeys(listOfKeys[0], "string", filter);
+            const inputString = filter[Object.keys(filter)[0]];
+            const regexForAsteriskCheck = new RegExp("[*]? [^*]* [*]?");
+            if (inputString === regexForAsteriskCheck) {
+                return reject(new InsightError("input string for IS cannot have asterisks in middle"));
+            } else {
+                return this.checkKeys(listOfKeys[0], "string", filter);
+            }
         });
     }
 
