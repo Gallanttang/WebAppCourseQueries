@@ -4,7 +4,6 @@ import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryManager from "./QueryManager";
-import {rejects} from "assert";
 
 /**
  * This is the main programmatic entry point for the project.
