@@ -4,6 +4,7 @@ import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryManager from "./QueryManager";
+import {rejects} from "assert";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -11,8 +12,7 @@ import QueryManager from "./QueryManager";
  *
  */
 export default class InsightFacade implements IInsightFacade {
-    private memMan = new MemoryManager();
-    private queryMan = new QueryManager();
+    private memMan: MemoryManager;
     private coursevalidator: any = {
         courses_dept: "Subject", courses_id: "Course", courses_avg: "Avg", courses_instructor: "Professor",
         courses_title: "Title", courses_pass: "Pass", courses_fail: "Fail", courses_audit: "Audit",
@@ -26,11 +26,13 @@ export default class InsightFacade implements IInsightFacade {
 
     private addedDatasets: string[];
     private forListDS: any[];
-
+    private queryMan: QueryManager;
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.addedDatasets = [];
         this.forListDS = [];
+        this.memMan = new MemoryManager();
+        this.queryMan = new QueryManager(this.addedDatasets);
         this.initializerHelper(this.addedDatasets, this.forListDS);
     }
 
@@ -158,16 +160,16 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should reject with an InsightError describing the error.
      */
     public performQuery(query: any): Promise<any[]> {
-        let that = this;
-        return new Promise<any[]>((resolve, reject) => {
-            that.queryMan.isQueryValid(query, that.addedDatasets).then((result: any) => {
-                // now do something with the returned AST
-                return (reject("not implemented"));
-            }).catch((err: any) => {
-                return (reject(new InsightError(err)));
-            });
-            // return (reject("not implemented"));
-        });
+        let datasetToQuery: string;
+        try {
+            Log.trace(this.addedDatasets);
+            datasetToQuery = this.queryMan.isQueryValid(query);
+        } catch (err) {
+            return Promise.reject(err);
+        }
+        let result: any;
+        try { result = this.queryMan.doQuery(query, datasetToQuery); } catch (err) { return Promise.reject(err); }
+        return Promise.resolve(result);
     }
 
     public listDatasets(): Promise<InsightDataset[]> {

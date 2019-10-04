@@ -1,17 +1,18 @@
 import Log from "../Util";
 import {InsightError, NotFoundError} from "./IInsightFacade";
+import {stringify} from "querystring";
 
 export default class QueryManager {
-    private datasetToQuery: string;
-    private currentDS: string[];
+    private currentDS: string[] = [];
     private coursevalidator: any = {
         courses_dept: "string", courses_id: "string", courses_avg: "number",
         courses_instructor: "string", courses_title: "string", courses_pass: "number",
         courses_fail: "number", courses_audit: "number", courses_uuid: "string", courses_year: "number"
     };
-    constructor() {
+
+    constructor(ds: string[]) {
         Log.trace("MemoryManager::init()");
-        this.datasetToQuery = "";
+        this.currentDS = ds;
     }
 
     /*
@@ -19,49 +20,56 @@ export default class QueryManager {
     * @return Promise<any>
     * the promise should fulfill with true if query is valid, InsightError if it isn't
     */
-    public isQueryValid(query: any, datasets: string[]): Promise<any> {
-        const that = this;
-        this.currentDS = datasets;
-        return new Promise<any>((resolve, reject) => {
-            if (query != null && typeof query === "object") {
-                if (that.equals(Object.keys(query), ["WHERE", "OPTIONS"]) ||
-                    that.equals(Object.keys(query), ["OPTIONS", "WHERE"])) {
-                    if (query["WHERE"].hasOwnProperty) {
-                        that.checkFilter(query["WHERE"], "WHERE").then((result: any) => {
-                            if (!result) {
-                                return (reject(new InsightError("invalid filter(s)")));
-                            }
-                        }).catch((err: any) => {
-                            return (err);
-                        });
+    public isQueryValid(query: any): string {
+        let datasetToQuery: string = "";
+        if (query && typeof query === "object") {
+            if (this.equals(Object.keys(query), ["WHERE", "OPTIONS"]) ||
+                this.equals(Object.keys(query), ["OPTIONS", "WHERE"])) {
+                if (query["WHERE"].hasOwnProperty) {
+                    let whereValid: boolean;
+                    const listOfKeys: string[] = Object.keys(query["WHERE"]);
+                    if (listOfKeys.length === 1) {
+                        let result: boolean;
+                        try { result = this.checkWHERE(query["WHERE"][listOfKeys[0]], listOfKeys[0], datasetToQuery);
+                        } catch (err) { throw err; }
+                        whereValid = result;
+                    } else {
+                        throw new InsightError("Expected WHERE to have 1 key got " + listOfKeys.length);
                     }
-                    if (query["OPTIONS"].hasOwnProperty) {
-                        const value = query.key(1);
-                        if (that.equals(query[value], ["COLUMNS", "ORDER"]) ||
-                            that.equals(query[value], ["COLUMNS"])) {
-                            // "OPTIONS" is formed correctly
+                    if (whereValid) {
+                        if (query["OPTIONS"].hasOwnProperty) {
+                            const value = Object.keys(query["OPTIONS"]);
+                            let optionsValid: boolean;
+                            if (value.includes("COLUMNS")) {
+                                try {
+                                    optionsValid =
+                                        this.checkOPTIONS(query["OPTIONS"], "OPTIONS", datasetToQuery);
+                                } catch (err) {
+                                    throw err; }
+                                if (optionsValid) {
+                                    return datasetToQuery;
+                                }
+                            } else {
+                                throw new InsightError("malformed options structure");
+                            }
                         } else {
-                            return reject(new InsightError("malformed options structure"));
+                            throw new InsightError("options is missing columns");
                         }
                     } else {
-                        return reject(new InsightError("options is missing columns"));
+                        throw new InsightError("WHERE is invalid");
                     }
-                    // at this point we know the query's valid, return true
-                    return resolve(true);
-                } else {
-                    return reject(new InsightError("malformed query body structure"));
                 }
             } else {
-                return reject(new InsightError("query cannot be null"));
+                throw new InsightError("malformed query body structure");
             }
-        });
+        } else {
+            throw new InsightError("query cannot be null");
+        }
     }
-
     public equals(keys: any, expected: any): boolean {
         if (keys.length !== expected.length) {
             return false;
         } else {
-            // comparing each element of array
             for (let i = 0; i < keys.length; i++) {
                 if (keys[i] !== expected[i]) {
                     return false;
@@ -70,130 +78,210 @@ export default class QueryManager {
             return true;
         }
     }
-
-    private checkFilter(filter: any, parent: string): Promise<any> {
+    private checkWHERE(filter: any, parent: string, datasetToQuery: string): boolean {
+        if (parent === "OR" || parent === "AND") {
+            let logicValid: boolean;
+            try { logicValid = this.checkLogicComp(filter, parent, datasetToQuery);
+            } catch (err) { throw err; }
+            return logicValid;
+        }
         const that = this;
-        const listOfKeys: any[] = Object.keys(filter);
-        return new Promise<any>((resolve, reject) => {
-            if (parent === "WHERE" || "NOT") {
-                if (listOfKeys.length === 1) {
-                    return this.checkFilter(filter.listOfKeys[0], listOfKeys[0]);
-                } else {
-                    return reject(new InsightError("Expected WHERE to have 1 key got " + listOfKeys.length));
-                }
-            } else if (parent === "IS") {
-                return that.checkFilterSCOMPParent(filter);
-
-            } else if (parent === "EQ" || parent === "GT" || parent === "LT") {
-                return that.checkFilterMCOMPParent(filter);
-            } else if (parent === "OR" || parent === "AND") {
-                if (Object.keys(filter).length < 1) {
-                    return reject(new InsightError(parent + "expects at least one filter"));
-                } else {
-                    return this.checkLogicComp(listOfKeys, filter);
-                }
-            } else {
-                return reject(new InsightError("Invalid filter: " + Object.keys(filter)[0] + " in " + parent));
-            }
-        });
+        let listOfKeys: string[];
+        try { listOfKeys = Object.keys(filter); } catch (err) {
+            throw new InsightError(parent + " expects an object, got " + typeof filter + " instead");
+        }
+        if (listOfKeys.length !== 1) {
+            throw new InsightError(parent + " expects 1 key, received " + listOfKeys.length);
+        }
+        if (parent === "NOT") {
+            this.checkWHERE(filter[listOfKeys[0]], listOfKeys[0], datasetToQuery);
+        } else if (parent === "IS") {
+            let sCompValid: boolean;
+            try { sCompValid = that.checkFilterSCOMPParent(filter, datasetToQuery); } catch (err) { throw err; }
+            return sCompValid;
+        } else if (parent === "EQ" || parent === "GT" || parent === "LT") {
+            let mCompValid: boolean;
+            try {
+                mCompValid = that.checkFilterMCOMPParent(filter, parent, datasetToQuery);
+            } catch (err) { throw err; }
+            return mCompValid;
+        } else if (parent === "NOT") {
+            let notIsValid: boolean;
+            try { notIsValid = this.checkWHERE(filter[listOfKeys[0]], listOfKeys[0], datasetToQuery);
+            } catch (err) { throw err; }
+            return notIsValid;
+        } else {
+            throw new InsightError("Invalid filter: " + listOfKeys[0] + " in " + parent);
+        }
     }
-
-    private checkLogicComp(listOfFilterKeys: any, logic: any): Promise<any> {
-        let listOfPromises: any[] = [];
-        return new Promise<any>((resolve, reject) => {
-            for (const filter of listOfFilterKeys) {
-                listOfPromises.push(this.checkFilter(logic.filter, filter));
+    private checkLogicComp(listOfFilters: any, parent: string, datasetToQuery: string): boolean {
+        if (!Array.isArray(listOfFilters)) {
+            throw new InsightError(parent + " expects an array");
+        } else if (listOfFilters.length < 1) {
+            throw new InsightError(parent + "expects at least one filter");
+        } else {
+            for (const filter of listOfFilters) {
+                let listOfKeys: string[];
+                try { listOfKeys = Object.keys(filter); } catch (err) {
+                    throw new InsightError(parent + " expects filters, got " + filter + " instead");
+                }
+                if (listOfKeys.length !== 1) {
+                    throw new InsightError( "Filters expects 1 key, received " + listOfKeys.length);
+                }
+                if (!this.checkWHERE(filter[listOfKeys[0]], listOfKeys[0], datasetToQuery)) {
+                    return false;
+                }
             }
-            return Promise.all(listOfPromises);
-        });
+            return true;
+        }
     }
     /*
-    *  helper called by checkFilter, because checkFilter was getting too long
+    *  helper called by checkWHERE, because checkWHERE was getting too long
     *  should return true if filter is valid, otherwise return statement describing error
     */
-    private checkFilterMCOMPParent(filter: any): Promise<any> {
-        const dataset: string = Object.keys(filter)[0].split("_", 1)[0];
-        const mfield = filter.key[0].split("_", 1)[1];
-        const listOfKeys: any[] = Object.keys(filter);
-        if (this.datasetToQuery === "") {
-            this.datasetToQuery = dataset;
+    private checkFilterMCOMPParent(filter: any, parent: string, datasetToQuery: string): boolean {
+        if (Object.keys(filter).length !== 1) {
+            throw new InsightError(parent + " expects 1 key got " + Object.keys(filter).length);
         }
-        return new Promise<any>((resolve, reject) => {
-            if (mfield.includes("_")) {
-                return reject (new InsightError("idstring cannot contain underscore"));
+        let dataset: string;
+        try {
+            if (datasetToQuery === "") {
+                datasetToQuery = Object.keys(filter)[0].split("_", 1)[0];
             }
-            if (dataset === "") {
-                return reject(new InsightError("idstring cannot be empty"));
-            }
-            if (listOfKeys.length !== 1) {
-                return reject(new InsightError(parent + " expects 1 key found " + listOfKeys.length));
-            }
-            if ([ "avg", "pass", "fail", "audit", "year"].indexOf(mfield) === -1) {
-                return reject(new InsightError("mfield must be  'avg' | 'pass' | 'fail' | 'audit' | 'year'"));
-            }
-            if (this.datasetToQuery !== dataset) {
-                return reject(new InsightError("Attempts to query more than one dataset"));
-            }
-            if (this.currentDS.includes(dataset)) {
-                return reject(new InsightError(dataset + " not contained"));
-            }
-            return this.checkKeys(listOfKeys[0], "number", filter);
-        });
+            dataset = Object.keys(filter)[0].split("_", 1)[0];
+            Log.trace(dataset);
+        } catch (err) {
+            throw new InsightError(parent + " contains invalid value " + Object.keys(filter)[0]);
+        }
+        const listOfKeys: string[] = Object.keys(filter);
+        if (listOfKeys.length !== 1) {
+            throw new InsightError(parent + " expects 1 key found " + listOfKeys.length);
+        }
+        if (datasetToQuery !== dataset) {
+            Log.trace(dataset + datasetToQuery + " in mcomp");
+            throw new InsightError("Attempts to query more than one dataset");
+        }
+        Log.trace(this.currentDS);
+        if (this.currentDS.includes(dataset)) {
+             throw new InsightError(dataset + " not contained");
+        }
+        let rt: boolean;
+        try { rt = this.checkKeys(listOfKeys[0], "number", filter); } catch (err) { throw err; }
+        return rt;
     }
     /*
-    *  helper called by checkFilter, because checkFilter was getting too long
+    *  helper called by checkWHERE, because checkWHERE was getting too long
     *  should return true if filter is valid, otherwise return statement describing error
     */
-    private checkFilterSCOMPParent(filter: any): Promise<any> {
-        const dataset = filter.key[0].split("_", 1)[0];
-        const sfield = filter.key[0].split("_", 1)[1];
-        const listOfKeys: any[] = Object.keys(filter);
-        if (this.datasetToQuery === "") {
-            this.datasetToQuery = dataset;
-        }
-        return new Promise<any>((resolve, reject) => {
-            if (sfield.includes("_")) {
-                return reject (new InsightError("idstring cannot contain underscore"));
+    private checkFilterSCOMPParent(filter: any , datasetToQuery: string): boolean {
+        if (Object.keys(filter).length === 1) {
+            let isCond: string;
+            try {
+                if (datasetToQuery === "") {
+                    datasetToQuery = Object.keys(filter)[0].split("_", 1)[0];
+                }
+                isCond = Object.keys(filter)[0].split("_", 1)[0];
+            } catch (err) {
+                throw new InsightError(parent + " contains invalid value " + Object.keys(filter)[0]);
             }
-            if (dataset === "") {
-                return reject (new InsightError("idstring cannot be empty"));
+            const listOfKeys: string[] = Object.keys(filter);
+            if (datasetToQuery !== isCond) {
+                Log.trace(isCond + datasetToQuery + " in scomp");
+                throw new InsightError("Attempts to query more than one dataset");
             }
             if (listOfKeys.length !== 1) {
-                return reject(new InsightError("IS filter expects 1 key, found " + listOfKeys.length));
+                throw new InsightError("IS filter expects 1 key, found " + listOfKeys.length);
             }
-            if (["dept", "id", "instructor", "title", "uuid"].indexOf(sfield) === -1) {
-                return reject(new InsightError("sfield must be 'dept' | 'id' | 'instructor' | 'title' | 'uuid'"));
+            Log.trace(this.currentDS);
+            if (this.currentDS.includes(isCond)) {
+                throw new InsightError(isCond + " in IS was not found");
             }
-            if (this.currentDS.includes(dataset)) {
-                return reject(new InsightError(dataset + " in IS was not found"));
-            }
-            if (this.datasetToQuery !== dataset) {
-                return reject(new InsightError("Cannot query from more than one dataset"));
-            }
-            const inputString = filter[Object.keys(filter)[0]];
-            const regexForAsteriskCheck = new RegExp("[*]? [^*]* [*]?");
-            if (inputString === regexForAsteriskCheck) {
-                return reject(new InsightError("input string for IS cannot have asterisks in middle"));
-            } else {
-                return this.checkKeys(listOfKeys[0], "string", filter);
-            }
-        });
+            let rt: boolean;
+            try { rt = this.checkKeys(listOfKeys[0], "string", filter); } catch (err) { throw err; }
+            return rt;
+        } else { throw new InsightError("IS expects 1 key got " + Object.keys(filter).length); }
     }
 
-    private checkKeys(key: string, expected: string, filter: any): Promise<any> {
-        let valueType: string = typeof filter[Object.keys(filter)[0]];
-        return new Promise<any>((resolve, reject) => {
-            if (this.coursevalidator.hasOwnProperty(key)) {
-                if (this.coursevalidator.key === valueType) {
-                    if (expected === valueType) {
-                        return resolve(this.datasetToQuery);
+    private checkKeys(key: string, expected: string, filter: any): boolean {
+        let valueType: string = typeof filter[key];
+        if (this.coursevalidator.hasOwnProperty(key)) {
+            if (this.coursevalidator.key === valueType) {
+                return expected === valueType;
+            } else {
+                throw new InsightError(filter + " expects " + expected +
+                    " but is called on " + valueType + " instead");
+            }
+        }
+        throw new InsightError("Column " + key + " not found");
+    }
+
+    private checkOPTIONS(option: any, parent: string, datasetToQuery: string): boolean {
+        const listOfKeys: string[] = Object.keys(option);
+        if (parent === "OPTIONS") {
+            if (listOfKeys.includes("COLUMNS")) {
+                let validColumns: boolean;
+                try { validColumns = this.checkCOLUMNS(option["COLUMNS"], datasetToQuery); } catch (err) {
+                    throw err;
+                }
+                if (validColumns) {
+                    if (listOfKeys.includes("ORDER")) {
+                        if (typeof option["ORDER"] !== "string") {
+                            throw new InsightError("ORDER expects a string, got a " + typeof option["ORDER"]);
+                        }
+                        let validOrder: boolean;
+                        try { validOrder = this.checkORDER(option["ORDER"], datasetToQuery); } catch (err) {
+                            throw err;
+                        }
+                        return validOrder;
+                    } else {
+                        return true;
                     }
-                } else {
-                    return reject(new InsightError(filter + " expects " + expected +
-                        " but is called on " + valueType + " instead"));
                 }
+            } else {
+                throw new InsightError("Expected OPTIONS to contain COLUMNS");
             }
-            return reject(new InsightError("Column " + key + " not found"));
-        });
+        } else {
+            throw new InsightError("Invalid filter: " + listOfKeys[0] + " in " + parent);
+        }
+    }
+
+    private checkCOLUMNS(listOfKey: string[], datasetToQuery: string): boolean {
+        for (let selection of listOfKey) {
+            let validSelection: boolean = false;
+            for (let column of Object.keys(this.coursevalidator)) {
+                let dataset: string;
+                try { dataset = selection[0].split("_", 1)[0];
+                } catch (err) { throw new InsightError("COLUMNS has invalid key " + dataset); }
+                if (datasetToQuery !== dataset) {
+                    Log.trace(dataset + datasetToQuery + " in scomp");
+                    throw new InsightError("Attempts to query more than one dataset");
+                }
+                if (selection === column) { validSelection = true; }
+            }
+            if (!validSelection) {
+                throw new InsightError("COLUMN contains non-existing column " + selection);
+            }
+        }
+        return true;
+    }
+
+    private checkORDER(key: string, datasetToQuery: string): boolean {
+        let validColumn: boolean = false;
+        for (let column of Object.keys(this.coursevalidator)) {
+                let dataset: string;
+                try { dataset = key[0].split("_", 1)[0];
+                } catch (err) { throw new InsightError("ORDER has invalid key " + dataset); }
+                if (datasetToQuery !== dataset) {
+                    throw new InsightError("Attempts to query more than one dataset");
+                }
+                if (key === column) { validColumn = true; }
+        }
+        if (!validColumn) { throw new InsightError("ORDER contains non-existing column " + key); }
+        return true;
+    }
+
+    public doQuery(query: any, dataset: any): Promise<any> {
+        // todo perform the query
+        return Promise.reject("Not implemented");
     }
 }
