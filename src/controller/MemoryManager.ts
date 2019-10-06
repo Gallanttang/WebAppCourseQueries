@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import Log from "../Util";
-import {InsightError} from "./IInsightFacade";
 
 export default class MemoryManager {
     private internalDataStructure: any = {};
@@ -128,16 +127,11 @@ export default class MemoryManager {
             });
         });
     }
-    public retrieveDataset(path: string, dataset: any) {
+
+    public retrieveDataset(path: string) {
         try {
-            fs.readFile("./data/" + path + ".json", {encoding: "utf"},
-                function (err, result) {
-                    if (err) {
-                        Log.trace(err);
-                        throw err; }
-                    dataset = JSON.parse(result);
-                    Log.trace(dataset["aanb"]);
-                });
+            let path0: string = "./data/" + path + ".json";
+            return JSON.parse(fs.readFileSync(path0, {encoding: "utf8"}));
         } catch (err) {
             throw err;
         }

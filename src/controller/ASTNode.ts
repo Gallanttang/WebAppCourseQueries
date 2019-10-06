@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import Log from "../Util";
 import {ResultTooLargeError} from "./IInsightFacade";
 
@@ -8,7 +7,7 @@ export default class ASTNode {
     }
     private funcDictionary: any = {
         AND: this.ANDfunc,
-        OR: this.ORfunc,
+        OR: this.orFunc,
         NOT: this.NOTfunc,
         LT: this.LTfunc,
         EQ: this.EQfunc,
@@ -19,19 +18,19 @@ export default class ASTNode {
      * @param query
      *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
      */
-    public ANDfunc(dataStructure: any, query: any): Promise<any> {
+    public ANDfunc(dataStructure: any, query: any): any {
         const that = this;
         const childPromises: any = [];
         return new Promise<string[]>((resolve) => {
-            let results: any = {};
+            let results: any = [];
             // query is going to be in form OR[GT: {courses_avg: 98}, ...]
             const childQuery = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
             if (Array.isArray(childQuery)) {
                 for (const val of childQuery) {
-                    results.push(that.funcDictionary[val](dataStructure, val));
+                    childPromises.push(that.switcher(childQuery, val, dataStructure));
                 }
             }
-            Promise.all(childPromises).then((childResults) => {
+            for (let childResults of childPromises) {
                 let tempResult = childResults[0]as Record<string, any>;
                 for (const cr of childResults) {
                     let restrictedCR = cr as Record<string, any>;
@@ -50,8 +49,8 @@ export default class ASTNode {
                     }
                 }
                 results = tempResult;
-            });
-            return resolve(results);
+            }
+            return results;
         });
     }
     /**
@@ -59,19 +58,19 @@ export default class ASTNode {
      * @param query
      *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
      */
-    public ORfunc(dataStructure: any, query: any): any {
+    public orFunc(dataStructure: any, query: any): any {
         const that = this;
         const childPromises: any = [];
         return new Promise<string[]>((resolve) => {
-            let result: any = {};
+            let result: any = [];
             // query is going to be in form AND[GT: {courses_avg: 98}, ...]
             const childQuery = query["OR"]; // this will give [GT: {courses_avg: 98}, ...]
             if (Array.isArray(childQuery)) {
                 for (const val of childQuery) {
-                    result.push(that.funcDictionary[val](dataStructure, val));
+                    childPromises.push(this.switcher(childQuery, val, dataStructure));
                 }
             }
-            Promise.all(childPromises).then((childResults) => {
+            for (let childResults of childPromises) {
                 let tempResult = childResults[0]as Record<string, any>;
                 for (const cr of childResults) {
                     let restrictedCR = cr as Record<string, any>;
@@ -90,7 +89,7 @@ export default class ASTNode {
                     }
                 }
                 result = tempResult;
-            });
+            }
             return resolve(result);
         });
     }
@@ -116,8 +115,8 @@ export default class ASTNode {
     public LTfunc(dataStructure: any, query: any): any {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
-            // query is going to be in format EQ: { courses_avg: 99}
-            const columnName = query["LT"].split("_", 1)[1]; // this will give avg
+            // query is going to be in format LT: { courses_avg: 99}
+            const columnName = Object.keys(query["LT"])[0].split("_", 1)[1]; // this will give avg
             const insideLT = query["LT"]; // will give "courses_avg"
             const condition = query[insideLT]; // will give 99
             if (columnName === "dept") {
@@ -142,7 +141,7 @@ export default class ASTNode {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in format EQ: { courses_avg: 99}
-            const columnName = query["EQ"].split("_", 1)[1]; // this will give avg
+            const columnName = Object.keys(query["EQ"])[0].split("_", 1)[1]; // this will give avg
             const insideEQ = query["EQ"]; // will give "courses_avg"
             const condition = query[insideEQ]; // will give 99
             if (columnName === "dept") {
@@ -166,7 +165,7 @@ export default class ASTNode {
     public GTfunc(dataStructure: any, query: any): any {
         let result: any = {};
         // query is going to be in format GT: { courses_avg: 99}
-        const columnName = query["GT"].split("_", 1)[1]; // this will give avg
+        const columnName = Object.keys(query["GT"])[0]; // this will give avg
         const insideGT = query["GT"]; // will give "courses_avg"
         const condition = query[insideGT]; // will give 99
         if (columnName === "dept") {
@@ -174,17 +173,17 @@ export default class ASTNode {
         } else {
             for (const dept of dataStructure) {
                 const deptResult: any = [];
-                const columns = dataStructure[Object.keys(dataStructure)[0]];
-                const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                const departments = dataStructure[dept];
+                const relevantColumn = departments[columnName]; // returns value (array) of relevant column
                 relevantColumn.forEach((value: any, index: any) => {
-                    if (value >= condition) {
+                    if (value > condition) {
                         deptResult.push(index);
                     }
                 });
                 result[dept] = deptResult;
             }
-            return result;
         }
+        return result;
     }
 
     /**
@@ -195,9 +194,8 @@ export default class ASTNode {
     public ISfunc(dataStructure: any, query: any): any {
         let result: any = {};
         // query is going to be in format IS: { courses_instructor: "cox, barbara"}
-        const columnName = query["IS"].split("_", 1)[1]; // this will give instructor
+        const columnName: string = Object.keys(query["IS"])[0]; // this will give instructor
         const insideIS = query["IS"]; // will give courses_instructor
-        const datasetName = query.key[0].split("_", 1)[0]; // this will give courses
         const condition = query[insideIS]; // will give "cox, barbara"
         let reg: RegExp;
         if (condition.charAt(0) === "*" && condition.charAt(condition.length - 1) === "*") {
@@ -214,8 +212,8 @@ export default class ASTNode {
         } else {
             for (const dept of dataStructure) {
                 const deptResult: any = [];
-                const columns = dataStructure[Object.keys(dataStructure)[0]];
-                const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                const department = dataStructure[dept];
+                const relevantColumn = department[columnName]; // returns value (array) of relevant column
                 relevantColumn.forEach((value: any, index: any) => {
                     if (value === reg) {
                         deptResult.push(index);
@@ -223,7 +221,35 @@ export default class ASTNode {
                 });
                 result[dept] = deptResult;
             }
-            return result;
         }
+        return result;
+    }
+
+    private switcher (query: any, func: string, dataStructure: any): any {
+        let result: any;
+        switch (func) {
+            case "AND":
+                result = this.ANDfunc(dataStructure, query);
+                break;
+            case "OR":
+                result = this.orFunc(dataStructure, query);
+                break;
+            case "NOT":
+                result = this.NOTfunc(dataStructure, query);
+                break;
+            case "LT":
+                result = this.LTfunc(dataStructure, query);
+                break;
+            case "EQ":
+                result = this.EQfunc(dataStructure, query);
+                break;
+            case "GT":
+                result = this.GTfunc(dataStructure, query);
+                break;
+            case "IS":
+                result = this.ISfunc(dataStructure, query);
+                break;
+        }
+        return result;
     }
 }

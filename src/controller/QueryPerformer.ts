@@ -4,7 +4,7 @@ import MemoryManager from "./MemoryManager";
 import ASTNode from "./ASTNode";
 
 export default class QueryPerformer {
-    private node: ASTNode;
+    private astNode: ASTNode = new ASTNode();
     constructor() {
         Log.trace("QueryPerformer::init()");
     }
@@ -16,36 +16,40 @@ export default class QueryPerformer {
      */
     // todo change the test query to ResultTooLargeError!!
     public returnQueriedCourses(dataStructure: any, query: any): Promise<any[]> {
-        const thisClass = this;
         let result: any;
-        return new Promise<any>((resolve, reject) => {
-            const value = query.key(1);
+        let that = this;
+        return new Promise<any>((resolve) => {
+            const value = query["WHERE"];
             // query[value] will give ["COLUMNS, "ORDER"]
-            const columns = query[value].key(0); // will give "COLUMNS"
+            const columns = query["COLUMNS"]; // will give "COLUMNS"
             const columnsToDisplay = query[columns];
-            if (query["WHERE"].hasOwnProperty) {
-                const wherequery = query["WHERE"];
-                const firstArgument = Object.keys(wherequery)[0];
+            if (value.hasOwnProperty) {
+                const firstArgument: string = Object.keys(value)[0];
+                Log.trace(firstArgument);
                 switch (firstArgument) {
                     case "AND":
-                        result = this.node.ANDfunc(dataStructure, wherequery);
+                        result = that.astNode.ANDfunc(dataStructure, value);
                         break;
                     case "OR":
-                        result = this.node.ORfunc(dataStructure, wherequery);
+                        result = that.astNode.orFunc(dataStructure, value);
                         break;
                     case "NOT":
-                        result = this.node.NOTfunc(dataStructure, wherequery);
+                        result = that.astNode.NOTfunc(dataStructure, value);
                         break;
                     case "LT":
-                        result = this.node.LTfunc(dataStructure, wherequery);
+                        result = that.astNode.LTfunc(dataStructure, value);
                         break;
                     case "EQ":
-                        result = this.node.EQfunc(dataStructure, wherequery);
+                        result = that.astNode.EQfunc(dataStructure, value);
                         break;
                     case "GT":
-                        result = this.node.GTfunc(dataStructure, wherequery);
+                        result = that.astNode.GTfunc(dataStructure, value);
+                        break;
+                    case "IS":
+                        result = that.astNode.ISfunc(dataStructure, value);
                         break;
                 }
+                return result;
             } else { result = dataStructure; }
             // else {
             //     // there's nothing in WHERE. return all results if it's not too large

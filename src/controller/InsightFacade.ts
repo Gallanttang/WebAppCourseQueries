@@ -5,6 +5,7 @@ import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryValidator from "./QueryValidator";
 import QueryPerformer from "./QueryPerformer";
+import {stringify} from "querystring";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -16,6 +17,7 @@ export default class InsightFacade implements IInsightFacade {
     private queryPerformer: QueryPerformer;
     private addedDatasets: string[];
     private forListDS: any[];
+    private internalDataStructure: any = {};
     private queryMan: QueryValidator;
 
     constructor() {
@@ -152,14 +154,25 @@ export default class InsightFacade implements IInsightFacade {
      * The promise should reject with an InsightError describing the error.
      */
     public performQuery(query: any): Promise<any[]> {
+        let that = this;
         let datasetToQuery: string;
         try {
             datasetToQuery = this.queryMan.isQueryValid(query);
         } catch (err) {
             return Promise.reject(err);
         }
+        for (const ds of this.forListDS) {
+            if (datasetToQuery === ds["id"]) {
+                try {
+                    that.internalDataStructure =
+                        that.memMan.retrieveDataset(
+                            datasetToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
+                } catch (err) {return Promise.reject( new InsightError(err)); }
+                break;
+            }
+        }
         let result: any;
-        try { result = this.queryPerformer.returnQueriedCourses(this.addedDatasets, query);
+        try { result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
         } catch (err) { return Promise.reject(err); }
         return Promise.resolve(result);
     }
