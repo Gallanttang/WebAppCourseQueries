@@ -1,6 +1,5 @@
 import Log from "../Util";
-import {InsightError, NotFoundError} from "./IInsightFacade";
-import {stringify} from "querystring";
+import {InsightError} from "./IInsightFacade";
 
 export default class QueryValidator {
     private currentDS: string[] = [];
@@ -49,7 +48,7 @@ export default class QueryValidator {
                                 } catch (err) {
                                     throw err; }
                                 if (optionsValid) {
-                                    return datasetToQuery;
+                                    return this.dsToQuery;
                                 }
                             } else {
                                 throw new InsightError("malformed options structure");
@@ -223,7 +222,6 @@ export default class QueryValidator {
     private checkOPTIONS(option: any, parent: string): boolean {
         const listOfKeys: string[] = Object.keys(option);
         if (parent === "OPTIONS") {
-            let that = this;
             if (listOfKeys.includes("COLUMNS")) {
                 let validColumns: boolean;
                 if (!Array.isArray(option["COLUMNS"])) { throw new InsightError("COLUMNS expects array");
@@ -286,10 +284,5 @@ export default class QueryValidator {
         }
         if (!validColumn) { throw new InsightError("ORDER contains non-existing column " + key); }
         return true;
-    }
-
-    public doQuery(query: any, dataset: any): Promise<any> {
-        // todo perform the query
-        return Promise.reject("Not implemented");
     }
 }

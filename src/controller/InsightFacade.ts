@@ -4,6 +4,7 @@ import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryValidator from "./QueryValidator";
+import QueryPerformer from "./QueryPerformer";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -12,24 +13,16 @@ import QueryValidator from "./QueryValidator";
  */
 export default class InsightFacade implements IInsightFacade {
     private memMan: MemoryManager;
-    private coursevalidator: any = {
-        courses_dept: "Subject", courses_id: "Course", courses_avg: "Avg", courses_instructor: "Professor",
-        courses_title: "Title", courses_pass: "Pass", courses_fail: "Fail", courses_audit: "Audit",
-        courses_uuid: "id", courses_year: "Year"
-    };
-
-    private filters: any = {
-        gt: "GT", lt: "LT", eq: "EQ",
-        is: "IS", not: "NOT", and: "AND", or: "OR"
-    };
-
+    private queryPerformer: QueryPerformer;
     private addedDatasets: string[];
     private forListDS: any[];
     private queryMan: QueryValidator;
+
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.addedDatasets = [];
         this.forListDS = [];
+        this.queryPerformer = new QueryPerformer();
         this.memMan = new MemoryManager();
         this.queryMan = new QueryValidator(this.addedDatasets);
         this.initializerHelper(this.addedDatasets, this.forListDS);
@@ -166,9 +159,9 @@ export default class InsightFacade implements IInsightFacade {
             return Promise.reject(err);
         }
         let result: any;
-        try { result = this.queryMan.doQuery(query, datasetToQuery); } catch (err) { return Promise.reject(err); }
+        try { result = this.queryPerformer.returnQueriedCourses(query);
+        } catch (err) { return Promise.reject(err); }
         return Promise.resolve(result);
-        // return Promise.reject("NOT IMPLEMENTED");
     }
 
     public listDatasets(): Promise<InsightDataset[]> {

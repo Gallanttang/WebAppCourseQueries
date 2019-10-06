@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import Log from "../Util";
+import {ResultTooLargeError} from "./IInsightFacade";
 
 export default class ASTNode {
     constructor() {
@@ -58,7 +59,7 @@ export default class ASTNode {
      * @param query
      *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
      */
-    public ORfunc(dataStructure: any, query: any): any {
+    public ORfunc(dataStructure: any, query: any, numRow: number): any {
         const that = this;
         const childPromises: any = [];
         return new Promise<string[]>((resolve) => {
@@ -93,28 +94,26 @@ export default class ASTNode {
             return resolve(result);
         });
     }
-    public NOTfunc(dataStructure: any, query: any): any {
+    public NOTfunc(dataStructure: any, query: any, numRow: number): any {
         let that = this;
-        return new Promise<string[]>((resolve) => {
-            let result: any = dataStructure;
-            // query is going to be in form NOT{GT: {courses_avg: 98}}
-            const childQuery = query["AND"]; // this will give GT
-            that.funcDictionary[childQuery](dataStructure, childQuery).then((childResult: any) => {
-                let restrictedCR = childResult as Record<string, any>;
-                let deptKeys = Object.keys(childResult);
-                for (const key of deptKeys) {
-                    // delete all elements which are returned by the childResult
-                    result[key] = result[key].filter((f: any) => restrictedCR[key].includes(f));
-                    // if any key becomes empty of all elements, delete it
-                    if (!result[key].hasOwnProperty) {
-                        result.splice(result[key].indexOf, 1);
-                    }
+        let result: any = dataStructure;
+        // query is going to be in form NOT{GT: {courses_avg: 98}}
+        const childQuery = query["AND"]; // this will give GT
+        that.funcDictionary[childQuery](dataStructure, childQuery, numRow).then((childResult: any) => {
+            let restrictedCR = childResult as Record<string, any>;
+            let deptKeys = Object.keys(childResult);
+            for (const key of deptKeys) {
+                // delete all elements which are returned by the childResult
+                result[key] = result[key].filter((f: any) => restrictedCR[key].includes(f));
+                // if any key becomes empty of all elements, delete it
+                if (!result[key].hasOwnProperty) {
+                    result.splice(result[key].indexOf, 1);
                 }
-            });
-            return resolve(result);
+            }
         });
+        return result;
     }
-    public LTfunc(dataStructure: any, query: any): any {
+    public LTfunc(dataStructure: any, query: any, numRow: number): any {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in format EQ: { courses_avg: 99}
@@ -131,6 +130,9 @@ export default class ASTNode {
                     relevantColumn.forEach((value: any, index: any) => {
                         if (value <= condition) {
                             deptResult.push(index);
+                            if (numRow >= 5000) {
+                                throw new ResultTooLargeError("Query result has more than 5000 rows");
+                            }
                         }
                     });
                     result.push({ [dept] : deptResult});
@@ -139,7 +141,7 @@ export default class ASTNode {
             }
         });
     }
-    public EQfunc(dataStructure: any, query: any): any {
+    public EQfunc(dataStructure: any, query: any, numRow: number): any {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in format EQ: { courses_avg: 99}
@@ -156,6 +158,9 @@ export default class ASTNode {
                     relevantColumn.forEach((value: any, index: any) => {
                         if (value === condition) {
                             deptResult.push(index);
+                            if (numRow >= 5000) {
+                                throw new ResultTooLargeError("Query result has more than 5000 rows");
+                            }
                         }
                     });
                     result.push({ [dept] : deptResult});
@@ -164,30 +169,31 @@ export default class ASTNode {
             }
         });
     }
-    public GTfunc(dataStructure: any, query: any): any {
-        return new Promise<string[]>((resolve) => {
-            let result: any = {};
-            // query is going to be in format GT: { courses_avg: 99}
-            const columnName = query["IS"].split("_", 1)[1]; // this will give avg
-            const insideIS = query["IS"]; // will give "courses_avg"
-            const condition = query[insideIS]; // will give 99
-            if (columnName === "dept") {
-                dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
-            } else {
-                for (const dept of dataStructure) {
-                    const deptResult: any = [];
-                    const columns = dataStructure[Object.keys(dataStructure)[0]];
-                    const relevantColumn = columns[columnName]; // returns value (array) of relevant column
-                    relevantColumn.forEach((value: any, index: any) => {
-                        if (value >= condition) {
-                            deptResult.push(index);
+    public GTfunc(dataStructure: any, query: any, numRow: number): any {
+        let result: any = {};
+        // query is going to be in format GT: { courses_avg: 99}
+        const columnName = query["IS"].split("_", 1)[1]; // this will give avg
+        const insideIS = query["IS"]; // will give "courses_avg"
+        const condition = query[insideIS]; // will give 99
+        if (columnName === "dept") {
+            dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
+        } else {
+            for (const dept of dataStructure) {
+                const deptResult: any = [];
+                const columns = dataStructure[Object.keys(dataStructure)[0]];
+                const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                relevantColumn.forEach((value: any, index: any) => {
+                    if (value >= condition) {
+                        deptResult.push(index);
+                        if (numRow >= 5000) {
+                            throw new ResultTooLargeError("Query result has more than 5000 rows");
                         }
-                    });
-                    result.push({ [dept] : deptResult});
-                }
-                return resolve(result);
+                    }
+                });
+                result[dept] = deptResult;
             }
-        });
+            return result;
+        }
     }
 
     /**
@@ -195,40 +201,42 @@ export default class ASTNode {
      * @param query
      *  Returns a promise of dictionary of pairs <department: array of indices> of valid sections
      */
-    public ISfunc(dataStructure: any, query: any): Promise<any> {
-        return new Promise<string[]>((resolve, reject) => {
-            let result: any = {};
-            // query is going to be in format IS: { courses_instructor: "cox, barbara"}
-            const columnName = query["IS"].split("_", 1)[1]; // this will give instructor
-            const insideIS = query["IS"]; // will give courses_instructor
-            const datasetName = query.key[0].split("_", 1)[0]; // this will give courses
-            const condition = query[insideIS]; // will give "cox, barbara"
-            let reg: any;
-            if (condition.charAt(0) === "*" && condition.charAt(condition.length - 1) === "*") {
-                reg = new RegExp("(.*)" + condition + "(.*)");
-            } else if (condition.charAt(condition.length - 1) === "*") {
-                reg = new RegExp(condition + "(.*)" );
-            } else if (condition.charAt(0) === "*") {
-                reg = new RegExp("(.*)" + condition);
-            } else {
-                reg = new RegExp(condition);
-            }
-            if (columnName === "dept") {
-                dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
-            } else {
-                for (const dept of dataStructure) {
-                    const deptResult: any = [];
-                    const columns = dataStructure[Object.keys(dataStructure)[0]];
-                    const relevantColumn = columns[columnName]; // returns value (array) of relevant column
-                    relevantColumn.forEach((value: any, index: any) => {
-                        if (value === reg) {
-                            deptResult.push(index);
+    public ISfunc(dataStructure: any, query: any, numRow: number): any {
+        let result: any = {};
+        // query is going to be in format IS: { courses_instructor: "cox, barbara"}
+        const columnName = query["IS"].split("_", 1)[1]; // this will give instructor
+        const insideIS = query["IS"]; // will give courses_instructor
+        const datasetName = query.key[0].split("_", 1)[0]; // this will give courses
+        const condition = query[insideIS]; // will give "cox, barbara"
+        let reg: RegExp;
+        if (condition.charAt(0) === "*" && condition.charAt(condition.length - 1) === "*") {
+            reg = new RegExp("(.*)" + condition + "(.*)");
+        } else if (condition.charAt(condition.length - 1) === "*") {
+            reg = new RegExp(condition + "(.*)");
+        } else if (condition.charAt(0) === "*") {
+            reg = new RegExp("(.*)" + condition);
+        } else {
+            reg = new RegExp(condition);
+        }
+        if (columnName === "dept") {
+            dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
+        } else {
+            for (const dept of dataStructure) {
+                const deptResult: any = [];
+                const columns = dataStructure[Object.keys(dataStructure)[0]];
+                const relevantColumn = columns[columnName]; // returns value (array) of relevant column
+                relevantColumn.forEach((value: any, index: any) => {
+                    if (value === reg) {
+                        deptResult.push(index);
+                        numRow += 1;
+                        if (numRow >= 5000) {
+                            throw new ResultTooLargeError("Query result has more than 5000 rows");
                         }
-                    });
-                    result.push({ [dept] : deptResult});
-                }
-                return resolve(result);
+                    }
+                });
+                result[dept] = deptResult;
             }
-        });
+            return result;
+        }
     }
 }
