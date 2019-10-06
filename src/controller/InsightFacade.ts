@@ -159,7 +159,7 @@ export default class InsightFacade implements IInsightFacade {
             return Promise.reject(err);
         }
         let result: any;
-        try { result = this.queryPerformer.returnQueriedCourses(query);
+        try { result = this.queryPerformer.returnQueriedCourses(this.addedDatasets, query);
         } catch (err) { return Promise.reject(err); }
         return Promise.resolve(result);
     }
