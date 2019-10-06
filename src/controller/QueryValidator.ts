@@ -196,7 +196,7 @@ export default class QueryValidator {
                 throw new InsightError(isCond + " in IS was not found");
             }
             const inputString = filter[Object.keys(filter)[0]];
-            const regexForAsteriskCheck = new RegExp("^[*]?([a-z]|[A-Z]|[0-9])*[*]?$");
+            const regexForAsteriskCheck: RegExp = /^[*]?([a-z]|[A-Z][0-9]|[,]|[_]|\s)*[*]?$/;
             if (!regexForAsteriskCheck.test(inputString)) {
                 throw new InsightError("Invalid input string in IS: " + inputString);
             } else {
