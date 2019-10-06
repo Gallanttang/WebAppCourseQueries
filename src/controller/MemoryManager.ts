@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 export default class MemoryManager {
     private internalDataStructure: any = {};
@@ -15,8 +16,9 @@ export default class MemoryManager {
     public helpInitialize(dataset: any, forListDS: any) {
         fs.readdirSync("./data/").forEach((file) => {
             let content: string[] = file.split("_", 3);
+            let numRow: string = content[2].split(".", 1)[0];
             dataset.push(content[0]);
-            forListDS.push({id: content[0], kind: content[1], numRows: content[2]});
+            forListDS.push({id: content[0], kind: content[1], numRows: numRow});
         });
     }
 
@@ -115,7 +117,6 @@ export default class MemoryManager {
             }
         }
     }
-
     public deleteFromMemory(path: string): Promise<boolean> {
         return new Promise<boolean>((resolve) => {
             fs.unlink("./data/" + path + ".json", (err) => {
@@ -126,5 +127,19 @@ export default class MemoryManager {
                 }
             });
         });
+    }
+    public retrieveDataset(path: string, dataset: any) {
+        try {
+            fs.readFile("./data/" + path + ".json", {encoding: "utf"},
+                function (err, result) {
+                    if (err) {
+                        Log.trace(err);
+                        throw err; }
+                    dataset = JSON.parse(result);
+                    Log.trace(dataset["aanb"]);
+                });
+        } catch (err) {
+            throw err;
+        }
     }
 }

@@ -57,7 +57,24 @@ export default class QueryValidator {
                             throw new InsightError("options is missing columns");
                         }
                     } else {
-                        throw new InsightError("WHERE is invalid");
+                        if (query["OPTIONS"].hasOwnProperty) {
+                            const value = Object.keys(query["OPTIONS"]);
+                            let optionsValid: boolean;
+                            if (value.length > 2 || value.length < 1) {
+                                throw new InsightError("OPTIONS expect 1/2 keys got " + value.length);
+                            }
+                            if (value.includes("COLUMNS")) {
+                                try {
+                                    optionsValid =
+                                        this.checkOPTIONS(query["OPTIONS"], "OPTIONS");
+                                } catch (err) {
+                                    throw err;
+                                }
+                                if (optionsValid) {
+                                    return this.dsToQuery;
+                                }
+                            }
+                        }
                     }
                 }
             } else {
@@ -134,10 +151,6 @@ export default class QueryValidator {
             return true;
         }
     }
-    /*
-    *  helper called by checkWHERE, because checkWHERE was getting too long
-    *  should return true if filter is valid, otherwise return statement describing error
-    */
     private checkFilterMCOMPParent(filter: any, parent: string, datasetToQuery: string): boolean {
         let that = this;
         if (Object.keys(filter).length !== 1) {
@@ -167,10 +180,6 @@ export default class QueryValidator {
         try { rt = this.checkKeys(listOfKeys[0], "number", filter); } catch (err) { throw err; }
         return rt;
     }
-    /*
-    *  helper called by checkWHERE, because checkWHERE was getting too long
-    *  should return true if filter is valid, otherwise return statement describing error
-    */
     private checkFilterSCOMPParent(filter: any , datasetToQuery: string): boolean {
         let that = this;
         if (Object.keys(filter).length === 1) {

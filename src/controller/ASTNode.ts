@@ -23,12 +23,12 @@ export default class ASTNode {
         const that = this;
         const childPromises: any = [];
         return new Promise<string[]>((resolve) => {
-            let result: any = {};
+            let results: any = {};
             // query is going to be in form OR[GT: {courses_avg: 98}, ...]
             const childQuery = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
             if (Array.isArray(childQuery)) {
                 for (const val of childQuery) {
-                    result.push(that.funcDictionary[val](dataStructure, val));
+                    results.push(that.funcDictionary[val](dataStructure, val));
                 }
             }
             Promise.all(childPromises).then((childResults) => {
@@ -49,9 +49,9 @@ export default class ASTNode {
                         }
                     }
                 }
-                result = tempResult;
+                results = tempResult;
             });
-            return resolve(result);
+            return resolve(results);
         });
     }
     /**
@@ -65,7 +65,7 @@ export default class ASTNode {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in form AND[GT: {courses_avg: 98}, ...]
-            const childQuery = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
+            const childQuery = query["OR"]; // this will give [GT: {courses_avg: 98}, ...]
             if (Array.isArray(childQuery)) {
                 for (const val of childQuery) {
                     result.push(that.funcDictionary[val](dataStructure, val));
@@ -98,7 +98,7 @@ export default class ASTNode {
         let that = this;
         let result: any = dataStructure;
         // query is going to be in form NOT{GT: {courses_avg: 98}}
-        const childQuery = query["AND"]; // this will give GT
+        const childQuery = query["NOT"]; // this will give GT
         that.funcDictionary[childQuery](dataStructure, childQuery).then((childResult: any) => {
             let restrictedCR = childResult as Record<string, any>;
             let deptKeys = Object.keys(childResult);
@@ -117,9 +117,9 @@ export default class ASTNode {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in format EQ: { courses_avg: 99}
-            const columnName = query["IS"].split("_", 1)[1]; // this will give avg
-            const insideIS = query["IS"]; // will give "courses_avg"
-            const condition = query[insideIS]; // will give 99
+            const columnName = query["LT"].split("_", 1)[1]; // this will give avg
+            const insideLT = query["LT"]; // will give "courses_avg"
+            const condition = query[insideLT]; // will give 99
             if (columnName === "dept") {
                 dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
             } else {
@@ -142,9 +142,9 @@ export default class ASTNode {
         return new Promise<string[]>((resolve) => {
             let result: any = {};
             // query is going to be in format EQ: { courses_avg: 99}
-            const columnName = query["IS"].split("_", 1)[1]; // this will give avg
-            const insideIS = query["IS"]; // will give "courses_avg"
-            const condition = query[insideIS]; // will give 99
+            const columnName = query["EQ"].split("_", 1)[1]; // this will give avg
+            const insideEQ = query["EQ"]; // will give "courses_avg"
+            const condition = query[insideEQ]; // will give 99
             if (columnName === "dept") {
                 dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
             } else {
@@ -166,9 +166,9 @@ export default class ASTNode {
     public GTfunc(dataStructure: any, query: any): any {
         let result: any = {};
         // query is going to be in format GT: { courses_avg: 99}
-        const columnName = query["IS"].split("_", 1)[1]; // this will give avg
-        const insideIS = query["IS"]; // will give "courses_avg"
-        const condition = query[insideIS]; // will give 99
+        const columnName = query["GT"].split("_", 1)[1]; // this will give avg
+        const insideGT = query["GT"]; // will give "courses_avg"
+        const condition = query[insideGT]; // will give 99
         if (columnName === "dept") {
             dataStructure[columnName].forEach((value: any, index: any) => result.push({[condition]: index}));
         } else {

@@ -46,17 +46,13 @@ export default class QueryPerformer {
                         result = this.node.GTfunc(dataStructure, wherequery);
                         break;
                 }
-            } else {
-                // there's nothing in WHERE. return all results if it's not too large
-                if (Object.keys(query["WHERE"]).length === 0) {
-                    return reject("The result is too big. Only queries with a maximum of 5000 results are supported.");
-                }
-            }
-            let numRows = Object.keys(result).length;
-            if (numRows >= 5000) {
-                throw new ResultTooLargeError("The result is too big. Only queries with " +
-                    "a maximum of 5000 results are supported.");
-            }
+            } else { result = dataStructure; }
+            // else {
+            //     // there's nothing in WHERE. return all results if it's not too large
+            //     if (Object.keys(query["WHERE"]).length === 0) {
+            //       return reject("The result is too big. Only queries with a maximum of 5000 results are supported.");
+            //     }
+            // }
             return resolve(result);
         });
     }
