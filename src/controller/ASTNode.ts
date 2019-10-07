@@ -33,7 +33,7 @@ export default class ASTNode {
      * @param query
      *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
      */
-    public orFunc(dataStructure: any, query: any): number[] {
+    public ORfunc(dataStructure: any, query: any): number[] {
         let result: any[] = [];
         let results: any[] = [];
         // query is going to be in form AND[GT: {courses_avg: 98}, ...]
@@ -54,7 +54,7 @@ export default class ASTNode {
         let result: number[] = [];
         let toNegate: number[] = that.switcher(query["NOT"], dataStructure);
         for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
-            if (toNegate.includes(index)) {
+            if (!toNegate.includes(index)) {
                 result.push(index);
             }
         }
@@ -66,11 +66,10 @@ export default class ASTNode {
         // query is going to be in format LT: { courses_avg: 99}
         const columnName = Object.keys(query["LT"])[0]; // this will give courses_avg
         const condition = query["LT"][columnName]; // will give 99
-        for (const index in dataStructure[columnName]) {
+        for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
-                if (Number(dataStructure[columnName][index].toFixed(2)) <
-                    Number(condition.toFixed(2))) {
-                    result.push(index);
+                if (dataStructure[columnName][section] - condition < 0) {
+                    result.push(section);
                 }
             }
         }
@@ -84,8 +83,7 @@ export default class ASTNode {
         const condition = query["EQ"][columnName]; // will give 99
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
-                if (Number(dataStructure[columnName][section].toFixed(2)) ===
-                    Number(condition.toFixed(2))) {
+                if (dataStructure[columnName][section] - condition === 0) {
                     result.push(section);
                 }
             }
@@ -100,7 +98,7 @@ export default class ASTNode {
         const condition = query["GT"][columnName]; // will give 99
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
-                if (Number(dataStructure[columnName][section].toFixed(2)) > Number(condition.toFixed(2))) {
+                if (dataStructure[columnName][section] - condition > 0) {
                     result.push(section);
                 }
             }
@@ -156,7 +154,7 @@ export default class ASTNode {
                 result = this.ANDfunc(dataStructure, query);
                 break;
             case "OR":
-                result = this.orFunc(dataStructure, query);
+                result = this.ORfunc(dataStructure, query);
                 break;
             case "NOT":
                 result = this.NOTfunc(dataStructure, query);

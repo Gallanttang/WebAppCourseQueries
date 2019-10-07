@@ -25,7 +25,6 @@ export default class QueryPerformer {
                 result.push(index);
             }
         }
-        Log.trace(result.length);
         if (result.length >= 5000) {
             throw new
             ResultTooLargeError("The result is too big. Only queries with a maximum of 5000 results are supported.");
