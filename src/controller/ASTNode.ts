@@ -1,5 +1,4 @@
 import Log from "../Util";
-import {stringify} from "querystring";
 
 export default class ASTNode {
     constructor() {
@@ -14,7 +13,7 @@ export default class ASTNode {
     public ANDfunc(dataStructure: any, query: any): number[] {
         const that = this;
         const filters: any[] = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
-        let tempResult: any[] = [];
+        let tempResult: any[];
         let result: any[] = [];
         // query is going to be in form OR[GT: {courses_avg: 98}, ...]
         for (const filter in filters) {
@@ -53,6 +52,7 @@ export default class ASTNode {
         let that = this;
         let result: number[] = [];
         let toNegate: number[] = that.switcher(query["NOT"], dataStructure);
+        Log.trace(dataStructure[Object.keys(dataStructure)[0]].length);
         for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
             if (!toNegate.includes(index)) {
                 result.push(index);
@@ -120,17 +120,17 @@ export default class ASTNode {
         if (condition[0] === "*" && condition[condition.length - 1] === "*") {
             condition = condition.slice(1, condition.length - 1);
             Log.trace(condition);
-            reg = new RegExp(".*(" + condition + ").*");
+            reg = new RegExp("^.*(" + condition + "){1}.*$");
         } else if (condition[condition.length - 1] === "*") {
             condition = condition.slice(0, condition.length - 1);
             Log.trace(condition);
-            reg = new RegExp("(" + condition + ").*");
+            reg = new RegExp("^(" + condition + "){1}.*$");
         } else if (condition[0] === "*") {
             condition = condition.slice(1, condition.length - 1);
             Log.trace(condition);
-            reg = new RegExp(".*(" + condition + ")");
+            reg = new RegExp("^.*(" + condition + "){1}$");
         } else {
-            reg = new RegExp("(" + condition + ")");
+            reg = new RegExp("^(" + condition + "){1}$");
         }
         if (dataStructure.hasOwnProperty(columnName)) {
             for (const section in dataStructure[columnName]) {
