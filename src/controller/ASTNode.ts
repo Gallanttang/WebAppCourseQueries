@@ -34,11 +34,10 @@ export default class ASTNode {
      */
     public ORfunc(dataStructure: any, query: any): number[] {
         let result: any[] = [];
-        let results: any[] = [];
         // query is going to be in form AND[GT: {courses_avg: 98}, ...]
         const filters = query["OR"]; // this will give [GT: {courses_avg: 98}, ...]
-        for (const filter in filters) {
-            let tempResult = this.switcher(filters[filter], dataStructure);
+        for (const filter of filters) {
+            let tempResult = this.switcher(filter, dataStructure);
             for (const res of tempResult) {
                 if (!result.includes(res)) {
                     result.push(res);
@@ -63,8 +62,8 @@ export default class ASTNode {
     public LTfunc(dataStructure: any, query: any): number[] {
         let result: any[] = [];
         // query is going to be in format LT: { courses_avg: 99}
-        const columnName = Object.keys(query["LT"])[0]; // this will give courses_avg
-        const condition = query["LT"][columnName]; // will give 99
+        const columnName: string = Object.keys(query["LT"])[0]; // this will give courses_avg
+        const condition: number = query["LT"][columnName]; // will give 99
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
                 if (dataStructure[columnName][section] - condition < 0) {
@@ -78,8 +77,8 @@ export default class ASTNode {
     public EQfunc(dataStructure: any, query: any): number[] {
         let result: any[] = [];
         // query is going to be in format EQ: { courses_avg: 99}
-        const columnName = Object.keys(query["EQ"])[0]; // this will give courses_avg
-        const condition = query["EQ"][columnName]; // will give 99
+        const columnName: string = Object.keys(query["EQ"])[0]; // this will give courses_avg
+        const condition: number = query["EQ"][columnName]; // will give 99
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
                 if (dataStructure[columnName][section] - condition === 0) {
@@ -93,8 +92,8 @@ export default class ASTNode {
     public GTfunc(dataStructure: any, query: any): number[] {
         let result: any[] = [];
         // query is going to be in format GT: { courses_avg: 99}
-        const columnName = Object.keys(query["GT"])[0]; // this will give avg
-        const condition = query["GT"][columnName]; // will give 99
+        const columnName: string = Object.keys(query["GT"])[0]; // this will give avg
+        const condition: number = query["GT"][columnName]; // will give 99
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
                 if (dataStructure[columnName][section] - condition > 0) {
