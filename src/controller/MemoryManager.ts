@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 export default class MemoryManager {
     private internalDataStructure: any = {};
@@ -37,15 +38,14 @@ export default class MemoryManager {
 
     public writeToMemory(id: string): Promise<boolean> {
         return new Promise<boolean>(((resolve) => {
-            fs.writeFile("./data/" + id + ".json",
-                JSON.stringify(this.internalDataStructure), (err) => {
-                    if (err) {
-                        return resolve(false);
-                    } else {
-                        this.internalDataStructure = {};
-                        return resolve(true);
-                    }
-                });
+            fs.writeFileSync("./data/" + id + ".json", JSON.stringify(this.internalDataStructure));
+            fs.access("./data/" + id + ".json", fs.constants.F_OK, (err) => {
+                if (err) {
+                    return resolve(false);
+                } else {
+                    return resolve(true);
+                }
+            });
         }));
     }
 
@@ -138,14 +138,15 @@ export default class MemoryManager {
         }
     }
 
-    public deleteFromMemory(path: string): boolean {
-        fs.unlink("./data/" + path + ".json", (err) => {
-            if (err) {
-                return false;
-            }
-            return true;
+    public deleteFromMemory(path: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            fs.unlink("./data/" + path + ".json", (err) => {
+                if (err) {
+                    return reject(new InsightError("Could not delete " + path));
+                }
+                return resolve(true);
+            });
         });
-        return true;
     }
 
     public retrieveDataset(path: string): any {

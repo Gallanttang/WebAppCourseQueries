@@ -33,15 +33,15 @@ export default class InsightFacade implements IInsightFacade {
         this.memMan.helpInitialize(addedDataset, forListDS);
     }
 
-    // change to string x.toString("base64")
-    // JSZip to unzip files
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
         const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^\s*$/.test(id) ||
             this.addedDatasets.some((s) => s === id);
-        if (idIsInvalid) { return Promise.reject(new InsightError("Invalid id used")); }
+        if (idIsInvalid) {
+            return Promise.reject(new InsightError("Invalid id used"));
+        }
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {
@@ -54,9 +54,7 @@ export default class InsightFacade implements IInsightFacade {
                             promisedFiles.push(file.async("text"));
                         });
                         Promise.all(promisedFiles).then((results) => {
-                            for (let result0 of results) {
-                                this.processFiles(result0, validSections);
-                            }
+                            for (let result0 of results) { this.processFiles(result0, validSections); }
                         }).then(function () {
                             let validDataset = false;
                             for (const section of validSections) {
@@ -76,9 +74,7 @@ export default class InsightFacade implements IInsightFacade {
                                         return reject(new InsightError("Could not write " + id + "to memory"));
                                     }
                                 });
-                            } else {
-                                return reject(new InsightError("Could not add invalid dataset: " + id));
-                            }
+                            } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
                         });
                     }).catch(() => {
                         return reject(new InsightError("Invalid file " + id + "cannot be added"));
@@ -88,10 +84,15 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
-    public processFiles (file: any, validSections: any[]) {
+    public processFiles(file: any, validSections: any[]) {
         let processed: any;
-        try { processed = this.memMan.parseFile(file); } catch (err) { // ignore
-        } finally { if (processed !== null) { validSections.push(processed); }
+        try {
+            processed = this.memMan.parseFile(file);
+        } catch (err) { // ignore
+        } finally {
+            if (processed !== null) {
+                validSections.push(processed);
+            }
         }
     }
 
@@ -113,20 +114,19 @@ export default class InsightFacade implements IInsightFacade {
                 }
                 this.memMan.alreadyInDisk(dataset.id + "_" + dataset.kind + "_" + dataset.numRows)
                     .then((isInDisk) => {
-                    if (isInDisk) {
-                        if (thisClass.memMan.deleteFromMemory(
-                            dataset.id + "_" + dataset.kind + "_" + dataset.numRows)) {
-                            thisClass.updateDataset(index, id);
-                            resolve(id);
-                        } else {
-                            return reject(new InsightError
-                            ("Dataset " + id + " could not be deleted from memory"));
+                        if (isInDisk) {
+                            thisClass.memMan.deleteFromMemory(
+                                dataset.id + "_" + dataset.kind + "_" + dataset.numRows)
+                                .then((removed) => {
+                                    if (removed) {
+                                        thisClass.updateDataset(index, id);
+                                        resolve(id);
+                                    }
+                                }).catch((err) => {
+                                return new InsightError(err);
+                            });
                         }
-                    } else {
-                        thisClass.updateDataset(index, id);
-                        return reject(NotFoundError);
-                    }
-                });
+                    });
             }
         });
     }
@@ -168,13 +168,19 @@ export default class InsightFacade implements IInsightFacade {
                     that.internalDataStructure =
                         that.memMan.retrieveDataset(
                             datasetToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
-                } catch (err) { return Promise.reject( new InsightError(err)); }
+                } catch (err) {
+                    return Promise.reject(new InsightError(err));
+                }
                 break;
             }
         }
         let result: any[];
-        try { result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
-        } catch (err) { Log.trace(err); return Promise.reject(new InsightError(err)); }
+        try {
+            result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
+        } catch (err) {
+            Log.trace(err);
+            return Promise.reject(new InsightError(err));
+        }
         return Promise.resolve(result);
     }
 
