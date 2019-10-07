@@ -127,6 +127,16 @@ describe("InsightFacade Add/Remove Dataset", function () {
         });
     });
 
+    it("Should be impossible to add an invalid dataset", async () => {
+        const id: string = "invalid";
+        const expected: string[] = [];
+        insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result) => {
+            expect.fail(result, InsightError, "Managed to add a dataset that is invalid");
+        }).catch((err) => {
+            expect(err).to.be.instanceOf(InsightError);
+        });
+    });
+
     it("Should be impossible to add an empty dataset", async () => {
         const id: string = "empty";
         const expected: string[] = [];

@@ -32,8 +32,10 @@ export default class QueryValidator {
                         try { result = this.checkWHERE(query["WHERE"][listOfKeys[0]], listOfKeys[0], datasetToQuery);
                         } catch (err) { throw err; }
                         whereValid = result;
-                    } else {
+                    } else if (listOfKeys.length > 1) {
                         throw new InsightError("Expected WHERE to have 1 key got " + listOfKeys.length);
+                    } else {
+                        whereValid = true;
                     }
                     if (whereValid) {
                         if (query["OPTIONS"].hasOwnProperty) {

@@ -12,5 +12,5 @@
         }
     },
     "isQueryValid": false,
-    "result": "InsightError"
+    "result": "ResultTooLargeError"
 }

@@ -1,5 +1,12 @@
 import Log from "../Util";
-import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
+import {
+    IInsightFacade,
+    InsightDataset,
+    InsightDatasetKind,
+    InsightError,
+    NotFoundError,
+    ResultTooLargeError
+} from "./IInsightFacade";
 import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
@@ -179,7 +186,11 @@ export default class InsightFacade implements IInsightFacade {
             result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
         } catch (err) {
             Log.trace(err);
-            return Promise.reject(new InsightError(err));
+            return Promise.reject(err);
+        }
+        if (result.length > 5000) {
+            return Promise.reject(new ResultTooLargeError("The result is too big." +
+                " Only queries with a maximum of 5000 results are supported."));
         }
         return Promise.resolve(result);
     }

@@ -18,16 +18,17 @@ export default class QueryPerformer {
         let result: any[] = [];
         let that = this;
         const value: any = query["WHERE"];
-        if (value.hasOwnProperty) {
+        if (Object.keys(value).length === 1) {
             result = that.astNode.switcher(value, dataStructure);
         } else {
+            Log.trace(dataStructure[Object.keys(dataStructure)[0]].length);
             for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
-                result.push(index);
+                result.push(Number(index));
             }
+            Log.trace(result.length);
         }
-        if (result.length >= 5000) {
-            throw new
-            ResultTooLargeError("The result is too big. Only queries with a maximum of 5000 results are supported.");
+        if (result.length > 5000) {
+            return result;
         }
         if (result.length === 0) {
             return result;
