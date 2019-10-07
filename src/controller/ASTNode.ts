@@ -21,7 +21,7 @@ export default class ASTNode {
                 result = that.switcher(filters[filter], dataStructure);
             } else {
                 tempResult = that.switcher(filters[filter], dataStructure);
-                result = result.filter((f: any) => tempResult.includes(f));
+                result = result.filter((f: number) => tempResult.includes(f));
             }
         }
         return result;
@@ -40,7 +40,7 @@ export default class ASTNode {
             let tempResult = this.switcher(filter, dataStructure);
             for (const res of tempResult) {
                 if (!result.includes(res)) {
-                    result.push(res);
+                    result.push(Number(res));
                 }
             }
         }
@@ -53,7 +53,7 @@ export default class ASTNode {
         let toNegate: number[] = that.switcher(query["NOT"], dataStructure);
         for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
             if (!toNegate.includes(index)) {
-                result.push(index);
+                result.push(Number(index));
             }
         }
         return result;
@@ -145,7 +145,7 @@ export default class ASTNode {
         return result;
     }
     public switcher(query: any, dataStructure: any): number[] {
-        let result: any;
+        let result: any[];
         let filter: string = Object.keys(query)[0];
         switch (filter) {
             case "AND":
