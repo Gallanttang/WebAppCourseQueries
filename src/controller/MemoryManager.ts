@@ -138,19 +138,17 @@ export default class MemoryManager {
         }
     }
 
-    public deleteFromMemory(path: string): Promise<boolean> {
-        return new Promise<boolean>((resolve) => {
-            fs.unlink("./data/" + path + ".json", (err) => {
-                if (err) {
-                    return resolve(false);
-                } else {
-                    return resolve(true);
-                }
-            });
+    public deleteFromMemory(path: string): boolean {
+        fs.unlink("./data/" + path + ".json", (err) => {
+            if (err) {
+                return false;
+            }
+            return true;
         });
+        return true;
     }
 
-    public retrieveDataset(path: string) {
+    public retrieveDataset(path: string): any {
         try {
             let path0: string = "./data/" + path + ".json";
             return JSON.parse(fs.readFileSync(path0, {encoding: "utf8"}));

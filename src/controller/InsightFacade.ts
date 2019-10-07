@@ -41,9 +41,13 @@ export default class InsightFacade implements IInsightFacade {
         let validSections: any[] = [];
         const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^\s*$/.test(id) ||
             this.addedDatasets.some((s) => s === id);
+        if (idIsInvalid) { return Promise.reject(new InsightError("Invalid id used")); }
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
-                if (idIsInvalid || isInDisk) { return reject(new InsightError("Invalid id used")); } else {
+                if (isInDisk) {
+                    this.initializerHelper(this.addedDatasets, this.forListDS);
+                    return Promise.resolve(id);
+                } else {
                     let count: number = 0;
                     jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                         result.folder("courses").forEach(function (relativePath, file) {
@@ -110,16 +114,14 @@ export default class InsightFacade implements IInsightFacade {
                 this.memMan.alreadyInDisk(dataset.id + "_" + dataset.kind + "_" + dataset.numRows)
                     .then((isInDisk) => {
                     if (isInDisk) {
-                        thisClass.memMan.deleteFromMemory(dataset.id + "_" + dataset.kind + "_" + dataset.numRows)
-                            .then((successful) => {
-                            if (successful) {
-                                thisClass.updateDataset(index, id);
-                                resolve(id);
-                            } else {
-                                return reject(new InsightError
-                                ("Dataset " + id + " could not be deleted from memory"));
-                            }
-                        });
+                        if (thisClass.memMan.deleteFromMemory(
+                            dataset.id + "_" + dataset.kind + "_" + dataset.numRows)) {
+                            thisClass.updateDataset(index, id);
+                            resolve(id);
+                        } else {
+                            return reject(new InsightError
+                            ("Dataset " + id + " could not be deleted from memory"));
+                        }
                     } else {
                         thisClass.updateDataset(index, id);
                         return reject(NotFoundError);
@@ -166,7 +168,7 @@ export default class InsightFacade implements IInsightFacade {
                     that.internalDataStructure =
                         that.memMan.retrieveDataset(
                             datasetToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
-                } catch (err) { Log.trace(err); return Promise.reject( new InsightError(err)); }
+                } catch (err) { return Promise.reject( new InsightError(err)); }
                 break;
             }
         }

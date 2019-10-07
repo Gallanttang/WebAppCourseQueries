@@ -310,7 +310,6 @@ describe("InsightFacade listDataset", () => {
     it("Should not list an non-existent dataset", async () => {
         const id: string = "dne";
         let expected0: InsightDataset[] = [];
-        let result: string[];
         let result0: InsightDataset[];
         try {
             result0 = await insightFacade.listDatasets();
