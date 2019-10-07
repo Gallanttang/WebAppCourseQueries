@@ -174,7 +174,7 @@ export default class QueryValidator {
             throw new InsightError("Attempts to query more than one dataset");
         }
         if (!this.currentDS.includes(dataset)) {
-             throw new InsightError(dataset + " not contained");
+            throw new InsightError(dataset + " not contained");
         }
         let rt: boolean;
         try { rt = this.checkKeys(listOfKeys[0], "number", filter); } catch (err) { throw err; }
@@ -218,7 +218,7 @@ export default class QueryValidator {
     private checkKeys(key: string, expected: string, filter: any): boolean {
         let valueType: string = typeof filter[key];
         if (this.coursevalidator.hasOwnProperty(key)) {
-            if (this.coursevalidator[key] === valueType) {
+            if (this.coursevalidator[key] === valueType && valueType === expected) {
                 return expected === valueType;
             } else {
                 throw new InsightError(filter + " expects " + expected +
