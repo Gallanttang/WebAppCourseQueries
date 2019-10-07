@@ -87,6 +87,11 @@ export default class MemoryManager {
 
     // Adds a section to the internal data structure
     private addSection(section: any) {
+        if (section.hasOwnProperty("Section")) {
+            if (section["Section"] === "overall") {
+                section["Year"] = 1900;
+            }
+        }
         for (const key of Object.keys(this.coursevalidator)) {
             if (this.internalDataStructure.hasOwnProperty(key)) {
                 if (key === "courses_year") {

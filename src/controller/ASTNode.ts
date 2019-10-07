@@ -52,7 +52,6 @@ export default class ASTNode {
         let that = this;
         let result: number[] = [];
         let toNegate: number[] = that.switcher(query["NOT"], dataStructure);
-        Log.trace(dataStructure[Object.keys(dataStructure)[0]].length);
         for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
             if (!toNegate.includes(index)) {
                 result.push(index);
@@ -69,7 +68,7 @@ export default class ASTNode {
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
                 if (dataStructure[columnName][section] - condition < 0) {
-                    result.push(section);
+                    result.push(Number(section));
                 }
             }
         }
@@ -84,7 +83,7 @@ export default class ASTNode {
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
                 if (dataStructure[columnName][section] - condition === 0) {
-                    result.push(section);
+                    result.push(Number(section));
                 }
             }
         }
@@ -99,7 +98,7 @@ export default class ASTNode {
         for (const section in dataStructure[columnName]) {
             if (dataStructure.hasOwnProperty(columnName)) {
                 if (dataStructure[columnName][section] - condition > 0) {
-                    result.push(section);
+                    result.push(Number(section));
                 }
             }
         }
@@ -135,7 +134,7 @@ export default class ASTNode {
         if (dataStructure.hasOwnProperty(columnName)) {
             for (const section in dataStructure[columnName]) {
                 if (reg.test(dataStructure[columnName][section])) {
-                    result.push(section);
+                    result.push(Number(section));
                 }
             }
             // result = dataStructure[columnName].map(function (f: string, index: number) {
