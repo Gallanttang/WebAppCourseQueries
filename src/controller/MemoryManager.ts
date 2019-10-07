@@ -8,6 +8,7 @@ export default class MemoryManager {
         courses_title: "Title", courses_pass: "Pass", courses_fail: "Fail", courses_audit: "Audit",
         courses_uuid: "id", courses_year: "Year"
     };
+
     constructor() {
         Log.trace("MemoryManager::init()");
     }
@@ -36,8 +37,8 @@ export default class MemoryManager {
 
     public writeToMemory(id: string): Promise<boolean> {
         return new Promise<boolean>(((resolve) => {
-            fs.writeFile( "./data/" + id + ".json",
-                JSON.stringify(this.internalDataStructure),  (err) => {
+            fs.writeFile("./data/" + id + ".json",
+                JSON.stringify(this.internalDataStructure), (err) => {
                     if (err) {
                         return resolve(false);
                     } else {
@@ -47,6 +48,7 @@ export default class MemoryManager {
                 });
         }));
     }
+
     public parseFile(text: any): any {
         let JSObj: any;
         try {
@@ -85,37 +87,30 @@ export default class MemoryManager {
 
     // Adds a section to the internal data structure
     private addSection(section: any) {
-        const dept: string = section[this.coursevalidator["courses_dept"]];
-        if (!this.internalDataStructure.hasOwnProperty(dept)) {
-            this.internalDataStructure[dept] = {};
-            if (section["Section"] === "overall") {
-                section["Year"] = "1900";
-            }
-            for (const key of Object.keys(this.coursevalidator)) {
-                if (key !== "courses_dept") {
-                    if (key === "courses_year") {
-                        this.internalDataStructure[dept][key] = [];
-                        this.internalDataStructure[dept][key].push(Number(section[this.coursevalidator[key]]));
-                    } else {
-                        this.internalDataStructure[dept][key] = [];
-                        this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
-                    }
+        for (const key of Object.keys(this.coursevalidator)) {
+            if (this.internalDataStructure.hasOwnProperty(key)) {
+                if (key === "courses_year") {
+                    this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
+                } else if (key === "courses_uuid") {
+                    this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+                } else {
+                    this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
                 }
-            }
-        } else {
-            for (const key of Object.keys(this.coursevalidator)) {
-                if (key !== "courses_dept") {
-                    if (key === "courses_year") {
-                        this.internalDataStructure[dept][key].push(Number(section[this.coursevalidator[key]]));
-                    } else if (key === "courses_uuid") {
-                        this.internalDataStructure[dept][key].push(String(section[this.coursevalidator[key]]));
-                    } else {
-                        this.internalDataStructure[dept][key].push(section[this.coursevalidator[key]]);
-                    }
+            } else {
+                if (key === "courses_year") {
+                    this.internalDataStructure[key] = [];
+                    this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
+                } else if (key === "courses_uuid") {
+                    this.internalDataStructure[key] = [];
+                    this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+                } else {
+                    this.internalDataStructure[key] = [];
+                    this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
                 }
             }
         }
     }
+
     public deleteFromMemory(path: string): Promise<boolean> {
         return new Promise<boolean>((resolve) => {
             fs.unlink("./data/" + path + ".json", (err) => {

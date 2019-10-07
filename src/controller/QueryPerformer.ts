@@ -1,11 +1,9 @@
 import Log from "../Util";
-import {InsightError, NotFoundError, ResultTooLargeError} from "./IInsightFacade";
-import MemoryManager from "./MemoryManager";
+import {ResultTooLargeError} from "./IInsightFacade";
 import ASTNode from "./ASTNode";
 
 export default class QueryPerformer {
     private astNode: ASTNode = new ASTNode();
-
     constructor() {
         Log.trace("QueryPerformer::init()");
     }
@@ -17,54 +15,32 @@ export default class QueryPerformer {
      */
     // todo change the test query to ResultTooLargeError!!
     public returnQueriedCourses(dataStructure: any, query: any): any[] {
-        let result: any;
+        let result: any[] = [];
         let that = this;
-        const value = query["WHERE"];
-        // query[value] will give ["COLUMNS, "ORDER"]
-        const columns = query["COLUMNS"]; // will give "COLUMNS"
-        const columnsToDisplay = query[columns];
+        const value: any = query["WHERE"];
         if (value.hasOwnProperty) {
-            const firstArgument: string = Object.keys(value)[0];
-            Log.trace(firstArgument);
-            switch (firstArgument) {
-                case "AND":
-                    result = that.astNode.ANDfunc(dataStructure, value);
-                    break;
-                case "OR":
-                    result = that.astNode.orFunc(dataStructure, value);
-                    break;
-                case "NOT":
-                    result = that.astNode.NOTfunc(dataStructure, value);
-                    break;
-                case "LT":
-                    result = that.astNode.LTfunc(dataStructure, value);
-                    break;
-                case "EQ":
-                    result = that.astNode.EQfunc(dataStructure, value);
-                    break;
-                case "GT":
-                    result = that.astNode.GTfunc(dataStructure, value);
-                    break;
-                case "IS":
-                    result = that.astNode.ISfunc(dataStructure, value);
-                    break;
-            }
-            return result;
+            result = that.astNode.switcher(value, dataStructure);
         } else {
-            result = dataStructure;
+            for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
+                result.push(index);
+            }
         }
-        // else {
-        //     // there's nothing in WHERE. return all results if it's not too large
-        //     if (Object.keys(query["WHERE"]).length === 0) {
-        //       return reject("The result is too big. Only queries with a maximum of 5000 results are supported.");
-        //     }
-        // }
+        Log.trace(result.length);
+        if (result.length >= 5000) {
+            throw new
+            ResultTooLargeError("The result is too big. Only queries with a maximum of 5000 results are supported.");
+        }
+        if (result.length === 0) {
+            return result;
+        }
+        result = this.selectColumns(result, query["OPTIONS"]["COLUMNS"], dataStructure);
         // assume that result is only of the columns chosen
-
-        // sort result given ORDER
-        const orderBy: any = query["ORDER"]; // should give "courses_avg" or something else
-        // sort by given key to order (orderBy) in result
-        result.sort(that.compareValues(orderBy));
+        if (query["OPTIONS"].hasOwnProperty("ORDER")) {
+            // sort result given ORDER
+            const orderBy: string = query["OPTIONS"]["ORDER"]; // should give "courses_avg" or something else
+            // sort by given key to order (orderBy) in result
+            result.sort(that.compareValues(orderBy));
+        }
         return result;
     }
 
@@ -88,17 +64,17 @@ export default class QueryPerformer {
         };
     }
 
-    public equals(keys: any, expected: any): boolean {
-        if (keys.length !== expected.length) {
-            return false;
-        } else {
-            // comparing each element of array
-            for (let i = 0; i < keys.length; i++) {
-                if (keys[i] !== expected[i]) {
-                    return false;
+    private selectColumns(result: any[], options: string[], dataStructure: any) {
+        let returnValue: any[] = [];
+        for (const index of result) {
+            let section: any = {};
+            for (const column of options) {
+                if (dataStructure.hasOwnProperty(column)) {
+                    section[column] = dataStructure[column][index];
                 }
             }
-            return true;
+            returnValue.push(section);
         }
+        return returnValue;
     }
 }

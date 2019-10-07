@@ -5,7 +5,6 @@ import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryValidator from "./QueryValidator";
 import QueryPerformer from "./QueryPerformer";
-import {stringify} from "querystring";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -171,7 +170,7 @@ export default class InsightFacade implements IInsightFacade {
                 break;
             }
         }
-        let result: any;
+        let result: any[];
         try { result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
         } catch (err) { Log.trace(err); return Promise.reject(new InsightError(err)); }
         return Promise.resolve(result);
