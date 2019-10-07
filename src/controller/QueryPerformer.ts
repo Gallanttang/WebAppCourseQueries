@@ -40,6 +40,7 @@ export default class QueryPerformer {
             // sort by given key to order (orderBy) in result
             result.sort(that.compareValues(orderBy));
         }
+        Log.trace(result);
         return result;
     }
 

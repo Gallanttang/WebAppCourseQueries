@@ -89,28 +89,50 @@ export default class MemoryManager {
     private addSection(section: any) {
         if (section.hasOwnProperty("Section")) {
             if (section["Section"] === "overall") {
-                section["Year"] = 1900;
-            }
-        }
-        for (const key of Object.keys(this.coursevalidator)) {
-            if (this.internalDataStructure.hasOwnProperty(key)) {
-                if (key === "courses_year") {
-                    this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
-                } else if (key === "courses_uuid") {
-                    this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
-                } else {
-                    this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
+                for (const key of Object.keys(this.coursevalidator)) {
+                    if (this.internalDataStructure.hasOwnProperty(key)) {
+                        if (key === "courses_year") {
+                            this.internalDataStructure[key].push(1900);
+                        } else if (key === "courses_uuid") {
+                            this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+                        } else {
+                            this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
+                        }
+                    } else {
+                        if (key === "courses_year") {
+                            this.internalDataStructure[key] = [];
+                            this.internalDataStructure[key].push(1900);
+                        } else if (key === "courses_uuid") {
+                            this.internalDataStructure[key] = [];
+                            this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+                        } else {
+                            this.internalDataStructure[key] = [];
+                            this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
+                        }
+                    }
                 }
             } else {
-                if (key === "courses_year") {
-                    this.internalDataStructure[key] = [];
-                    this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
-                } else if (key === "courses_uuid") {
-                    this.internalDataStructure[key] = [];
-                    this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
-                } else {
-                    this.internalDataStructure[key] = [];
-                    this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
+                for (const key of Object.keys(this.coursevalidator)) {
+                    if (this.internalDataStructure.hasOwnProperty(key)) {
+                        if (key === "courses_year") {
+                            this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
+                        } else if (key === "courses_uuid") {
+                            this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+                        } else {
+                            this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
+                        }
+                    } else {
+                        if (key === "courses_year") {
+                            this.internalDataStructure[key] = [];
+                            this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
+                        } else if (key === "courses_uuid") {
+                            this.internalDataStructure[key] = [];
+                            this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+                        } else {
+                            this.internalDataStructure[key] = [];
+                            this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
+                        }
+                    }
                 }
             }
         }
