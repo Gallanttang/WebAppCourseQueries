@@ -28,9 +28,10 @@ export default class QueryPerformer {
                 Log.trace(firstArgument);
                 switch (firstArgument) {
                     case "AND":
-                        result = that.astNode.ANDfunc(dataStructure, value);
+                        result = that.astNode.ANDfunc(dataStructure[firstArgument], value);
                         break;
                     case "OR":
+                        Log.trace(value);
                         result = that.astNode.orFunc(dataStructure, value);
                         break;
                     case "NOT":

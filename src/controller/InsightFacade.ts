@@ -167,13 +167,13 @@ export default class InsightFacade implements IInsightFacade {
                     that.internalDataStructure =
                         that.memMan.retrieveDataset(
                             datasetToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
-                } catch (err) {return Promise.reject( new InsightError(err)); }
+                } catch (err) { Log.trace(err); return Promise.reject( new InsightError(err)); }
                 break;
             }
         }
         let result: any;
         try { result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
-        } catch (err) { return Promise.reject(err); }
+        } catch (err) { Log.trace(err); return Promise.reject(new InsightError(err)); }
         return Promise.resolve(result);
     }
 
