@@ -117,20 +117,22 @@ export default class ASTNode {
         let result: any[] = [];
         // query is going to be in format IS: { courses_instructor: "cox, barbara"}
         const columnName: string = Object.keys(query["IS"])[0]; // this will give courses_instructor
-        const condition: string = query["IS"][columnName]; // will give "cox, barbara"
+        let condition: string = query["IS"][columnName]; // will give "cox, barbara"
         let reg: RegExp;
-        Log.trace(condition);
         if (condition[0] === "*" && condition[condition.length - 1] === "*") {
-            condition.replace("*", "");
-            reg = new RegExp("^.*[" + condition + "].*$");
+            condition = condition.slice(1, condition.length - 1);
+            Log.trace(condition);
+            reg = new RegExp(".*(" + condition + ").*");
         } else if (condition[condition.length - 1] === "*") {
-            condition.replace("*", "");
-            reg = new RegExp("^[" + condition + "].*$");
+            condition = condition.slice(0, condition.length - 1);
+            Log.trace(condition);
+            reg = new RegExp("(" + condition + ").*");
         } else if (condition[0] === "*") {
-            condition.replace("*", "");
-            reg = new RegExp("^.*[" + condition + "]$");
+            condition = condition.slice(1, condition.length - 1);
+            Log.trace(condition);
+            reg = new RegExp(".*(" + condition + ")");
         } else {
-            reg = new RegExp("^[" + condition + "]$");
+            reg = new RegExp("(" + condition + ")");
         }
         if (dataStructure.hasOwnProperty(columnName)) {
             for (const section in dataStructure[columnName]) {
