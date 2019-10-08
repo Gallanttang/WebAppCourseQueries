@@ -266,8 +266,9 @@ export default class QueryValidator {
         for (let selection of listOfKey) {
             let validSelection: boolean = false;
             for (let column of Object.keys(this.coursevalidator)) {
+                if (/^\s*$/.test(selection)) { throw new InsightError("COLUMNS has invalid key " + selection); }
                 try { dataset = selection.split("_", 1)[0];
-                } catch (err) { throw new InsightError("COLUMNS has invalid key " + dataset); }
+                } catch (err) { throw new InsightError("COLUMNS has invalid key " + selection); }
                 if (that.dsToQuery !== dataset) {
                     throw new InsightError("Attempts to query more than one dataset");
                 }
@@ -279,7 +280,6 @@ export default class QueryValidator {
         }
         return true;
     }
-
     private checkORDER(key: string, columns: string[]): boolean {
         let validColumn: boolean = false;
         let that = this;
