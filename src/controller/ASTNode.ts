@@ -124,7 +124,7 @@ export default class ASTNode {
             Log.trace(condition);
             reg = new RegExp("^(" + condition + "){1}.*$");
         } else if (condition[0] === "*") {
-            condition = condition.slice(1, condition.length - 1);
+            condition = condition.slice(1, condition.length);
             Log.trace(condition);
             reg = new RegExp("^.*(" + condition + "){1}$");
         } else {
