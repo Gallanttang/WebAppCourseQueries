@@ -24,7 +24,7 @@ export default class QueryPerformer {
                     section[column] = dataStructure[column][index];
                 }
             }
-            if (query.hasOwnProperty) {
+            if (Object.keys(value).length === 1) {
                 if (this.filtering.checkCond(section, value)) {
                     result.push(section);
                 }
