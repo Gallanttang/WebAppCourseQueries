@@ -5,7 +5,7 @@
             "AND": [
                 {
                     "IS":{
-                        "course_dept":"adhe"
+                        "courses_dept":"adhe"
                     }
                 },
                 {
@@ -17,7 +17,7 @@
         },
         "OPTIONS": {
             "COLUMNS": [
-                "courses_dept",
+                "course_dept",
                 "courses_avg"
             ],
             "ORDER": "courses_avg"

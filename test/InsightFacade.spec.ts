@@ -78,6 +78,19 @@ describe("InsightFacade Add/Remove Dataset", function () {
         }
     });
 
+    it("Should add another valid course dataset", async () => {
+        const id: string = "course";
+        const expected: string[] = [id];
+        let result: string[];
+        try {
+            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
+        } catch (err) {
+            expect.fail(err, expected, "failed to add valid course dataset");
+        } finally {
+            expect(result).to.deep.equal(expected);
+        }
+    });
+
     it("Should be impossible to add an existing valid courses dataset",  async () => {
         const id: string = "courses";
         let result: string[];
@@ -268,7 +281,8 @@ describe("InsightFacade listDataset", () => {
 
 describe("InsightFacade PerformQuery", () => {
     const datasetsToQuery: { [id: string]: any } = {
-        courses: {id: "courses", path: "./test/data/courses.zip", kind: InsightDatasetKind.Courses},
+        courses: {id: "courses", path: "./test/data/courses.zip", kind: InsightDatasetKind.Courses}
+        // course: {id: "course", path: "./test/data/course.zip", kind: InsightDatasetKind.Courses}
     };
     let insightFacade: InsightFacade;
     let testQueries: ITestQuery[] = [];
@@ -293,7 +307,6 @@ describe("InsightFacade PerformQuery", () => {
             const ds = datasetsToQuery[key];
             const data = fs.readFileSync(ds["path"]).toString("base64");
             loadDatasetPromises.push(insightFacade.addDataset(ds.id, data, ds.kind));
-            setTimeout(function ( ) { return; }, 1000);
         }
         return Promise.all(loadDatasetPromises).catch((err) => {
             /* *IMPORTANT NOTE: This catch is to let this run even without the implemented addDataset,

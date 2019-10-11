@@ -1,4 +1,5 @@
 import Log from "../Util";
+import Filtering from "./Filtering";
 
 export default class ASTNode {
     constructor() {
@@ -117,16 +118,20 @@ export default class ASTNode {
         let reg: RegExp;
         if (condition[0] === "*" && condition[condition.length - 1] === "*") {
             condition = condition.slice(1, condition.length - 1);
-            Log.trace(condition);
-            reg = new RegExp("^.*(" + condition + "){1}.*$");
+            if (condition.length > 0) {
+                reg = new RegExp("^.*(" + condition + "){1}.*$");
+            } else {
+                reg = /^.*$/;
+            }
         } else if (condition[condition.length - 1] === "*") {
             condition = condition.slice(0, condition.length - 1);
-            Log.trace(condition);
+            if (condition.length > 0) { reg = new RegExp("^.*(" + condition + "){1}.*$"); } else { reg = /^.*$/; }
             reg = new RegExp("^(" + condition + "){1}.*$");
         } else if (condition[0] === "*") {
             condition = condition.slice(1, condition.length);
-            Log.trace(condition);
-            reg = new RegExp("^.*(" + condition + "){1}$");
+            if (condition.length > 0) { reg = new RegExp("^.*(" + condition + "){1}$"); } else {
+                reg = new RegExp("^.*$");
+            }
         } else {
             reg = new RegExp("^(" + condition + "){1}$");
         }
@@ -136,11 +141,6 @@ export default class ASTNode {
                     result.push(Number(section));
                 }
             }
-            // result = dataStructure[columnName].map(function (f: string, index: number) {
-            //     if (reg.test(f)) {
-            //         return index;
-            //     }
-            // });
         }
         return result;
     }

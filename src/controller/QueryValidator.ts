@@ -172,12 +172,8 @@ export default class QueryValidator {
         if (listOfKeys.length !== 1) {
             throw new InsightError(parent + " expects 1 key found " + listOfKeys.length);
         }
-        if (datasetToQuery !== dataset) {
-            throw new InsightError("Attempts to query more than one dataset");
-        }
-        if (!this.currentDS.includes(dataset)) {
-            throw new InsightError(dataset + " not contained");
-        }
+        if (datasetToQuery !== dataset) { throw new InsightError("Attempts to query more than one dataset"); }
+        if (!this.currentDS.includes(dataset)) { throw new InsightError(dataset + " not contained"); }
         let rt: boolean;
         try { rt = this.checkKeys(listOfKeys[0], "number", filter); } catch (err) { throw err; }
         return rt;
@@ -196,15 +192,11 @@ export default class QueryValidator {
                 throw new InsightError(parent + " contains invalid value " + Object.keys(filter)[0]);
             }
             const listOfKeys: string[] = Object.keys(filter);
-            if (datasetToQuery !== isCond) {
-                throw new InsightError("Attempts to query more than one dataset");
-            }
+            if (datasetToQuery !== isCond) { throw new InsightError("Attempts to query more than one dataset"); }
             if (listOfKeys.length !== 1) {
                 throw new InsightError("IS filter expects 1 key, found " + listOfKeys.length);
             }
-            if (!this.currentDS.includes(isCond)) {
-                throw new InsightError(isCond + " in IS was not found");
-            }
+            if (!this.currentDS.includes(isCond)) { throw new InsightError(isCond + " in IS was not found"); }
             const inputString = filter[Object.keys(filter)[0]];
             const regexForAsteriskCheck: RegExp = /^[*]?([a-z]|[A-Z][0-9]|[,]|[_]|\s)*[*]?$/;
             if (!regexForAsteriskCheck.test(inputString)) {
@@ -266,9 +258,8 @@ export default class QueryValidator {
         for (let selection of listOfKey) {
             let validSelection: boolean = false;
             for (let column of Object.keys(this.coursevalidator)) {
-                if (/^\s*$/.test(selection)) { throw new InsightError("COLUMNS has invalid key " + selection); }
                 try { dataset = selection.split("_", 1)[0];
-                } catch (err) { throw new InsightError("COLUMNS has invalid key " + selection); }
+                } catch (err) { throw new InsightError("COLUMNS has invalid key " + dataset); }
                 if (that.dsToQuery !== dataset) {
                     throw new InsightError("Attempts to query more than one dataset");
                 }
@@ -280,6 +271,7 @@ export default class QueryValidator {
         }
         return true;
     }
+
     private checkORDER(key: string, columns: string[]): boolean {
         let validColumn: boolean = false;
         let that = this;

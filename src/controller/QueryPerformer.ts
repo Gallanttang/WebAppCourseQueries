@@ -1,9 +1,10 @@
 import Log from "../Util";
-import {ResultTooLargeError} from "./IInsightFacade";
 import ASTNode from "./ASTNode";
+import {ResultTooLargeError} from "./IInsightFacade";
+import Filtering from "./Filtering";
 
 export default class QueryPerformer {
-    private astNode: ASTNode = new ASTNode();
+    private filtering: Filtering = new Filtering();
     constructor() {
         Log.trace("QueryPerformer::init()");
     }
@@ -13,33 +14,41 @@ export default class QueryPerformer {
      * Promise resolves with result of query (an array of courses)
      *  A result should have a max size of 5,000. If this is exceeded, promise should reject with a ResultTooLargeError.
      */
-    // todo change the test query to ResultTooLargeError!!
     public returnQueriedCourses(dataStructure: any, query: any): any[] {
         let result: any[] = [];
-        let that = this;
         const value: any = query["WHERE"];
-        if (Object.keys(value).length === 1) {
-            result = that.astNode.switcher(value, dataStructure);
-        } else {
-            Log.trace(dataStructure[Object.keys(dataStructure)[0]].length);
-            for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
-                result.push(Number(index));
+        for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
+            let section: any = {};
+            for (const column of Object.keys(dataStructure)) {
+                if (Array.isArray(dataStructure[column])) {
+                    section[column] = dataStructure[column][index];
+                }
             }
-            Log.trace(result.length);
+            if (query.hasOwnProperty) {
+                if (this.filtering.checkCond(section, value)) {
+                    result.push(section);
+                }
+            } else {
+                result.push(section);
+            }
         }
         if (result.length > 5000) {
-            return result;
+           throw new ResultTooLargeError("The result is too big." +
+                " Only queries with a maximum of 5000 results are supported.");
         }
         if (result.length === 0) {
             return result;
         }
-        result = this.selectColumns(result, query["OPTIONS"]["COLUMNS"], dataStructure);
+        result = this.selectColumns(result, query["OPTIONS"]["COLUMNS"]);
         // assume that result is only of the columns chosen
         if (query["OPTIONS"].hasOwnProperty("ORDER")) {
             // sort result given ORDER
             const orderBy: string = query["OPTIONS"]["ORDER"]; // should give "courses_avg" or something else
             // sort by given key to order (orderBy) in result
-            result.sort(that.compareValues(orderBy));
+            result.sort((a, b) =>
+                (a[orderBy] > b[orderBy]) ? 1 :
+                    (b[orderBy] > a[orderBy]) ? -1 : 0
+            );
         }
         return result;
     }
@@ -64,16 +73,18 @@ export default class QueryPerformer {
         };
     }
 
-    private selectColumns(result: any[], options: string[], dataStructure: any) {
+    private selectColumns(result: any[], options: string[]) {
         let returnValue: any[] = [];
-        for (const index of result) {
+        for (const index in result) {
             let section: any = {};
             for (const column of options) {
-                if (dataStructure.hasOwnProperty(column)) {
-                    section[column] = dataStructure[column][index];
+                if (result[index].hasOwnProperty(column)) {
+                    section[column] = result[index][column];
                 }
             }
-            returnValue.push(section);
+            if (section.hasOwnProperty) {
+                returnValue.push(section);
+            }
         }
         return returnValue;
     }

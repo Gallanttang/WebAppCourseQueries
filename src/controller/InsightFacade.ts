@@ -185,12 +185,7 @@ export default class InsightFacade implements IInsightFacade {
         try {
             result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
         } catch (err) {
-            Log.trace(err);
             return Promise.reject(err);
-        }
-        if (result.length > 5000) {
-            return Promise.reject(new ResultTooLargeError("The result is too big." +
-                " Only queries with a maximum of 5000 results are supported."));
         }
         return Promise.resolve(result);
     }

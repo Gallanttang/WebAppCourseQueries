@@ -1,0 +1,16 @@
+{
+    "title": "SELECT from more than one dataset",
+    "query": {
+        "WHERE": {
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "course_dept",
+                "course_avg"
+            ],
+            "ORDER": "course_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": []
+}
