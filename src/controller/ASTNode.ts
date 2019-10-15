@@ -1,175 +1,175 @@
-import Log from "../Util";
-import Filtering from "./Filtering";
-
-export default class ASTNode {
-    constructor() {
-        Log.trace("QueryPerformer::init()");
-    }
-
-    /**
-     * @param dataStructure
-     * @param query
-     *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
-     */
-    public ANDfunc(dataStructure: any, query: any): number[] {
-        const that = this;
-        const filters: any[] = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
-        let tempResult: any[];
-        let result: any[] = [];
-        // query is going to be in form OR[GT: {courses_avg: 98}, ...]
-        for (const filter in filters) {
-            if (Number(filter) === 0) {
-                result = that.switcher(filters[filter], dataStructure);
-            } else {
-                tempResult = that.switcher(filters[filter], dataStructure);
-                result = result.filter((f: number) => tempResult.includes(f));
-            }
-        }
-        return result;
-    }
-
-    /**
-     * @param dataStructure
-     * @param query
-     *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
-     */
-    public ORfunc(dataStructure: any, query: any): number[] {
-        let result: any[] = [];
-        // query is going to be in form AND[GT: {courses_avg: 98}, ...]
-        const filters = query["OR"]; // this will give [GT: {courses_avg: 98}, ...]
-        for (const filter of filters) {
-            let tempResult = this.switcher(filter, dataStructure);
-            for (const res of tempResult) {
-                if (!result.includes(res)) {
-                    result.push(Number(res));
-                }
-            }
-        }
-        return result.sort();
-    }
-
-    public NOTfunc(dataStructure: any, query: any): number[] {
-        let that = this;
-        let result: number[] = [];
-        let toNegate: number[] = that.switcher(query["NOT"], dataStructure);
-        for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
-            if (!toNegate.includes(index)) {
-                result.push(Number(index));
-            }
-        }
-        return result;
-    }
-
-    public LTfunc(dataStructure: any, query: any): number[] {
-        let result: any[] = [];
-        // query is going to be in format LT: { courses_avg: 99}
-        const columnName: string = Object.keys(query["LT"])[0]; // this will give courses_avg
-        const condition: number = query["LT"][columnName]; // will give 99
-        for (const section in dataStructure[columnName]) {
-            if (dataStructure.hasOwnProperty(columnName)) {
-                if (dataStructure[columnName][section] - condition < 0) {
-                    result.push(Number(section));
-                }
-            }
-        }
-        return result;
-    }
-
-    public EQfunc(dataStructure: any, query: any): number[] {
-        let result: any[] = [];
-        // query is going to be in format EQ: { courses_avg: 99}
-        const columnName: string = Object.keys(query["EQ"])[0]; // this will give courses_avg
-        const condition: number = query["EQ"][columnName]; // will give 99
-        for (const section in dataStructure[columnName]) {
-            if (dataStructure.hasOwnProperty(columnName)) {
-                if (dataStructure[columnName][section] - condition === 0) {
-                    result.push(Number(section));
-                }
-            }
-        }
-        return result;
-    }
-
-    public GTfunc(dataStructure: any, query: any): number[] {
-        let result: any[] = [];
-        // query is going to be in format GT: { courses_avg: 99}
-        const columnName: string = Object.keys(query["GT"])[0]; // this will give avg
-        const condition: number = query["GT"][columnName]; // will give 99
-        for (const section in dataStructure[columnName]) {
-            if (dataStructure.hasOwnProperty(columnName)) {
-                if (dataStructure[columnName][section] - condition > 0) {
-                    result.push(Number(section));
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * @param dataStructure
-     * @param query
-     *  Returns a promise of dictionary of pairs <department: array of indices> of valid sections
-     */
-    public ISfunc(dataStructure: any, query: any): number[] {
-        let result: any[] = [];
-        // query is going to be in format IS: { courses_instructor: "cox, barbara"}
-        const columnName: string = Object.keys(query["IS"])[0]; // this will give courses_instructor
-        let condition: string = query["IS"][columnName]; // will give "cox, barbara"
-        let reg: RegExp;
-        if (condition[0] === "*" && condition[condition.length - 1] === "*") {
-            condition = condition.slice(1, condition.length - 1);
-            if (condition.length > 0) {
-                reg = new RegExp("^.*(" + condition + "){1}.*$");
-            } else {
-                reg = /^.*$/;
-            }
-        } else if (condition[condition.length - 1] === "*") {
-            condition = condition.slice(0, condition.length - 1);
-            if (condition.length > 0) { reg = new RegExp("^.*(" + condition + "){1}.*$"); } else { reg = /^.*$/; }
-            reg = new RegExp("^(" + condition + "){1}.*$");
-        } else if (condition[0] === "*") {
-            condition = condition.slice(1, condition.length);
-            if (condition.length > 0) { reg = new RegExp("^.*(" + condition + "){1}$"); } else {
-                reg = new RegExp("^.*$");
-            }
-        } else {
-            reg = new RegExp("^(" + condition + "){1}$");
-        }
-        if (dataStructure.hasOwnProperty(columnName)) {
-            for (const section in dataStructure[columnName]) {
-                if (reg.test(dataStructure[columnName][section])) {
-                    result.push(Number(section));
-                }
-            }
-        }
-        return result;
-    }
-    public switcher(query: any, dataStructure: any): number[] {
-        let result: any[];
-        let filter: string = Object.keys(query)[0];
-        switch (filter) {
-            case "AND":
-                result = this.ANDfunc(dataStructure, query);
-                break;
-            case "OR":
-                result = this.ORfunc(dataStructure, query);
-                break;
-            case "NOT":
-                result = this.NOTfunc(dataStructure, query);
-                break;
-            case "LT":
-                result = this.LTfunc(dataStructure, query);
-                break;
-            case "EQ":
-                result = this.EQfunc(dataStructure, query);
-                break;
-            case "GT":
-                result = this.GTfunc(dataStructure, query);
-                break;
-            case "IS":
-                result = this.ISfunc(dataStructure, query);
-                break;
-        }
-        return result;
-    }
-}
+// import Log from "../Util";
+// import Filtering from "./Filtering";
+//
+// export default class ASTNode {
+//     constructor() {
+//         Log.trace("QueryPerformer::init()");
+//     }
+//
+//     /**
+//      * @param dataStructure
+//      * @param query
+//      *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
+//      */
+//     public ANDfunc(dataStructure: any, query: any): number[] {
+//         const that = this;
+//         const filters: any[] = query["AND"]; // this will give [GT: {courses_avg: 98}, ...]
+//         let tempResult: any[];
+//         let result: any[] = [];
+//         // query is going to be in form OR[GT: {courses_avg: 98}, ...]
+//         for (const filter in filters) {
+//             if (Number(filter) === 0) {
+//                 result = that.switcher(filters[filter], dataStructure);
+//             } else {
+//                 tempResult = that.switcher(filters[filter], dataStructure);
+//                 result = result.filter((f: number) => tempResult.includes(f));
+//             }
+//         }
+//         return result;
+//     }
+//
+//     /**
+//      * @param dataStructure
+//      * @param query
+//      *  Returns a promise of dictionary (result) of pairs <department: array of indices> of valid sections
+//      */
+//     public ORfunc(dataStructure: any, query: any): number[] {
+//         let result: any[] = [];
+//         // query is going to be in form AND[GT: {courses_avg: 98}, ...]
+//         const filters = query["OR"]; // this will give [GT: {courses_avg: 98}, ...]
+//         for (const filter of filters) {
+//             let tempResult = this.switcher(filter, dataStructure);
+//             for (const res of tempResult) {
+//                 if (!result.includes(res)) {
+//                     result.push(Number(res));
+//                 }
+//             }
+//         }
+//         return result.sort();
+//     }
+//
+//     public NOTfunc(dataStructure: any, query: any): number[] {
+//         let that = this;
+//         let result: number[] = [];
+//         let toNegate: number[] = that.switcher(query["NOT"], dataStructure);
+//         for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
+//             if (!toNegate.includes(index)) {
+//                 result.push(Number(index));
+//             }
+//         }
+//         return result;
+//     }
+//
+//     public LTfunc(dataStructure: any, query: any): number[] {
+//         let result: any[] = [];
+//         // query is going to be in format LT: { courses_avg: 99}
+//         const columnName: string = Object.keys(query["LT"])[0]; // this will give courses_avg
+//         const condition: number = query["LT"][columnName]; // will give 99
+//         for (const section in dataStructure[columnName]) {
+//             if (dataStructure.hasOwnProperty(columnName)) {
+//                 if (dataStructure[columnName][section] - condition < 0) {
+//                     result.push(Number(section));
+//                 }
+//             }
+//         }
+//         return result;
+//     }
+//
+//     public EQfunc(dataStructure: any, query: any): number[] {
+//         let result: any[] = [];
+//         // query is going to be in format EQ: { courses_avg: 99}
+//         const columnName: string = Object.keys(query["EQ"])[0]; // this will give courses_avg
+//         const condition: number = query["EQ"][columnName]; // will give 99
+//         for (const section in dataStructure[columnName]) {
+//             if (dataStructure.hasOwnProperty(columnName)) {
+//                 if (dataStructure[columnName][section] - condition === 0) {
+//                     result.push(Number(section));
+//                 }
+//             }
+//         }
+//         return result;
+//     }
+//
+//     public GTfunc(dataStructure: any, query: any): number[] {
+//         let result: any[] = [];
+//         // query is going to be in format GT: { courses_avg: 99}
+//         const columnName: string = Object.keys(query["GT"])[0]; // this will give avg
+//         const condition: number = query["GT"][columnName]; // will give 99
+//         for (const section in dataStructure[columnName]) {
+//             if (dataStructure.hasOwnProperty(columnName)) {
+//                 if (dataStructure[columnName][section] - condition > 0) {
+//                     result.push(Number(section));
+//                 }
+//             }
+//         }
+//         return result;
+//     }
+//
+//     /**
+//      * @param dataStructure
+//      * @param query
+//      *  Returns a promise of dictionary of pairs <department: array of indices> of valid sections
+//      */
+//     public ISfunc(dataStructure: any, query: any): number[] {
+//         let result: any[] = [];
+//         // query is going to be in format IS: { courses_instructor: "cox, barbara"}
+//         const columnName: string = Object.keys(query["IS"])[0]; // this will give courses_instructor
+//         let condition: string = query["IS"][columnName]; // will give "cox, barbara"
+//         let reg: RegExp;
+//         if (condition[0] === "*" && condition[condition.length - 1] === "*") {
+//             condition = condition.slice(1, condition.length - 1);
+//             if (condition.length > 0) {
+//                 reg = new RegExp("^.*(" + condition + "){1}.*$");
+//             } else {
+//                 reg = /^.*$/;
+//             }
+//         } else if (condition[condition.length - 1] === "*") {
+//             condition = condition.slice(0, condition.length - 1);
+//             if (condition.length > 0) { reg = new RegExp("^.*(" + condition + "){1}.*$"); } else { reg = /^.*$/; }
+//             reg = new RegExp("^(" + condition + "){1}.*$");
+//         } else if (condition[0] === "*") {
+//             condition = condition.slice(1, condition.length);
+//             if (condition.length > 0) { reg = new RegExp("^.*(" + condition + "){1}$"); } else {
+//                 reg = new RegExp("^.*$");
+//             }
+//         } else {
+//             reg = new RegExp("^(" + condition + "){1}$");
+//         }
+//         if (dataStructure.hasOwnProperty(columnName)) {
+//             for (const section in dataStructure[columnName]) {
+//                 if (reg.test(dataStructure[columnName][section])) {
+//                     result.push(Number(section));
+//                 }
+//             }
+//         }
+//         return result;
+//     }
+//     public switcher(query: any, dataStructure: any): number[] {
+//         let result: any[];
+//         let filter: string = Object.keys(query)[0];
+//         switch (filter) {
+//             case "AND":
+//                 result = this.ANDfunc(dataStructure, query);
+//                 break;
+//             case "OR":
+//                 result = this.ORfunc(dataStructure, query);
+//                 break;
+//             case "NOT":
+//                 result = this.NOTfunc(dataStructure, query);
+//                 break;
+//             case "LT":
+//                 result = this.LTfunc(dataStructure, query);
+//                 break;
+//             case "EQ":
+//                 result = this.EQfunc(dataStructure, query);
+//                 break;
+//             case "GT":
+//                 result = this.GTfunc(dataStructure, query);
+//                 break;
+//             case "IS":
+//                 result = this.ISfunc(dataStructure, query);
+//                 break;
+//         }
+//         return result;
+//     }
+// }

@@ -46,9 +46,7 @@ export default class InsightFacade implements IInsightFacade {
         let validSections: any[] = [];
         const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^\s*$/.test(id) ||
             this.addedDatasets.some((s) => s === id);
-        if (idIsInvalid) {
-            return Promise.reject(new InsightError("Invalid id used"));
-        }
+        if (idIsInvalid) { return Promise.reject(new InsightError("Invalid id used")); }
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {

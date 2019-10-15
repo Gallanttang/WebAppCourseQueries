@@ -1,3 +1,0 @@
-{
-    "this is an invalid course": "SO WRONG"
-}

@@ -27,7 +27,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
         courses: "./test/data/courses.zip",
         invalid: "./test/data/invalid.zip",
         invalid0: "./test/data/invalid0.json",
-        course: "./test/data/course.zip",
+        course: "./test/data/courses2.zip",
         empty: "./test/data/empty.zip"
     };
     let datasets: { [id: string]: string } = {};
@@ -67,19 +67,6 @@ describe("InsightFacade Add/Remove Dataset", function () {
     // This is a unit test. You should create more like this!
     it("Should add a valid course dataset", async () => {
         const id: string = "courses";
-        const expected: string[] = [id];
-        let result: string[];
-        try {
-            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-        } catch (err) {
-            expect.fail(err, expected, "failed to add valid course dataset");
-        } finally {
-            expect(result).to.deep.equal(expected);
-        }
-    });
-
-    it("Should add another valid course dataset", async () => {
-        const id: string = "course";
         const expected: string[] = [id];
         let result: string[];
         try {
