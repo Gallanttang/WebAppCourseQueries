@@ -79,7 +79,8 @@ export default class InsightFacade implements IInsightFacade {
                                         return reject(new InsightError("Could not write " + id + "to memory"));
                                     }
                                 });
-                            } else { return reject(new InsightError("Could not add invalid dataset: " + id)); }
+                            } else { return reject(new InsightError("Could not add invalid dataset: " + id));
+                            }
                         });
                     }).catch(() => {
                         return reject(new InsightError("Invalid file " + id + "cannot be added"));
