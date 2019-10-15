@@ -4,6 +4,7 @@ export default class Filtering {
     constructor() {
         Log.trace("filtering::init()");
     }
+
     public checkCond (element: any, query: any): boolean {
         let filterType: string = Object.keys(query)[0];
         if (filterType === "OR" || filterType === "AND") {
@@ -34,6 +35,7 @@ export default class Filtering {
         }
         return false;
     }
+
     private performSCOMP (element: any, query: any): boolean {
         let queriedColumn: string = Object.keys(query)[0];
         let condition: string = query[queriedColumn];
