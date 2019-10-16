@@ -42,7 +42,8 @@ export default class QueryValidator {
                             const value = Object.keys(query["OPTIONS"]);
                             let optionsValid: boolean;
                             if ( value.length > 2 || value.length < 1) {
-                                throw new InsightError("OPTIONS expect 1/2 keys got " + value.length); }
+                                throw new InsightError("OPTIONS expect 1/2 keys got " + value.length);
+                            }
                             if (value.includes("COLUMNS")) {
                                 try {
                                     optionsValid =
@@ -192,11 +193,15 @@ export default class QueryValidator {
                 throw new InsightError(parent + " contains invalid value " + Object.keys(filter)[0]);
             }
             const listOfKeys: string[] = Object.keys(filter);
-            if (datasetToQuery !== isCond) { throw new InsightError("Attempts to query more than one dataset"); }
+            if (datasetToQuery !== isCond) {
+                throw new InsightError("Attempts to query more than one dataset");
+            }
             if (listOfKeys.length !== 1) {
                 throw new InsightError("IS filter expects 1 key, found " + listOfKeys.length);
             }
-            if (!this.currentDS.includes(isCond)) { throw new InsightError(isCond + " in IS was not found"); }
+            if (!this.currentDS.includes(isCond)) {
+                throw new InsightError(isCond + " in IS was not found");
+            }
             const inputString = filter[Object.keys(filter)[0]];
             const regexForAsteriskCheck: RegExp = /^[*]?([a-z]|[A-Z][0-9]|[,]|[_]|\s)*[*]?$/;
             if (!regexForAsteriskCheck.test(inputString)) {
@@ -227,8 +232,11 @@ export default class QueryValidator {
         if (parent === "OPTIONS") {
             if (listOfKeys.includes("COLUMNS")) {
                 let validColumns: boolean;
-                if (!Array.isArray(option["COLUMNS"])) { throw new InsightError("COLUMNS expects array");
-                } else if (option["COLUMNS"].length === 0) { throw new InsightError("COLUMNS cannot be empty"); }
+                if (!Array.isArray(option["COLUMNS"])) {
+                    throw new InsightError("COLUMNS expects array");
+                } else if (option["COLUMNS"].length === 0) {
+                    throw new InsightError("COLUMNS cannot be empty");
+                }
                 try { validColumns = this.checkCOLUMNS(option["COLUMNS"]); } catch (err) { throw err; }
                 if (validColumns) {
                     if (listOfKeys.includes("ORDER")) {
