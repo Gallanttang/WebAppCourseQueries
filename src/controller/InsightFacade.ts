@@ -59,7 +59,9 @@ export default class InsightFacade implements IInsightFacade {
                             promisedFiles.push(file.async("text"));
                         });
                         Promise.all(promisedFiles).then((results) => {
-                            for (let result0 of results) { this.processFiles(result0, validSections); }
+                            for (let result0 of results) {
+                                this.processFiles(result0, validSections);
+                            }
                         }).then(function () {
                             let validDataset = false;
                             for (const section of validSections) {

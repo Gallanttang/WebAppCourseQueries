@@ -13,19 +13,13 @@ export default class QueryValidator {
         Log.trace("MemoryManager::init()");
         this.currentDS = ds;
     }
-
-    /*
-    *  helper for PerformQuery
-    * @return Promise<any>
-    * the promise should fulfill with true if query is valid, InsightError if it isn't
-    */
     public isQueryValid(query: any): string {
         let datasetToQuery: string = "";
         if (query && typeof query === "object") {
             if (this.equals(Object.keys(query), ["WHERE", "OPTIONS"]) ||
                 this.equals(Object.keys(query), ["OPTIONS", "WHERE"])) {
                 if (query["WHERE"].hasOwnProperty) {
-                    let whereValid: boolean;
+                    let whereValid: boolean = true;
                     const listOfKeys: string[] = Object.keys(query["WHERE"]);
                     if (listOfKeys.length === 1) {
                         let result: boolean;
@@ -34,9 +28,8 @@ export default class QueryValidator {
                         whereValid = result;
                     } else if (listOfKeys.length > 1) {
                         throw new InsightError("Expected WHERE to have 1 key got " + listOfKeys.length);
-                    } else {
-                        whereValid = true;
                     }
+                    // todo deleted an else case here
                     if (whereValid) {
                         if (query["OPTIONS"].hasOwnProperty) {
                             const value = Object.keys(query["OPTIONS"]);
@@ -46,10 +39,10 @@ export default class QueryValidator {
                             }
                             if (value.includes("COLUMNS")) {
                                 try {
-                                    optionsValid =
-                                        this.checkOPTIONS(query["OPTIONS"], "OPTIONS");
+                                    optionsValid = this.checkOPTIONS(query["OPTIONS"], "OPTIONS");
                                 } catch (err) {
-                                    throw err; }
+                                    throw err;
+                                }
                                 if (optionsValid) {
                                     return this.dsToQuery;
                                 }
@@ -60,24 +53,8 @@ export default class QueryValidator {
                             throw new InsightError("options is missing columns");
                         }
                     } else {
-                        if (query["OPTIONS"].hasOwnProperty) {
-                            const value = Object.keys(query["OPTIONS"]);
-                            let optionsValid: boolean;
-                            if (value.length > 2 || value.length < 1) {
-                                throw new InsightError("OPTIONS expect 1/2 keys got " + value.length);
-                            }
-                            if (value.includes("COLUMNS")) {
-                                try {
-                                    optionsValid =
-                                        this.checkOPTIONS(query["OPTIONS"], "OPTIONS");
-                                } catch (err) {
-                                    throw err;
-                                }
-                                if (optionsValid) {
-                                    return this.dsToQuery;
-                                }
-                            }
-                        }
+                        // todo deleted a major part here, we'll see if it works lol
+                        throw new InsightError ("'WHERE' is not valid");
                     }
                 }
             } else {
@@ -121,7 +98,11 @@ export default class QueryValidator {
             return notIsValid;
         } else if (parent === "IS") {
             let sCompValid: boolean;
-            try { sCompValid = that.checkFilterSCOMPParent(filter, datasetToQuery); } catch (err) { throw err; }
+            try {
+                sCompValid = that.checkFilterSCOMPParent(filter, datasetToQuery);
+            } catch (err) {
+                throw err;
+            }
             return sCompValid;
         } else if (parent === "EQ" || parent === "GT" || parent === "LT") {
             let mCompValid: boolean;
@@ -173,8 +154,12 @@ export default class QueryValidator {
         if (listOfKeys.length !== 1) {
             throw new InsightError(parent + " expects 1 key found " + listOfKeys.length);
         }
-        if (datasetToQuery !== dataset) { throw new InsightError("Attempts to query more than one dataset"); }
-        if (!this.currentDS.includes(dataset)) { throw new InsightError(dataset + " not contained"); }
+        if (datasetToQuery !== dataset) {
+            throw new InsightError("Attempts to query more than one dataset");
+        }
+        if (!this.currentDS.includes(dataset)) {
+            throw new InsightError(dataset + " not contained");
+        }
         let rt: boolean;
         try { rt = this.checkKeys(listOfKeys[0], "number", filter); } catch (err) { throw err; }
         return rt;
@@ -208,12 +193,15 @@ export default class QueryValidator {
                 throw new InsightError("Invalid input string in IS: " + inputString);
             } else {
                 let rt: boolean;
-                try { rt = this.checkKeys(listOfKeys[0], "string", filter); } catch (err) { throw err; }
+                try {
+                    rt = this.checkKeys(listOfKeys[0], "string", filter);
+                } catch (err) {
+                    throw err;
+                }
                 return rt;
             }
         } else { throw new InsightError("IS expects 1 key got " + Object.keys(filter).length); }
     }
-
     private checkKeys(key: string, expected: string, filter: any): boolean {
         let valueType: string = typeof filter[key];
         if (this.coursevalidator.hasOwnProperty(key)) {
@@ -226,7 +214,6 @@ export default class QueryValidator {
         }
         throw new InsightError("Column " + key + " not found");
     }
-
     private checkOPTIONS(option: any, parent: string): boolean {
         const listOfKeys: string[] = Object.keys(option);
         if (parent === "OPTIONS") {
@@ -237,7 +224,11 @@ export default class QueryValidator {
                 } else if (option["COLUMNS"].length === 0) {
                     throw new InsightError("COLUMNS cannot be empty");
                 }
-                try { validColumns = this.checkCOLUMNS(option["COLUMNS"]); } catch (err) { throw err; }
+                try {
+                    validColumns = this.checkCOLUMNS(option["COLUMNS"]);
+                } catch (err) {
+                    throw err;
+                }
                 if (validColumns) {
                     if (listOfKeys.includes("ORDER")) {
                         if (typeof option["ORDER"] !== "string") {
@@ -260,7 +251,6 @@ export default class QueryValidator {
             throw new InsightError("Invalid filter: " + listOfKeys[0] + " in " + parent);
         }
     }
-
     private checkCOLUMNS(listOfKey: string[]): boolean {
         let that = this; let dataset: string;
         for (let selection of listOfKey) {
@@ -279,7 +269,6 @@ export default class QueryValidator {
         }
         return true;
     }
-
     private checkORDER(key: string, columns: string[]): boolean {
         let validColumn: boolean = false;
         let that = this;
