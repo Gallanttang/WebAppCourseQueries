@@ -59,19 +59,23 @@ export default class MemoryManager {
         return JSObj;
     }
 
-    public checkValidCourse(object: any): number {
+    public checkValidSections(validSections: any[]): number {
         let numValidSection: number = 0;
-        if (object["result"] !== null) {
-            if (Array.isArray(object["result"])) {
-                for (const section of object["result"]) {
-                    if (this.isSectionValid(section)) {
-                        this.addSection(section);
-                        numValidSection += 1;
-                    }
+        for (const sections of validSections) {
+            if (sections["result"] === null) {
+                continue;
+            }
+            if (!Array.isArray(sections["result"])) {
+                continue;
+            }
+            for (const section of sections["result"]) {
+                if (this.isSectionValid(section)) {
+                    this.addSection(section);
+                    numValidSection += 1;
                 }
             }
-            return numValidSection;
         }
+        return numValidSection;
     }
 
     private isSectionValid(section: any): boolean {
@@ -99,6 +103,7 @@ export default class MemoryManager {
             }
         }
     }
+
     public addHelperSectionEqualsOverall(section: any, key: any) {
         if (this.internalDataStructure.hasOwnProperty(key)) {
             if (key === "courses_year") {

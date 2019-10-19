@@ -10,8 +10,8 @@ import {
 import "./MemoryManager";
 import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
-import QueryValidator from "./QueryValidator";
 import QueryPerformer from "./QueryPerformer";
+import QueryManager from "./QueryManager";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -24,7 +24,7 @@ export default class InsightFacade implements IInsightFacade {
     private addedDatasets: string[];
     private forListDS: any[];
     private internalDataStructure: any = {};
-    private queryMan: QueryValidator;
+    private queryMan: QueryManager;
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
@@ -32,7 +32,7 @@ export default class InsightFacade implements IInsightFacade {
         this.forListDS = [];
         this.queryPerformer = new QueryPerformer();
         this.memMan = new MemoryManager();
-        this.queryMan = new QueryValidator(this.addedDatasets);
+        this.queryMan = new QueryManager(this.forListDS);
         this.initializerHelper(this.addedDatasets, this.forListDS);
     }
 
@@ -44,9 +44,11 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
-        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^\s*$/.test(id) ||
+        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
             this.addedDatasets.some((s) => s === id);
-        if (idIsInvalid) { return Promise.reject(new InsightError("Invalid id used")); }
+        if (idIsInvalid) {
+            return Promise.reject(new InsightError("Invalid id used"));
+        }
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {
@@ -63,15 +65,8 @@ export default class InsightFacade implements IInsightFacade {
                                 this.processFiles(result0, validSections);
                             }
                         }).then(function () {
-                            let validDataset = false;
-                            for (const section of validSections) {
-                                let valid: number = thisClass.memMan.checkValidCourse(section);
-                                if (valid !== 0) {
-                                    validDataset = true;
-                                    count += valid;
-                                }
-                            }
-                            if (validDataset) {
+                            count = thisClass.memMan.checkValidSections(validSections);
+                            if (count > 0) {
                                 thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
                                     if (successful) {
                                         thisClass.addedDatasets.push(id);
@@ -81,7 +76,8 @@ export default class InsightFacade implements IInsightFacade {
                                         return reject(new InsightError("Could not write " + id + "to memory"));
                                     }
                                 });
-                            } else { return reject(new InsightError("Could not add invalid dataset: " + id));
+                            } else {
+                                return reject(new InsightError("Could not add invalid dataset: " + id));
                             }
                         });
                     }).catch(() => {
@@ -166,16 +162,16 @@ export default class InsightFacade implements IInsightFacade {
         let that = this;
         let datasetToQuery: string;
         try {
-            datasetToQuery = this.queryMan.isQueryValid(query);
+            this.queryMan.checkQuery(query);
         } catch (err) {
             return Promise.reject(err);
         }
         for (const ds of this.forListDS) {
-            if (datasetToQuery === ds["id"]) {
+            if (this.queryMan.dsToQuery === ds["id"]) {
                 try {
                     that.internalDataStructure =
                         that.memMan.retrieveDataset(
-                            datasetToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
+                            this.queryMan.dsToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
                 } catch (err) {
                     return Promise.reject(new InsightError(err));
                 }
