@@ -1,0 +1,29 @@
+{
+    "title": "SELECT dept, avg, instructor WHERE instructor == '', ORDER by avg",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_instructor": ""
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "Comm"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": []
+}

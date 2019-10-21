@@ -13,10 +13,10 @@ export default class QueryPerformer {
      * Promise resolves with result of query (an array of courses)
      *  A result should have a max size of 5,000. If this is exceeded, promise should reject with a ResultTooLargeError.
      */
-    public returnQueriedCourses(dataStructure: any, query: any): any[] {
+    public returnQueriedCourses(dataStructure: any, query: any, numRows: number): any[] {
         let result: any[] = [];
         const value: any = query["WHERE"];
-        for (let index: number = 0; index < dataStructure[Object.keys(dataStructure)[0]].length; index++) {
+        for (let index: number = 0; index < numRows; index++) {
             let section: any = {};
             for (const column of Object.keys(dataStructure)) {
                 if (Array.isArray(dataStructure[column])) {
@@ -32,8 +32,7 @@ export default class QueryPerformer {
             }
         }
         if (result.length > 5000) {
-           throw new ResultTooLargeError("The result is too big." +
-                " Only queries with a maximum of 5000 results are supported.");
+           throw new ResultTooLargeError("Only queries with a maximum of 5000 results are supported.");
         }
         if (result.length === 0) {
             return result;

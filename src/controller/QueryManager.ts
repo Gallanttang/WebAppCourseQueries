@@ -1,5 +1,5 @@
 import {InsightError} from "./IInsightFacade";
-import Log from "../Util";
+
 
 export default class QueryManager {
     private coursevalidator: any = {
@@ -8,10 +8,10 @@ export default class QueryManager {
         fail: "number", audit: "number", uuid: "string", year: "number"
     };
 
-    private roomsvalidator: any = {
-        fullname: "string", shortname: "string", number: "string", address: "string", lat: "number",
-        lon: "number", seats: "number", type: "string", furniture: "string", href: "string"
-    };
+    // private roomsvalidator: any = {
+    //     fullname: "string", shortname: "string", number: "string", address: "string", lat: "number",
+    //     lon: "number", seats: "number", type: "string", furniture: "string", href: "string"
+    // };
 
     private readonly currentDS: any[];
     public dsToQuery: string = "";
@@ -96,7 +96,7 @@ export default class QueryManager {
         } catch (err) {
             throw err;
         }
-        if (!/^[*]?([a-z]|[A-Z][0-9]|[,]|[_]|\s)*[*]?$/.test(scomp[keys[0]])) {
+        if (!/^[*]?([a-zA-Z]|[0-9]|[,]|[_]|\s)*[*]?$/.test(scomp[keys[0]])) {
             throw new InsightError("IS filter has an invalid entry: " + scomp[keys[0]]);
         }
     }
@@ -154,7 +154,6 @@ export default class QueryManager {
         if (!Array.isArray(columns) || columns.length === 0) {
             throw new InsightError("Column expects a non-empty array");
         }
-        Log.trace(columns);
         for (const col of columns) {
             try {
                 this.checkApplyOrID(col);

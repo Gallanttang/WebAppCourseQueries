@@ -1,0 +1,3960 @@
+{
+    "title": "SELECT dept, avg, instructor WHERE instructor == '', ORDER by avg",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_instructor": ""
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "comm"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "comm",
+            "courses_avg": 49.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 56.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 57.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 58.72,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 60.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 64.71,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 65.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 66.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 67.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 68.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 68.91,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 69.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 69.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 69.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 69.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 69.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.48,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.7,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.89,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.94,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 70.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.01,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.09,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.58,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.79,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.79,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 71.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.04,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.04,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.08,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.36,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.37,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.79,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.91,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.96,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 72.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.24,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.49,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.54,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.54,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.57,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.72,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.91,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.94,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.96,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.98,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 73.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.23,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.24,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.36,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.37,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.41,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.41,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.49,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.49,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.58,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.7,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.92,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 74.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.01,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.03,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.08,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.23,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.28,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.36,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.48,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.49,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.49,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.52,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.57,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.65,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.65,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.66,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.7,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.71,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.72,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.73,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.77,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.79,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.89,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.94,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.96,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 75.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.01,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.02,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.02,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.02,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.03,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.51,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.54,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.58,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.61,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.61,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.68,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.7,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.7,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.71,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.71,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.73,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.88,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.91,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.92,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 76.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.02,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.03,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.03,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.12,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.23,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.23,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.24,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.24,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.28,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.37,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.57,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.63,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.66,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.72,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.73,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.74,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.77,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.77,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.77,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.88,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.94,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.94,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 77.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.04,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.04,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.08,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.09,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.23,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.24,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.35,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.36,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.41,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.52,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.59,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.61,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.61,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.61,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.7,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.71,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.77,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.89,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.98,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.98,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 78.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.03,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.26,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.28,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.37,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.38,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.46,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.47,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.57,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.66,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.66,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.71,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.78,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.89,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.89,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 79.98,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.02,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.11,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.19,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.31,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.32,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.36,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.37,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.48,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.52,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.62,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.69,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.73,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.73,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 80.98,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.03,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.08,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.39,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.41,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.42,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.43,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.48,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.54,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.55,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.58,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.58,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.75,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.76,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.8,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.9,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.92,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.93,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 81.95,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.04,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.15,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.16,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.3,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.34,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.41,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.64,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.97,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 82.99,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.02,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.06,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.08,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.09,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.09,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.21,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.22,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.28,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.53,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.54,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.57,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.58,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.83,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 83.85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.05,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.13,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.25,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.27,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.36,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.44,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.72,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.73,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.77,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 84.91,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.07,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.14,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.23,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.29,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.33,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.54,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.67,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 85.92,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86.1,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86.17,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86.2,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86.4,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86.84,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 86.86,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 87,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 87.92,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 88.18,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 88.6,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 89.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 89.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 92.45,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 94.5,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 94.56,
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "comm",
+            "courses_avg": 94.75,
+            "courses_instructor": ""
+        }
+    ]
+}

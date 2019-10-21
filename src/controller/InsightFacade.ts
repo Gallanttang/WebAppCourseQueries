@@ -4,8 +4,7 @@ import {
     InsightDataset,
     InsightDatasetKind,
     InsightError,
-    NotFoundError,
-    ResultTooLargeError
+    NotFoundError
 } from "./IInsightFacade";
 import "./MemoryManager";
 import * as jszip from "jszip";
@@ -21,23 +20,17 @@ import QueryManager from "./QueryManager";
 export default class InsightFacade implements IInsightFacade {
     private memMan: MemoryManager;
     private queryPerformer: QueryPerformer;
-    private addedDatasets: string[];
-    private forListDS: any[];
+    private addedDatasets: string[] = [];
+    private forListDS: any[] = [];
     private internalDataStructure: any = {};
     private queryMan: QueryManager;
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
-        this.addedDatasets = [];
-        this.forListDS = [];
         this.queryPerformer = new QueryPerformer();
         this.memMan = new MemoryManager();
         this.queryMan = new QueryManager(this.forListDS);
-        this.initializerHelper(this.addedDatasets, this.forListDS);
-    }
-
-    private initializerHelper(addedDataset: any, forListDS: any) {
-        this.memMan.helpInitialize(addedDataset, forListDS);
+        this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
@@ -52,7 +45,7 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {
-                    this.initializerHelper(this.addedDatasets, this.forListDS);
+                    this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
                     return Promise.resolve(id);
                 } else {
                     let count: number = 0;
@@ -160,7 +153,7 @@ export default class InsightFacade implements IInsightFacade {
      */
     public performQuery(query: any): Promise<any[]> {
         let that = this;
-        let datasetToQuery: string;
+        let numRow: number;
         try {
             this.queryMan.checkQuery(query);
         } catch (err) {
@@ -168,9 +161,9 @@ export default class InsightFacade implements IInsightFacade {
         }
         for (const ds of this.forListDS) {
             if (this.queryMan.dsToQuery === ds["id"]) {
+                numRow = ds["numRows"];
                 try {
-                    that.internalDataStructure =
-                        that.memMan.retrieveDataset(
+                    that.internalDataStructure = that.memMan.retrieveDataset(
                             this.queryMan.dsToQuery + "_" + ds["kind"] + "_" + ds["numRows"]);
                 } catch (err) {
                     return Promise.reject(new InsightError(err));
@@ -180,7 +173,7 @@ export default class InsightFacade implements IInsightFacade {
         }
         let result: any[];
         try {
-            result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query);
+            result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query, numRow);
         } catch (err) {
             return Promise.reject(err);
         }
