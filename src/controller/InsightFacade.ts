@@ -11,6 +11,7 @@ import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryPerformer from "./QueryPerformer";
 import QueryManager from "./QueryManager";
+import RoomMemoryManager from "../RoomMemoryManager";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -19,6 +20,8 @@ import QueryManager from "./QueryManager";
  */
 export default class InsightFacade implements IInsightFacade {
     private memMan: MemoryManager;
+    // todo I just put this here to make TSLint happier
+    private roomMemMan: RoomMemoryManager;
     private queryPerformer: QueryPerformer;
     private addedDatasets: string[] = [];
     private forListDS: any[] = [];
@@ -37,42 +40,25 @@ export default class InsightFacade implements IInsightFacade {
         const promisedFiles: any = [];
         const thisClass = this;
         let validSections: any[] = [];
-        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
-            this.addedDatasets.some((s) => s === id);
-        if (idIsInvalid) {
+        if (this.idIsInvalid(id)) {
             return Promise.reject(new InsightError("Invalid id used"));
+        }
+        // todo make this work
+        if (kind === "courses") {
+            // todo add course
+        } else if (kind === "rooms") {
+             // todo add rooms
+        } else {
+            return Promise.reject(new InsightError(""));
         }
         return new Promise<string[]>((resolve, reject) => {
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {
-                    this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
+                    thisClass.memMan.helpInitialize(this.addedDatasets, this.forListDS);
                     return Promise.resolve(id);
                 } else {
-                    let count: number = 0;
-                    jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-                        result.folder("courses").forEach(function (relativePath, file) {
-                            promisedFiles.push(file.async("text"));
-                        });
-                        Promise.all(promisedFiles).then((results) => {
-                            for (let result0 of results) {
-                                this.processFiles(result0, validSections);
-                            }
-                        }).then(function () {
-                            count = thisClass.memMan.checkValidSections(validSections);
-                            if (count > 0) {
-                                thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
-                                    if (successful) {
-                                        thisClass.addedDatasets.push(id);
-                                        thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                        return resolve(thisClass.addedDatasets);
-                                    } else {
-                                        return reject(new InsightError("Could not write " + id + "to memory"));
-                                    }
-                                });
-                            } else {
-                                return reject(new InsightError("Could not add invalid dataset: " + id));
-                            }
-                        });
+                    thisClass.loadToDisk(id, content, kind).then((result: string[]) => {
+                        return resolve(result);
                     }).catch(() => {
                         return reject(new InsightError("Invalid file " + id + "cannot be added"));
                     });
@@ -80,6 +66,48 @@ export default class InsightFacade implements IInsightFacade {
             });
         });
     }
+
+    // helper for addDataset, recently refactored out
+    public idIsInvalid(id: string): boolean {
+        return (!id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
+            this.addedDatasets.some((s) => s === id));
+    }
+
+    // helper for addDataset, recently refactored out
+    public loadToDisk( id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
+        const promisedFiles: any = [];
+        let validSections: any[] = [];
+        let thisClass = this;
+        let count: number = 0;
+        return new Promise<string[]>((resolve, reject) => {
+            jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+                result.folder("courses").forEach(function (relativePath, file) {
+                    promisedFiles.push(file.async("text"));
+                });
+                Promise.all(promisedFiles).then((results) => {
+                    for (let result0 of results) {
+                        this.processFiles(result0, validSections);
+                    }
+                }).then(function () {
+                    count = thisClass.memMan.checkValidSections(validSections);
+                    if (count > 0) {
+                        thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
+                            if (successful) {
+                                thisClass.addedDatasets.push(id);
+                                thisClass.forListDS.push({id: id, kind: kind, numRows: count});
+                                return resolve(thisClass.addedDatasets);
+                            } else {
+                                return reject(new InsightError("Could not write " + id + "to memory"));
+                            }
+                        });
+                    } else {
+                        return reject(new InsightError("Could not add invalid dataset: " + id));
+                    }
+                });
+            });
+        });
+    }
+
 
     public processFiles(file: any, validSections: any[]) {
         let processed: any;

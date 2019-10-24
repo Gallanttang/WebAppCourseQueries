@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
+import {IMemoryManager} from "../IMemoryManager";
 
-export default class MemoryManager {
+export default class MemoryManager implements IMemoryManager {
     private internalDataStructure: any = {};
     private coursevalidator: any = {
         courses_dept: "Subject", courses_id: "Course", courses_avg: "Avg", courses_instructor: "Professor",
@@ -78,7 +79,7 @@ export default class MemoryManager {
         return numValidSection;
     }
 
-    private isSectionValid(section: any): boolean {
+    public isSectionValid(section: any): boolean {
         let valid: boolean = true;
         for (const key of Object.keys(this.coursevalidator)) {
             if (!section.hasOwnProperty(this.coursevalidator[key])) {
