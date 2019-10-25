@@ -15,7 +15,7 @@ export default class QueryPerformer {
      */
     public returnQueriedCourses(dataStructure: any, query: any, numRows: number): any[] {
         let result: any[] = [];
-        const value: any = query["WHERE"];
+        const filter: any = query["WHERE"];
         for (let index: number = 0; index < numRows; index++) {
             let section: any = {};
             for (const column of Object.keys(dataStructure)) {
@@ -23,16 +23,12 @@ export default class QueryPerformer {
                     section[column] = dataStructure[column][index];
                 }
             }
-            if (Object.keys(value).length === 1) {
-                if (this.filtering.checkCond(section, value)) {
-                    result.push(section);
-                }
-            } else {
+            if (this.filtering.checkCond(section, filter)) {
                 result.push(section);
             }
-        }
-        if (result.length > 5000) {
-           throw new ResultTooLargeError("Only queries with a maximum of 5000 results are supported.");
+            if (result.length > 5000) {
+                throw new ResultTooLargeError("Only queries with a maximum of 5000 results are supported.");
+            }
         }
         if (result.length === 0) {
             return result;

@@ -19,7 +19,6 @@ import QueryManager from "./QueryManager";
  */
 export default class InsightFacade implements IInsightFacade {
     private memMan: MemoryManager;
-    private queryPerformer: QueryPerformer;
     private addedDatasets: string[] = [];
     private forListDS: any[] = [];
     private internalDataStructure: any = {};
@@ -27,7 +26,6 @@ export default class InsightFacade implements IInsightFacade {
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
-        this.queryPerformer = new QueryPerformer();
         this.memMan = new MemoryManager();
         this.queryMan = new QueryManager(this.forListDS);
         this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
@@ -172,8 +170,9 @@ export default class InsightFacade implements IInsightFacade {
             }
         }
         let result: any[];
+        let queryPerformer = new QueryPerformer();
         try {
-            result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query, numRow);
+            result = queryPerformer.returnQueriedCourses(this.internalDataStructure, query, numRow);
         } catch (err) {
             return Promise.reject(err);
         }
