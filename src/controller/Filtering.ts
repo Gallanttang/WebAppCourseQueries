@@ -6,6 +6,9 @@ export default class Filtering {
     }
 
     public checkCond (element: any, query: any): boolean {
+        if (Object.keys(query).length === 0) {
+            return true;
+        }
         let filterType: string = Object.keys(query)[0];
         if (filterType === "OR" || filterType === "AND") {
             return this.performLCOMP(filterType, element, query[filterType]);
@@ -22,18 +25,15 @@ export default class Filtering {
     }
 
     private performMCOMP (filterType: string, element: any, query: any): boolean {
-        let queriedColumn: string = Object.keys(query)[0];
-        let checking: number = element[queriedColumn];
+        let condition: number = query[Object.keys(query)[0]];
+        let checking: number = element[Object.keys(query)[0]];
         if (filterType === "LT") {
-            return checking - query[queriedColumn] < 0;
+            return checking < condition;
+        } else if (filterType === "GT") {
+            return checking > condition;
+        } else {
+            return checking === condition;
         }
-        if (filterType === "GT") {
-            return checking - query[queriedColumn] > 0;
-        }
-        if (filterType === "EQ") {
-            return checking - query[queriedColumn] === 0;
-        }
-        return false;
     }
 
     private performSCOMP (element: any, query: any): boolean {
@@ -76,15 +76,11 @@ export default class Filtering {
         let currResult: boolean;
         for (const filter of query) {
             currResult = this.checkCond(element, filter);
-            if (filterType === "AND") {
-                if (!currResult) {
-                    return false;
-                }
+            if (filterType === "AND" && !currResult) {
+                return false;
             }
-            if (filterType === "OR") {
-                if (currResult) {
-                    return true;
-                }
+            if (filterType === "OR" && currResult) {
+                return true;
             }
         }
         return currResult;

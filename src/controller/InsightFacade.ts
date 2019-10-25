@@ -11,10 +11,6 @@ import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryPerformer from "./QueryPerformer";
 import QueryManager from "./QueryManager";
-import RoomMemoryManager from "./RoomMemoryManager";
-import {IMemoryManager} from "./IMemoryManager";
-import * as fs from "fs";
-import {log} from "util";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -23,8 +19,6 @@ import {log} from "util";
  */
 export default class InsightFacade implements IInsightFacade {
     private memMan: MemoryManager;
-    private roomMemMan: RoomMemoryManager;
-    private queryPerformer: QueryPerformer;
     private addedDatasets: string[] = [];
     private forListDS: any[] = [];
     private internalDataStructure: any = {};
@@ -32,27 +26,51 @@ export default class InsightFacade implements IInsightFacade {
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
-        this.queryPerformer = new QueryPerformer();
-        this.roomMemMan = new RoomMemoryManager();
         this.memMan = new MemoryManager();
         this.queryMan = new QueryManager(this.forListDS);
         this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
+        const promisedFiles: any = [];
         const thisClass = this;
-        if (this.idIsInvalid(id)) {
+        let validSections: any[] = [];
+        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
+            this.addedDatasets.some((s) => s === id);
+        if (idIsInvalid) {
             return Promise.reject(new InsightError("Invalid id used"));
         }
         return new Promise<string[]>((resolve, reject) => {
-            Log.trace("inside new promise of addDataset");
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {
-                    thisClass.memMan.helpInitialize(this.addedDatasets, this.forListDS);
+                    this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
                     return Promise.resolve(id);
                 } else {
-                    thisClass.loadToDisk(id, content, kind).then((result: string[]) => {
-                        return resolve(result);
+                    let count: number = 0;
+                    jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+                        result.folder("courses").forEach(function (relativePath, file) {
+                            promisedFiles.push(file.async("text"));
+                        });
+                        Promise.all(promisedFiles).then((results) => {
+                            for (let result0 of results) {
+                                this.processFiles(result0, validSections);
+                            }
+                        }).then(function () {
+                            count = thisClass.memMan.checkValidSections(validSections);
+                            if (count > 0) {
+                                thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
+                                    if (successful) {
+                                        thisClass.addedDatasets.push(id);
+                                        thisClass.forListDS.push({id: id, kind: kind, numRows: count});
+                                        return resolve(thisClass.addedDatasets);
+                                    } else {
+                                        return reject(new InsightError("Could not write " + id + "to memory"));
+                                    }
+                                });
+                            } else {
+                                return reject(new InsightError("Could not add invalid dataset: " + id));
+                            }
+                        });
                     }).catch(() => {
                         return reject(new InsightError("Invalid file " + id + "cannot be added"));
                     });
@@ -61,77 +79,6 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
-    // helper for addDataset, recently refactored out
-    public idIsInvalid(id: string): boolean {
-        return (!id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
-            this.addedDatasets.some((s) => s === id));
-    }
-
-    // helper for addDataset, recently refactored out
-    public loadToDisk( id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        const promisedFiles: any = [];
-        let validSections: any[] = [];
-        let thisClass = this;
-        let count: number = 0;
-        return new Promise<string[]>((resolve, reject) => {
-            jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-                if (kind === "rooms") {
-                    thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
-                        return reject("not implemented");
-                    }).catch(() => {
-                        return reject(new InsightError("error in roomLoadToDisk"));
-                    });
-                } else {
-                result.folder("courses").forEach(function (relativePath, file) {
-                    promisedFiles.push(file.async("text"));
-                });
-                Promise.all(promisedFiles).then((results) => {
-                    for (let result0 of results) {
-                        thisClass.processFiles(result0, validSections);
-                    }
-                }).then(function () {
-                    count = thisClass.memMan.checkValidSections(validSections);
-                    if (count > 0) {
-                        thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
-                            if (successful) {
-                                thisClass.addedDatasets.push(id);
-                                thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                return resolve(thisClass.addedDatasets);
-                            } else {
-                                return reject(new InsightError("Could not write " + id + "to memory"));
-                            }
-                        });
-                    } else {
-                        return reject(new InsightError("Could not add invalid dataset: " + id));
-                    }
-                });
-                }
-            });
-        });
-    }
-
-    public roomLoadToDisk( id: string, content: string, kind: InsightDatasetKind, result: jszip): Promise<string[]> {
-        let roomsToParse: any[];
-        let thisClass = this;
-        let parsedIndexFile: object;
-        const parse5 = require("parse5");
-        Log.trace("inside roomLoadToDisk");
-        return new Promise<string[]>((resolve, reject) => {
-            result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
-                parsedIndexFile = parse5.parse(indexFile);
-                Log.trace("before roomsToParse is called");
-                roomsToParse = thisClass.roomMemMan.roomsToParse(parsedIndexFile);
-                Log.trace("after roomsToParse is called");
-                for (let room of roomsToParse) {
-                    Log.trace(room);
-                    // todo now go into the relevant folders and get data from each relevant room
-                }
-            });
-            return reject("not finished implementation");
-        });
-    }
-
-    // helper for loadToDisk, which is a helper for addDataset
     public processFiles(file: any, validSections: any[]) {
         let processed: any;
         try {
@@ -223,8 +170,9 @@ export default class InsightFacade implements IInsightFacade {
             }
         }
         let result: any[];
+        let queryPerformer = new QueryPerformer();
         try {
-            result = this.queryPerformer.returnQueriedCourses(this.internalDataStructure, query, numRow);
+            result = queryPerformer.returnQueriedCourses(this.internalDataStructure, query, numRow);
         } catch (err) {
             return Promise.reject(err);
         }
