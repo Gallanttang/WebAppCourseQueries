@@ -33,6 +33,9 @@ export default class QueryPerformer {
         if (result.length === 0) {
             return result;
         }
+        if (query.hasOwnProperty("TRANSFORMATION")) {
+            result = this.transform(query["TRANSFORMATION"], result);
+        }
         result = this.selectColumns(result, query["OPTIONS"]["COLUMNS"]);
         // assume that result is only of the columns chosen
         if (query["OPTIONS"].hasOwnProperty("ORDER")) {
@@ -61,5 +64,79 @@ export default class QueryPerformer {
             }
         }
         return returnValue;
+    }
+
+    private transform(queryElement: any, result: any[]): any[] {
+        let group: string[] = queryElement["GROUP"];
+        let apply: any[] = queryElement["APPLY"];
+        let returnValue: any[] = this.transformGroup(group, result);
+        returnValue = this.transformApply(apply, returnValue);
+        return returnValue;
+    }
+
+    private transformApply(apply: any[], result: any): any[] {
+        let that = this;
+        let returnValue: any[] = [];
+        let keys: string[] = Object.keys(result);
+        for (let key of keys) {
+            let temp: any = result[key];
+            if (!Array.isArray(result[key])) {
+                temp = that.transformApplyHelper(temp);
+            }
+            for (const applyRule of apply) {
+                let applyKey: string = Object.keys(applyRule)[0];
+                let applyToken: string = Object.keys(applyRule[applyKey])[0];
+                returnValue.push(this.apply(applyToken, temp, applyRule[applyKey][applyToken]));
+            }
+        }
+        return returnValue;
+    }
+
+    private transformApplyHelper(returnValue: any): any[] {
+        if (!Array.isArray(returnValue)) {
+            let keys: string = Object.keys(returnValue)[0];
+            return this.transformApplyHelper(returnValue[keys[0]]);
+        } else {
+            return returnValue;
+        }
+    }
+
+    private transformGroup(group: string[], result: any[]): any[] {
+        let returnValue: any = {};
+        for (let section of result) {
+            returnValue = this.transformGroupHelper(returnValue, section, group, 0);
+        }
+        return returnValue;
+    }
+
+    private transformGroupHelper(returnValue: any, section: any, cond: string[], index: number): any[] {
+        let nextIndex: number = index + 1;
+        let group: string = section[cond[index]];
+        if (cond.length - 1 !== index) {
+            if (returnValue.hasOwnProperty(group)) {
+                returnValue[group] = this.transformGroupHelper(returnValue[group], section, cond, nextIndex);
+            } else {
+                returnValue[group] = {};
+                returnValue[group] = this.transformGroupHelper(returnValue[group], section, cond, nextIndex);
+            }
+        } else if (returnValue.hasOwnProperty(group)) {
+            returnValue[group].push(section);
+        } else {
+            returnValue[group] = [];
+            returnValue[group].push(section);
+        }
+        return returnValue;
+    }
+
+    private apply(applyToken: string, section: any[], applyKey: string) {
+        if (applyToken === "MAX") {
+            section.reduce(function (acc, curr) {
+                if (curr[applyKey] > acc) {
+                    return curr[applyKey];
+                } else {
+                    return acc;
+                }
+            }, 0);
+        }
     }
 }

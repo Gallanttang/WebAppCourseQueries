@@ -2,8 +2,9 @@ import Validator from "./Validator";
 import {InsightError} from "./IInsightFacade";
 
 export default class ValidatorTransformation extends Validator {
-    private readonly columnsValidator: string[] = [];
+    private readonly columnsValidator: string[];
     private containedColumns: string[] = [];
+    private containedApply: string[] = [];
     private applyValidator: string[] = ["MAX", " MIN", "AVG", "SUM", "COUNT"];
     constructor(currDataset: any[], groupBy: string[]) {
         super(currDataset);
@@ -65,6 +66,11 @@ export default class ValidatorTransformation extends Validator {
             } catch (err) {
                 throw err;
             }
+            if (!this.containedApply.includes(applyKeys[0])) {
+                this.containedApply.push(applyKeys[0]);
+            } else {
+                throw new InsightError("Apply contains duplicate keys");
+            }
         }
     }
 
@@ -75,6 +81,31 @@ export default class ValidatorTransformation extends Validator {
         }
         if (!this.applyValidator.includes(applyToken[0])) {
             throw new InsightError("Invalid applyKey in transformation " + applyToken[0]);
+        }
+        let type: string;
+        if (this.checkSingleKey(applyKey[applyToken[0]])) {
+            throw new InsightError("Invalid key in Transformation's " + applyToken[0]);
+        }
+        let key: string;
+        try {
+            key = applyKey[applyToken[0]].split("_")[1];
+        } catch (err) {
+            throw new InsightError(err);
+        }
+        let columns: boolean = this.coursevalidator.hasOwnProperty(key);
+        if (columns) {
+            type = this.coursevalidator[key];
+        } else {
+            type = this.roomsvalidator[key];
+        }
+        if (applyToken[0] === "MAX" || applyToken[0] === " MIN" || applyToken[0] === "AVG" || applyToken[0] === "SUM") {
+            if (type !== "number") {
+                throw new InsightError("Expected field on " + applyToken[0] + " to be type of number, got a " + type);
+            }
+        } else {
+            if (type !== "number" && type !== "string") {
+                throw new InsightError("Expected field on count to be type of number or string, got a " + type);
+            }
         }
     }
 }
