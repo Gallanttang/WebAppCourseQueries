@@ -1,6 +1,7 @@
 import Log from "../Util";
+import {Decimal} from "decimal.js";
 
-export default class Filtering {
+export default class QueryFiltering {
     constructor() {
         Log.trace("filtering::init()");
     }
@@ -25,14 +26,14 @@ export default class Filtering {
     }
 
     private performMCOMP (filterType: string, element: any, query: any): boolean {
-        let condition: number = query[Object.keys(query)[0]];
-        let checking: number = element[Object.keys(query)[0]];
+        let condition: Decimal = new Decimal(query[Object.keys(query)[0]]);
+        let checking: Decimal = new Decimal(element[Object.keys(query)[0]]);
         if (filterType === "LT") {
-            return checking < condition;
+            return checking.lessThan(condition);
         } else if (filterType === "GT") {
-            return checking > condition;
+            return checking.greaterThan(condition);
         } else {
-            return checking === condition;
+            return checking.equals(condition);
         }
     }
 
