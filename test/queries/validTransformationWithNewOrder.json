@@ -1,0 +1,134 @@
+{
+    "title": "",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_dept": "comm"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 85
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title",
+                "numCourseSections"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "numCourseSections"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_title"
+            ],
+            "APPLY": [
+                {
+                    "numCourseSections": {
+                        "COUNT": "courses_id"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "risk mgt&fnc eng",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "research theory",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "invest theory",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "int fin mar/inst",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "dsgn stat prct",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "creativity busns",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "real est develop",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "database tech",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "bus telecommun",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "new venture des",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "fixed inc mrk",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "info sys mngt",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "new enter devel",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "int org res mthd",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "stats methlgy i",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "emp res meth",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "sem in marketing",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "buyer behaviour",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "theory of financ",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "adv tpc th co pr",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "rsrch meth 1",
+            "numCourseSections": 1
+        },
+        {
+            "courses_title": "adv tpc emp corp",
+            "numCourseSections": 1
+        }
+    ]
+}

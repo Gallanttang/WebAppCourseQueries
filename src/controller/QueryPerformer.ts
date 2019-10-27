@@ -1,9 +1,11 @@
 import Log from "../Util";
 import {ResultTooLargeError} from "./IInsightFacade";
-import Filtering from "./Filtering";
+import QueryFiltering from "./QueryFiltering";
+import QueryTransforming from "./QueryTransforming";
 
 export default class QueryPerformer {
-    private filtering: Filtering = new Filtering();
+    private filtering: QueryFiltering = new QueryFiltering();
+    private transformer: QueryTransforming = new QueryTransforming();
     constructor() {
         Log.trace("QueryPerformer::init()");
     }
@@ -15,6 +17,7 @@ export default class QueryPerformer {
      */
     public returnQueriedCourses(dataStructure: any, query: any, numRows: number): any[] {
         let result: any[] = [];
+        let that = this;
         const filter: any = query["WHERE"];
         for (let index: number = 0; index < numRows; index++) {
             let section: any = {};
@@ -33,18 +36,48 @@ export default class QueryPerformer {
         if (result.length === 0) {
             return result;
         }
+        if (query.hasOwnProperty("TRANSFORMATIONS")) {
+            result = this.transformer.transform(query["TRANSFORMATIONS"], result);
+        }
         result = this.selectColumns(result, query["OPTIONS"]["COLUMNS"]);
         // assume that result is only of the columns chosen
         if (query["OPTIONS"].hasOwnProperty("ORDER")) {
+            let order: any = query["OPTIONS"]["ORDER"];
             // sort result given ORDER
-            const orderBy: string = query["OPTIONS"]["ORDER"]; // should give "courses_avg" or something else
-            // sort by given key to order (orderBy) in result
-            result.sort((a, b) =>
-                (a[orderBy] > b[orderBy]) ? 1 :
-                    (b[orderBy] > a[orderBy]) ? -1 : 0
-            );
+            if (typeof order === "string") {
+                // order should be "courses_avg" or something else
+                // sort by given key to order (orderBy) in result
+                result.sort((a, b) =>
+                    (a[order] > b[order]) ? 1 :
+                        (b[order] > a[order]) ? -1 : 0);
+            } else {
+                let dir: string = order["dir"];
+                let keys: string[] = order["keys"];
+                result.sort(function (a, b) {
+                    if (dir === "DOWN") {
+                        return (a[order[keys[0]]] < b[order[keys[0]]]) ? 1 :
+                            (b[order[keys[0]]] < a[order[keys[0]]]) ? -1 : (that.advanceSort(a, b, keys, 0));
+                    } else {
+                        return (a[order[keys[0]]] > b[order[keys[0]]]) ? 1 :
+                            (b[order[keys[0]]] > a[order[keys[0]]]) ? -1 : (that.advanceSort(b, a, keys, 0));
+                    }
+                });
+            }
         }
         return result;
+    }
+
+    private advanceSort(a: any, b: any, keys: string[], index: number): number {
+        let nextIndex: number = index + 1;
+        if (a[keys[index]] < b[keys[index]]) {
+            return 1;
+        } else if (a[keys[index]] < b[keys[index]]) {
+            return -1;
+        } else if (nextIndex !== keys.length) {
+            return this.advanceSort(a, b, keys, index);
+        } else {
+            return 0;
+        }
     }
 
     private selectColumns(result: any[], options: string[]) {

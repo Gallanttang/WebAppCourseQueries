@@ -2,8 +2,9 @@ import Validator from "./Validator";
 import {InsightError} from "./IInsightFacade";
 
 export default class ValidatorTransformation extends Validator {
-    private readonly columnsValidator: string[] = [];
+    private readonly columnsValidator: string[];
     private containedColumns: string[] = [];
+    private containedApply: string[] = [];
     private applyValidator: string[] = ["MAX", " MIN", "AVG", "SUM", "COUNT"];
     constructor(currDataset: any[], groupBy: string[]) {
         super(currDataset);
@@ -21,6 +22,9 @@ export default class ValidatorTransformation extends Validator {
         if (!keys.includes("GROUP")) {
             throw new InsightError("Invalid Transformation, missing group key");
         }
+        if (!Array.isArray(trans["GROUP"]) || !Array.isArray(trans["APPLY"])) {
+            throw new InsightError("Invalid TRANSFORMATIONS " + trans);
+        }
         try {
             this.checkGroup(trans["GROUP"]);
             this.checkApply(trans["APPLY"]);
@@ -35,6 +39,9 @@ export default class ValidatorTransformation extends Validator {
     }
 
     private checkGroup(group: string[]) {
+        if (group.length < 1) {
+            throw new InsightError("GROUP must be a non empty array");
+        }
         for (let grouping of group) {
             if (this.columnsValidator.includes(grouping)) {
                 this.containedColumns.push(grouping);
@@ -65,16 +72,52 @@ export default class ValidatorTransformation extends Validator {
             } catch (err) {
                 throw err;
             }
+            if (!this.containedApply.includes(applyKeys[0])) {
+                this.containedApply.push(applyKeys[0]);
+            } else {
+                throw new InsightError("Apply contains duplicate keys");
+            }
         }
     }
 
     private checkApplyRule(applyKey: any) {
         let applyToken: string[] = super.getKeys(applyKey);
+        let column: string = applyKey[applyToken[0]];
         if (applyToken.length !== 1) {
             throw new InsightError("Invalid applyKey in transformation, expects 1 key got" + applyToken.length);
         }
         if (!this.applyValidator.includes(applyToken[0])) {
             throw new InsightError("Invalid applyKey in transformation " + applyToken[0]);
+        }
+        if (!this.idCheck.test(column) && !this.applyCheck.test(column)) {
+            throw new InsightError("Invalid key in apply " + column);
+        }
+        if (!this.checkSingleKey(applyKey[applyToken[0]])) {
+            throw new InsightError("Invalid key in Transformation's " + applyKey[applyToken[0]]);
+        }
+        let key: string;
+        try {
+            key = column.split("_")[1];
+        } catch (err) {
+            throw new InsightError(err);
+        }
+        let columns: boolean = this.coursevalidator.hasOwnProperty(key);
+        let type: string;
+        if (columns) {
+            type = this.coursevalidator[key];
+        } else {
+            type = this.roomsvalidator[key];
+        }
+        if (applyToken[0] === "MAX" || applyToken[0] === " MIN" || applyToken[0] === "AVG" || applyToken[0] === "SUM") {
+            if (type !== "number") {
+                throw new InsightError("Expected field on " + column + " to be type of number, got a " + type);
+            }
+        } else if (applyToken[0] === "COUNT") {
+            if (type !== "number" && type !== "string") {
+                throw new InsightError("Expected field on count to be type of number or string, got a " + type);
+            }
+        } else {
+            throw new InsightError("Invalid apply token in TRANSFORMATION " + applyToken[0]);
         }
     }
 }

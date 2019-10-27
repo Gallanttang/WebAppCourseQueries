@@ -106,6 +106,12 @@ export default abstract class Validator {
     }
 
     protected checkSingleKey(key: string): boolean {
-        return this.coursevalidator.hasOwnProperty(key) || this.roomsvalidator.hasOwnProperty(key);
+        let col: string;
+        try {
+            col = key.split("_")[1];
+        } catch (err) {
+            throw new InsightError(err);
+        }
+        return this.coursevalidator.hasOwnProperty(col) || this.roomsvalidator.hasOwnProperty(col);
     }
 }

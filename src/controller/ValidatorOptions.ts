@@ -3,6 +3,7 @@ import {InsightError} from "./IInsightFacade";
 
 export default class ValidatorOptions extends Validator {
 
+    private containedColumns: string[] = [];
     constructor(currDataset: any[]) {
         super(currDataset);
     }
@@ -43,11 +44,14 @@ export default class ValidatorOptions extends Validator {
             }
             if (!this.applyCheck.test(col)) {
                 this.checkDataset(col);
-                let field: string;
-                field = col.split("_")[1];
-                if (!this.checkSingleKey(field)) {
+                if (!this.checkSingleKey(col)) {
                     throw new InsightError("COLUMN contains invalid key " + col);
                 }
+            }
+            if (!this.containedColumns.includes(col)) {
+                this.containedColumns.push(col);
+            } else {
+                throw new InsightError("Column contains duplicate key " + col);
             }
         }
     }
