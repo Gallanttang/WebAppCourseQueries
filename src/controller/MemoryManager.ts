@@ -109,48 +109,32 @@ export default class MemoryManager implements IMemoryManager {
     }
 
     public addHelperSectionEqualsOverall(section: any, key: any) {
-        if (this.internalDataStructure.hasOwnProperty(key)) {
-            if (key === "courses_year") {
-                this.internalDataStructure[key].push(1900);
-            } else if (key === "courses_uuid") {
-                this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
-            } else {
-                this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
-            }
+        if (!this.internalDataStructure.hasOwnProperty(key)) {
+            this.internalDataStructure[key] = [];
+        }
+        if (key === "courses_year") {
+            this.internalDataStructure[key].push(1900);
         } else {
-            if (key === "courses_year") {
-                this.internalDataStructure[key] = [];
-                this.internalDataStructure[key].push(1900);
-            } else if (key === "courses_uuid") {
-                this.internalDataStructure[key] = [];
-                this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
-            } else {
-                this.internalDataStructure[key] = [];
-                this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
-            }
+            this.addHelperSection(section, key);
         }
     }
 
     public addHelperSectionNotEqualsOverall(section: any, key: any) {
-        if (this.internalDataStructure.hasOwnProperty(key)) {
-            if (key === "courses_year") {
-                this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
-            } else if (key === "courses_uuid") {
-                this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
-            } else {
-                this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
-            }
+        if (!this.internalDataStructure.hasOwnProperty(key)) {
+            this.internalDataStructure[key] = [];
+        }
+        if (key === "courses_year") {
+            this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
         } else {
-            if (key === "courses_year") {
-                this.internalDataStructure[key] = [];
-                this.internalDataStructure[key].push(Number(section[this.coursevalidator[key]]));
-            } else if (key === "courses_uuid") {
-                this.internalDataStructure[key] = [];
-                this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
-            } else {
-                this.internalDataStructure[key] = [];
-                this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
-            }
+            this.addHelperSection(section, key);
+        }
+    }
+
+    private addHelperSection(section: any, key: any) {
+        if (key === "courses_uuid") {
+            this.internalDataStructure[key].push(String(section[this.coursevalidator[key]]));
+        } else {
+            this.internalDataStructure[key].push(section[this.coursevalidator[key]]);
         }
     }
 

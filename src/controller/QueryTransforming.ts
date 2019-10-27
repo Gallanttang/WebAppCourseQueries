@@ -51,9 +51,7 @@ export default class QueryTransforming {
                 temp = that.transformApplyHelper(temp);
             }
             for (const applyRule of apply) {
-                let applyKey: string = Object.keys(applyRule)[0];
-                let applyToken: string = Object.keys(applyRule[applyKey])[0];
-                temp = this.apply(applyToken, temp, applyRule[applyKey][applyToken], applyKey, group);
+                temp = this.apply(applyRule, temp, group);
                 returnValue.push(temp);
             }
         }
@@ -69,8 +67,13 @@ export default class QueryTransforming {
         }
     }
 
-    private apply(applyToken: string, section: any[], column: string, applyKey: string, group: string[]): any[] {
+    private apply(apply: any, section: any[], group: string[]): any[] {
         let val: Decimal;
+        let applyKey: string = Object.keys(apply)[0];
+        let applyObj: any = apply[applyKey];
+        let applyToken: string = Object.keys(applyObj)[0];
+        let column: string = applyObj[applyToken];
+
         if (applyToken === "MAX") {
             val = new Decimal(section.reduce((acc, curr) => Decimal.max(acc, curr[column]), 0));
         }
@@ -85,7 +88,15 @@ export default class QueryTransforming {
             val = new Decimal(section.reduce((acc, curr) => Decimal.add(acc, curr[column]), 0));
         }
         if (applyToken === "COUNT") {
-            val = new Decimal(section.length);
+            let unique: any = [];
+            val = new Decimal(section.reduce(function (accumulator, curr) {
+                if (unique.includes(curr[column])) {
+                    return accumulator;
+                } else {
+                    unique.push(curr[column]);
+                    return Decimal.add(accumulator, 1);
+                }
+            }, 0));
         }
         let rt: any = {};
         for (let g of group) {

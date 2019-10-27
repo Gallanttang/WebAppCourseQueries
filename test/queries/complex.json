@@ -4,29 +4,29 @@
         "WHERE": {
             "OR": [
                 {
-                    "AND":[
+                    "AND": [
                         {
                             "LT": {
-                                "courses_avg":95
+                                "courses_avg": 95
                             }
                         },
                         {
                             "NOT": {
                                 "LT": {
-                                    "courses_avg":90
+                                    "courses_avg": 90
                                 }
                             }
                         },
                         {
                             "IS": {
-                                "courses_dept":"adhe"
+                                "courses_dept": "adhe"
                             }
                         }
                     ]
                 },
                 {
                     "EQ": {
-                        "courses_avg":95
+                        "courses_avg": 95
                     }
                 }
             ]
@@ -41,10 +41,12 @@
         }
     },
     "isQueryValid": true,
-    "result":[{"courses_dept":"adhe",
-        "courses_id": "329",
-        "courses_avg": 90.02
-    },
+    "result": [
+        {
+            "courses_dept": "adhe",
+            "courses_id": "329",
+            "courses_avg": 90.02
+        },
         {
             "courses_dept": "adhe",
             "courses_id": "412",
