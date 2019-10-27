@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
-import {IMemoryManager} from "../IMemoryManager";
+import {IMemoryManager} from "./IMemoryManager";
 
 export default class MemoryManager implements IMemoryManager {
     private internalDataStructure: any = {};
@@ -15,6 +15,8 @@ export default class MemoryManager implements IMemoryManager {
         Log.trace("MemoryManager::init()");
     }
 
+    // called when the dataset is already in disk
+    // gets dataset name & kind & numRows from the file name and pushes appropriately
     public helpInitialize(dataset: any, forListDS: any) {
         fs.readdirSync("./data/").forEach((file) => {
             let content: string[] = file.split("_", 3);
@@ -24,6 +26,7 @@ export default class MemoryManager implements IMemoryManager {
         });
     }
 
+    // checks if the dataset is already in disk
     public alreadyInDisk(id: string): Promise<boolean> {
         const path = "./data/" + id + ".json";
         return new Promise<boolean>((resolve) => {

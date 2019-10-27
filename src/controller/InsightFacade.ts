@@ -11,7 +11,10 @@ import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryPerformer from "./QueryPerformer";
 import QueryManager from "./QueryManager";
-import RoomMemoryManager from "../RoomMemoryManager";
+import RoomMemoryManager from "./RoomMemoryManager";
+import {IMemoryManager} from "./IMemoryManager";
+import * as fs from "fs";
+import {log} from "util";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -20,7 +23,6 @@ import RoomMemoryManager from "../RoomMemoryManager";
  */
 export default class InsightFacade implements IInsightFacade {
     private memMan: MemoryManager;
-    // todo I just put this here to make TSLint happier
     private roomMemMan: RoomMemoryManager;
     private queryPerformer: QueryPerformer;
     private addedDatasets: string[] = [];
@@ -31,27 +33,19 @@ export default class InsightFacade implements IInsightFacade {
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.queryPerformer = new QueryPerformer();
+        this.roomMemMan = new RoomMemoryManager();
         this.memMan = new MemoryManager();
         this.queryMan = new QueryManager(this.forListDS);
         this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        const promisedFiles: any = [];
         const thisClass = this;
-        let validSections: any[] = [];
         if (this.idIsInvalid(id)) {
             return Promise.reject(new InsightError("Invalid id used"));
         }
-        // todo make this work
-        if (kind === "courses") {
-            // todo add course
-        } else if (kind === "rooms") {
-             // todo add rooms
-        } else {
-            return Promise.reject(new InsightError(""));
-        }
         return new Promise<string[]>((resolve, reject) => {
+            Log.trace("inside new promise of addDataset");
             thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
                 if (isInDisk) {
                     thisClass.memMan.helpInitialize(this.addedDatasets, this.forListDS);
@@ -81,12 +75,19 @@ export default class InsightFacade implements IInsightFacade {
         let count: number = 0;
         return new Promise<string[]>((resolve, reject) => {
             jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
+                if (kind === "rooms") {
+                    thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
+                        return reject("not implemented");
+                    }).catch(() => {
+                        return reject(new InsightError("error in roomLoadToDisk"));
+                    });
+                } else {
                 result.folder("courses").forEach(function (relativePath, file) {
                     promisedFiles.push(file.async("text"));
                 });
                 Promise.all(promisedFiles).then((results) => {
                     for (let result0 of results) {
-                        this.processFiles(result0, validSections);
+                        thisClass.processFiles(result0, validSections);
                     }
                 }).then(function () {
                     count = thisClass.memMan.checkValidSections(validSections);
@@ -104,11 +105,33 @@ export default class InsightFacade implements IInsightFacade {
                         return reject(new InsightError("Could not add invalid dataset: " + id));
                     }
                 });
+                }
             });
         });
     }
 
+    public roomLoadToDisk( id: string, content: string, kind: InsightDatasetKind, result: jszip): Promise<string[]> {
+        let roomsToParse: any[];
+        let thisClass = this;
+        let parsedIndexFile: object;
+        const parse5 = require("parse5");
+        Log.trace("inside roomLoadToDisk");
+        return new Promise<string[]>((resolve, reject) => {
+            result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
+                parsedIndexFile = parse5.parse(indexFile);
+                Log.trace("before roomsToParse is called");
+                roomsToParse = thisClass.roomMemMan.roomsToParse(parsedIndexFile);
+                Log.trace("after roomsToParse is called");
+                for (let room of roomsToParse) {
+                    Log.trace(room);
+                    // todo now go into the relevant folders and get data from each relevant room
+                }
+            });
+            return reject("not finished implementation");
+        });
+    }
 
+    // helper for loadToDisk, which is a helper for addDataset
     public processFiles(file: any, validSections: any[]) {
         let processed: any;
         try {
