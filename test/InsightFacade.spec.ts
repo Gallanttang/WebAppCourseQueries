@@ -25,6 +25,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
     // noinspection DuplicatedCode
     const datasetsToLoad: { [id: string]: string } = {
         courses: "./test/data/courses.zip",
+        rooms: "./test/data/rooms.zip",
         invalid: "./test/data/invalid.zip",
         invalid0: "./test/data/invalid0.json",
         course: "./test/data/courses2.zip",
@@ -239,6 +240,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
 describe("InsightFacade listDataset", () => {
     const datasetsToLoad: { [id: string]: string } = {
         courses: "./test/data/courses.zip",
+        rooms: "./test/data/rooms.zip"
     };
     let insightFacade: InsightFacade;
     let datasets: { [id: string]: string } = {};
@@ -307,6 +309,30 @@ describe("InsightFacade listDataset", () => {
             expect.fail();
         } finally {
             expect(result0).to.deep.equal(expected0);
+        }
+    });
+
+    it("test my regex understanding", async () => {
+        const idTrue: string = "/n         CHBE      ";
+        const idFalse1: string = "/n            ";
+        const idFalse2: string = "";
+        const assert = require("assert");
+        let reg: RegExp = new RegExp(/\/n\s*(?:[A-Z]{4}|[A-Z]{3})\s*/);
+        assert(reg.test(idTrue));
+        assert(!reg.test(idFalse1));
+        assert(!reg.test(idFalse2));
+    });
+
+    it("should add a valid rooms dataset", async () => {
+        const id: string = "rooms";
+        const expected: string[] = [id];
+        let result: string[];
+        try {
+            result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Rooms);
+        } catch (err) {
+            expect.fail(err, expected, "failed to add valid course dataset");
+        } finally {
+            expect(result).to.deep.equal(expected);
         }
     });
 });
