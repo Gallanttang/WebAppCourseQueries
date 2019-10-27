@@ -55,13 +55,17 @@ export default class RoomMemoryManager {
     public roomsFromTableRecursion(table: any): string[] {
         let thisClass = this;
         let result: string[] = [];
-        let reg: RegExp = new RegExp("\/n\s(?:[A-Z]{4}|[A-Z]{3})\s?");
+        let reg: RegExp = new RegExp(/\/n\s*(?:[A-Z]{4}|[A-Z]{3})\s*/);
         // base case: reached #text
         // only return result if it actually is a building code
         if (table.nodeName === "#text") {
-            if (table.value.length > 6 && table.value.length <= 8 && table.value === reg) {
+            Log.trace("table.value:" + table.value);
+            // todo I misunderstood the spec
+            //  todo "You should only parse buildings that are linked to from the index.htm file'
+            // todo I shouldn't have looked in value at all
+            if (reg.test(table.value)) {
                 let buildingName: string = table.value.slice(4, -1);
-                // todo for some reason table.value is a number???
+                // todo for some reason table.value 's type is a number???
                 //  todo even though it doesn't show up that way in the AST playground online
                 result.push(buildingName);
                 return result;

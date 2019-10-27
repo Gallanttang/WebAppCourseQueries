@@ -267,6 +267,17 @@ describe("InsightFacade listDataset", () => {
         }
     });
 
+    it("test my regex understanding", async () => {
+        const idTrue: string = "/n         CHBE      ";
+        const idFalse1: string = "/n            ";
+        const idFalse2: string = "";
+        const assert = require("assert");
+        let reg: RegExp = new RegExp(/\/n\s*(?:[A-Z]{4}|[A-Z]{3})\s*/);
+        assert(reg.test(idTrue));
+        assert(!reg.test(idFalse1));
+        assert(!reg.test(idFalse2));
+    });
+
     it("should add a valid rooms dataset", async () => {
         const id: string = "rooms";
         const expected: string[] = [id];
