@@ -1,0 +1,83 @@
+{
+    "title": "Group by rooms shortname, rooms number, and rooms seats",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "rooms_seats": 300
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_shortname",
+                "rooms_number",
+                "rooms_seats",
+                "seatAvg"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_shortname",
+                "rooms_number",
+                "rooms_seats"
+            ],
+            "APPLY": [
+                {
+                    "seatAvg": {
+                        "AVG": "rooms_seats"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "rooms_shortname": "CIRS",
+            "rooms_number": "1250",
+            "rooms_seats": 426,
+            "seatAvg": 426
+        },
+        {
+            "rooms_shortname": "ESB",
+            "rooms_number": "1013",
+            "rooms_seats": 350,
+            "seatAvg": 350
+        },
+        {
+            "rooms_shortname": "HEBB",
+            "rooms_number": "100",
+            "rooms_seats": 375,
+            "seatAvg": 375
+        },
+        {
+            "rooms_shortname": "LSC",
+            "rooms_number": "1001",
+            "rooms_seats": 350,
+            "seatAvg": 350
+        },
+        {
+            "rooms_shortname": "LSC",
+            "rooms_number": "1002",
+            "rooms_seats": 350,
+            "seatAvg": 350
+        },
+        {
+            "rooms_shortname": "OSBO",
+            "rooms_number": "A",
+            "rooms_seats": 442,
+            "seatAvg": 442
+        },
+        {
+            "rooms_shortname": "WESB",
+            "rooms_number": "100",
+            "rooms_seats": 325,
+            "seatAvg": 325
+        },
+        {
+            "rooms_shortname": "WOOD",
+            "rooms_number": "2",
+            "rooms_seats": 503,
+            "seatAvg": 503
+        }
+    ]
+}

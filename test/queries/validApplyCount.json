@@ -1,0 +1,929 @@
+{
+    "title": "Count number of instructors teaching a course with course average above 95",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 95
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title",
+                "courses_instructor",
+                "Count"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_title",
+                "courses_instructor"
+            ],
+            "APPLY": [
+                {
+                    "Count": {
+                        "COUNT": "courses_instructor"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "dev wkshp/sem",
+            "courses_instructor": "bishundayal, deonarine",
+            "Count": 1
+        },
+        {
+            "courses_title": "eng mtls lab",
+            "courses_instructor": "wassink, berend",
+            "Count": 1
+        },
+        {
+            "courses_title": "aud&non-txt arch",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "audi prctcm iv",
+            "courses_instructor": "adelman, sharon",
+            "Count": 1
+        },
+        {
+            "courses_title": "audi prctcm iv",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "med tech project",
+            "courses_instructor": "hodgson, antony",
+            "Count": 1
+        },
+        {
+            "courses_title": "med tech project",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "thermodynamics",
+            "courses_instructor": "gopaluni, bhushan",
+            "Count": 1
+        },
+        {
+            "courses_title": "thermodynamics",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "math operations",
+            "courses_instructor": "gopaluni, bhushan",
+            "Count": 1
+        },
+        {
+            "courses_title": "math operations",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "dynam struct 2",
+            "courses_instructor": "ventura, carlos estuardo",
+            "Count": 1
+        },
+        {
+            "courses_title": "dynam struct 2",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "schl counselling",
+            "courses_instructor": "owens, rhea",
+            "Count": 1
+        },
+        {
+            "courses_title": "schl counselling",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "counsl adolescnt",
+            "courses_instructor": "weinberg, mark",
+            "Count": 1
+        },
+        {
+            "courses_title": "counsl adolescnt",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "career planning",
+            "courses_instructor": "cox, daniel",
+            "Count": 1
+        },
+        {
+            "courses_title": "career planning",
+            "courses_instructor": "neault, roberta a",
+            "Count": 1
+        },
+        {
+            "courses_title": "career planning",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "courses_instructor": "cox, daniel",
+            "Count": 1
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "courses_instructor": "carter, john",
+            "Count": 1
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "",
+            "courses_instructor": "munteanu, mircea",
+            "Count": 1
+        },
+        {
+            "courses_title": "prep writ career",
+            "courses_instructor": "campbell, deborah",
+            "Count": 1
+        },
+        {
+            "courses_title": "prep writ career",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "medved, maureen",
+            "Count": 1
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "campbell, deborah",
+            "Count": 1
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "taylor, timothy",
+            "Count": 1
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "maillard, keith",
+            "Count": 1
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "galloway, steve",
+            "Count": 1
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "grady, albert wayne",
+            "Count": 1
+        },
+        {
+            "courses_title": "ds tec ii sc c&p",
+            "courses_instructor": "magee, theresa",
+            "Count": 1
+        },
+        {
+            "courses_title": "ds tec ii sc c&p",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "fn & educ change",
+            "courses_instructor": "marker, michael",
+            "Count": 1
+        },
+        {
+            "courses_title": "fn & educ change",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "adlt edu pract",
+            "courses_instructor": "vanwynsberghe, robert",
+            "Count": 1
+        },
+        {
+            "courses_title": "adlt edu pract",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "res mthd in educ",
+            "courses_instructor": "morgan, tannis",
+            "Count": 1
+        },
+        {
+            "courses_title": "res mthd in educ",
+            "courses_instructor": "adler, james douglas;scott, sandra",
+            "Count": 1
+        },
+        {
+            "courses_title": "multimedia sys",
+            "courses_instructor": "coria, lino",
+            "Count": 1
+        },
+        {
+            "courses_title": "multimedia sys",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "tch'g hghly able",
+            "courses_instructor": "porath, marion",
+            "Count": 1
+        },
+        {
+            "courses_title": "tch'g hghly able",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "stockman, james",
+            "Count": 1
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "gaster, sean",
+            "Count": 1
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "romero, amber",
+            "Count": 1
+        },
+        {
+            "courses_title": "tchg st visl imp",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "ed prg hghly abl",
+            "courses_instructor": "porath, marion",
+            "Count": 1
+        },
+        {
+            "courses_title": "ed prg hghly abl",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "augmt&alt comm",
+            "courses_instructor": "mceachern hughes, tammy",
+            "Count": 1
+        },
+        {
+            "courses_title": "augmt&alt comm",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "tech for vis imp",
+            "courses_instructor": "levinson, tami",
+            "Count": 1
+        },
+        {
+            "courses_title": "tech for vis imp",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "assess lrn diffi",
+            "courses_instructor": "cole, kenneth",
+            "Count": 1
+        },
+        {
+            "courses_title": "assess lrn diffi",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "courses_instructor": "ervin, ruth",
+            "Count": 1
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "courses_instructor": "smith, gillian",
+            "Count": 1
+        },
+        {
+            "courses_title": "surv bhvr dis ch",
+            "courses_instructor": "champion, kathleen",
+            "Count": 1
+        },
+        {
+            "courses_title": "surv bhvr dis ch",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "educ stds autism",
+            "courses_instructor": "grow, laura",
+            "Count": 1
+        },
+        {
+            "courses_title": "educ stds autism",
+            "courses_instructor": "wilk, diana",
+            "Count": 1
+        },
+        {
+            "courses_title": "educ stds autism",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "intr stat rs edu",
+            "courses_instructor": "kishor, nand",
+            "Count": 1
+        },
+        {
+            "courses_title": "hn dev: inf-adlt",
+            "courses_instructor": "porath, marion",
+            "Count": 1
+        },
+        {
+            "courses_title": "able&creatv lrnr",
+            "courses_instructor": "porath, marion",
+            "Count": 1
+        },
+        {
+            "courses_title": "able&creatv lrnr",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "dev el sk df&hrd",
+            "courses_instructor": "cannon, joanna",
+            "Count": 1
+        },
+        {
+            "courses_title": "dev el sk df&hrd",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "cur dev e df&hrd",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "specific lrn dis",
+            "courses_instructor": "mcquarrie, maureen",
+            "Count": 1
+        },
+        {
+            "courses_title": "specific lrn dis",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "basic princ meas",
+            "courses_instructor": "kishor, nand",
+            "Count": 1
+        },
+        {
+            "courses_title": "basic princ meas",
+            "courses_instructor": "chan, eric",
+            "Count": 1
+        },
+        {
+            "courses_title": "basic princ meas",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "acad assess schl",
+            "courses_instructor": "amaral, deborah;ford, laurie",
+            "Count": 1
+        },
+        {
+            "courses_title": "acad assess schl",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "sem in autism",
+            "courses_instructor": "grow, laura",
+            "Count": 1
+        },
+        {
+            "courses_title": "thy cognt assess",
+            "courses_instructor": "ford, laurie",
+            "Count": 1
+        },
+        {
+            "courses_title": "thy cognt assess",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "dev neuropsych",
+            "courses_instructor": "weber, rachel",
+            "Count": 1
+        },
+        {
+            "courses_title": "dev neuropsych",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "courses_instructor": "wu, amery",
+            "Count": 1
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "courses_instructor": "kishor, nand",
+            "Count": 1
+        },
+        {
+            "courses_title": "cor des ed res",
+            "courses_instructor": "kishor, nand",
+            "Count": 1
+        },
+        {
+            "courses_title": "cor des ed res",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "coll&uni teachng",
+            "courses_instructor": "porath, marion",
+            "Count": 1
+        },
+        {
+            "courses_title": "indig, tech&ed",
+            "courses_instructor": "marker, michael",
+            "Count": 1
+        },
+        {
+            "courses_title": "indig, tech&ed",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "curric issu",
+            "courses_instructor": "feng, francis",
+            "Count": 1
+        },
+        {
+            "courses_title": "curric issu",
+            "courses_instructor": "petrina, stephen",
+            "Count": 1
+        },
+        {
+            "courses_title": "tech math sci",
+            "courses_instructor": "milner-bolotin, marina",
+            "Count": 1
+        },
+        {
+            "courses_title": "tech math sci",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "mo pict prod i",
+            "courses_instructor": "wenzek, rob",
+            "Count": 1
+        },
+        {
+            "courses_title": "mo pict prod i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "ds intl forstry",
+            "courses_instructor": "timko, joleen",
+            "Count": 1
+        },
+        {
+            "courses_title": "ds intl forstry",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "islnd wild mgmt",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "kin project",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "phyl asp phy act",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "acad libraries",
+            "courses_instructor": "farrell, adam",
+            "Count": 1
+        },
+        {
+            "courses_title": "acad libraries",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "algebra ii",
+            "courses_instructor": "karu, kalle",
+            "Count": 1
+        },
+        {
+            "courses_title": "algebra ii",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "functional analy",
+            "courses_instructor": "murugan, mathav",
+            "Count": 1
+        },
+        {
+            "courses_title": "functional analy",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "prt diff equa i",
+            "courses_instructor": "wei, juncheng",
+            "Count": 1
+        },
+        {
+            "courses_title": "prt diff equa i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "diff geometry i",
+            "courses_instructor": "fraser, ailana",
+            "Count": 1
+        },
+        {
+            "courses_title": "diff geometry i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "algb topology i",
+            "courses_instructor": "gomez, jose",
+            "Count": 1
+        },
+        {
+            "courses_title": "algb topology i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "algb geometry i",
+            "courses_instructor": "karu, kalle",
+            "Count": 1
+        },
+        {
+            "courses_title": "algb geometry i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "lie theory i",
+            "courses_instructor": "gordon, julia yulia",
+            "Count": 1
+        },
+        {
+            "courses_title": "lie theory i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "harmonic anal i",
+            "courses_instructor": "laba, izabella",
+            "Count": 1
+        },
+        {
+            "courses_title": "harmonic anal i",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "probability ii",
+            "courses_instructor": "nachmias, asaf",
+            "Count": 1
+        },
+        {
+            "courses_title": "probability ii",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "msc major essay",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "cnsl mat cr prov",
+            "courses_instructor": "mcrae, lorna",
+            "Count": 1
+        },
+        {
+            "courses_title": "cnsl mat cr prov",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "seminar",
+            "courses_instructor": "veiga, marcello",
+            "Count": 1
+        },
+        {
+            "courses_title": "seminar",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "mgmt sc meth",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "mgmt sc meth",
+            "courses_instructor": "dunbar, w scott",
+            "Count": 1
+        },
+        {
+            "courses_title": "hydrmtllgcl rctr",
+            "courses_instructor": "dixon, david",
+            "Count": 1
+        },
+        {
+            "courses_title": "hydrmtllgcl rctr",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "orch repertoire",
+            "courses_instructor": "girard, jonathan",
+            "Count": 1
+        },
+        {
+            "courses_title": "orch repertoire",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "ubc chamb string",
+            "courses_instructor": "girard, jonathan",
+            "Count": 1
+        },
+        {
+            "courses_title": "ubc chamb string",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "brew, nancy",
+            "Count": 1
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "krist, jennifer",
+            "Count": 1
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "harding, jillian",
+            "Count": 1
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "krist, jennifer;mccuaig, fairleth",
+            "Count": 1
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "courses_instructor": "krist, jennifer",
+            "Count": 1
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "courses_instructor": "burrows, marlene;harding, jillian;krist, jennifer;mccuaig, fairleth",
+            "Count": 1
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "courses_instructor": "burrows, marlene",
+            "Count": 1
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "courses_instructor": "brew, nancy",
+            "Count": 1
+        },
+        {
+            "courses_title": "ms thesis",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "admn of injectns",
+            "courses_instructor": "lalji, fawziah;seto, katherine",
+            "Count": 1
+        },
+        {
+            "courses_title": "log & crit think",
+            "courses_instructor": "jackson, howard",
+            "Count": 1
+        },
+        {
+            "courses_title": "clin make iv",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "quant fld theory",
+            "courses_instructor": "stamp, philip c",
+            "Count": 1
+        },
+        {
+            "courses_title": "quant fld theory",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "nat resrce mngmt",
+            "courses_instructor": "dorcey, anthony h j",
+            "Count": 1
+        },
+        {
+            "courses_title": "nat resrce mngmt",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "health psych",
+            "courses_instructor": "de longis, anita",
+            "Count": 1
+        },
+        {
+            "courses_title": "health psych",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "eth & prof clin",
+            "courses_instructor": "sochting, ingrid",
+            "Count": 1
+        },
+        {
+            "courses_title": "eth & prof clin",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "intro psychthrpy",
+            "courses_instructor": "wagner, john",
+            "Count": 1
+        },
+        {
+            "courses_title": "intro psychthrpy",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "masters thesis",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "social analysis",
+            "courses_instructor": "gill, deana",
+            "Count": 1
+        },
+        {
+            "courses_title": "social analysis",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "social analysis",
+            "courses_instructor": "bryson, stephanie;o'connor, deborah;stainton, timothy;sullivan, t richard;tester, frank",
+            "Count": 1
+        },
+        {
+            "courses_title": "hlth & soc care",
+            "courses_instructor": "gill, deana",
+            "Count": 1
+        },
+        {
+            "courses_title": "sociocult determ",
+            "courses_instructor": "frankish, charles james",
+            "Count": 1
+        },
+        {
+            "courses_title": "sociocult determ",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "work int health",
+            "courses_instructor": "frank, erica",
+            "Count": 1
+        },
+        {
+            "courses_title": "work int health",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "an meth epid res",
+            "courses_instructor": "sobolev, boris",
+            "Count": 1
+        },
+        {
+            "courses_title": "survlnc&monitrng",
+            "courses_instructor": "kishchenko, svetlana",
+            "Count": 1
+        },
+        {
+            "courses_title": "survlnc&monitrng",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "math mdl com dis",
+            "courses_instructor": "pourbohloul, babak",
+            "Count": 1
+        },
+        {
+            "courses_title": "math mdl com dis",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "com hlth prom",
+            "courses_instructor": "frankish, charles james",
+            "Count": 1
+        },
+        {
+            "courses_title": "com hlth prom",
+            "courses_instructor": "",
+            "Count": 1
+        },
+        {
+            "courses_title": "scenery prod i",
+            "courses_instructor": "mclean, jayson",
+            "Count": 1
+        },
+        {
+            "courses_title": "scenery prod i",
+            "courses_instructor": "",
+            "Count": 1
+        }
+    ]
+}
+

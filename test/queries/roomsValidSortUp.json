@@ -1,0 +1,59 @@
+{
+    "title": "Sort rooms up by rooms shortname and rooms number",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "rooms_seats": 300
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_shortname",
+                "rooms_number"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+                    "rooms_shortname",
+                    "rooms_number"
+                ]
+            }
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "rooms_shortname": "CIRS",
+            "rooms_number": "1250"
+        },
+        {
+            "rooms_shortname": "ESB",
+            "rooms_number": "1013"
+        },
+        {
+            "rooms_shortname": "HEBB",
+            "rooms_number": "100"
+        },
+        {
+            "rooms_shortname": "LSC",
+            "rooms_number": "1001"
+        },
+        {
+            "rooms_shortname": "LSC",
+            "rooms_number": "1002"
+        },
+        {
+            "rooms_shortname": "OSBO",
+            "rooms_number": "A"
+        },
+        {
+            "rooms_shortname": "WESB",
+            "rooms_number": "100"
+        },
+        {
+            "rooms_shortname": "WOOD",
+            "rooms_number": "2"
+        }
+    ]
+}
+

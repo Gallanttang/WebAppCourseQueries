@@ -1,0 +1,929 @@
+{
+    "title": "Find sum of course averages by same instructors with courses average above 95",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 95
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title",
+                "courses_instructor",
+                "Sum"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_title",
+                "courses_instructor"
+            ],
+            "APPLY": [
+                {
+                    "Sum": {
+                        "SUM": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "dev wkshp/sem",
+            "courses_instructor": "bishundayal, deonarine",
+            "Sum": 96.11
+        },
+        {
+            "courses_title": "eng mtls lab",
+            "courses_instructor": "wassink, berend",
+            "Sum": 382.94
+        },
+        {
+            "courses_title": "aud&non-txt arch",
+            "courses_instructor": "",
+            "Sum": 193.88
+        },
+        {
+            "courses_title": "audi prctcm iv",
+            "courses_instructor": "adelman, sharon",
+            "Sum": 96.9
+        },
+        {
+            "courses_title": "audi prctcm iv",
+            "courses_instructor": "",
+            "Sum": 96.9
+        },
+        {
+            "courses_title": "med tech project",
+            "courses_instructor": "hodgson, antony",
+            "Sum": 95.15
+        },
+        {
+            "courses_title": "med tech project",
+            "courses_instructor": "",
+            "Sum": 95.15
+        },
+        {
+            "courses_title": "thermodynamics",
+            "courses_instructor": "gopaluni, bhushan",
+            "Sum": 95.54
+        },
+        {
+            "courses_title": "thermodynamics",
+            "courses_instructor": "",
+            "Sum": 95.54
+        },
+        {
+            "courses_title": "math operations",
+            "courses_instructor": "gopaluni, bhushan",
+            "Sum": 95.31
+        },
+        {
+            "courses_title": "math operations",
+            "courses_instructor": "",
+            "Sum": 95.31
+        },
+        {
+            "courses_title": "dynam struct 2",
+            "courses_instructor": "ventura, carlos estuardo",
+            "Sum": 96.27
+        },
+        {
+            "courses_title": "dynam struct 2",
+            "courses_instructor": "",
+            "Sum": 96.27
+        },
+        {
+            "courses_title": "schl counselling",
+            "courses_instructor": "owens, rhea",
+            "Sum": 95.78
+        },
+        {
+            "courses_title": "schl counselling",
+            "courses_instructor": "",
+            "Sum": 95.78
+        },
+        {
+            "courses_title": "counsl adolescnt",
+            "courses_instructor": "weinberg, mark",
+            "Sum": 95.36
+        },
+        {
+            "courses_title": "counsl adolescnt",
+            "courses_instructor": "",
+            "Sum": 95.36
+        },
+        {
+            "courses_title": "career planning",
+            "courses_instructor": "cox, daniel",
+            "Sum": 99.19
+        },
+        {
+            "courses_title": "career planning",
+            "courses_instructor": "neault, roberta a",
+            "Sum": 97.47
+        },
+        {
+            "courses_title": "career planning",
+            "courses_instructor": "",
+            "Sum": 97.47
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "courses_instructor": "cox, daniel",
+            "Sum": 96.33
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "courses_instructor": "carter, john",
+            "Sum": 96
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "courses_instructor": "",
+            "Sum": 96.16
+        },
+        {
+            "courses_title": "",
+            "courses_instructor": "munteanu, mircea",
+            "Sum": 95.36
+        },
+        {
+            "courses_title": "prep writ career",
+            "courses_instructor": "campbell, deborah",
+            "Sum": 95.7
+        },
+        {
+            "courses_title": "prep writ career",
+            "courses_instructor": "",
+            "Sum": 95.7
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "medved, maureen",
+            "Sum": 96
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "campbell, deborah",
+            "Sum": 97
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "taylor, timothy",
+            "Sum": 96
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "maillard, keith",
+            "Sum": 290
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "galloway, steve",
+            "Sum": 96
+        },
+        {
+            "courses_title": "thesis",
+            "courses_instructor": "grady, albert wayne",
+            "Sum": 98
+        },
+        {
+            "courses_title": "ds tec ii sc c&p",
+            "courses_instructor": "magee, theresa",
+            "Sum": 95.58
+        },
+        {
+            "courses_title": "ds tec ii sc c&p",
+            "courses_instructor": "",
+            "Sum": 95.58
+        },
+        {
+            "courses_title": "fn & educ change",
+            "courses_instructor": "marker, michael",
+            "Sum": 95.78
+        },
+        {
+            "courses_title": "fn & educ change",
+            "courses_instructor": "",
+            "Sum": 95.78
+        },
+        {
+            "courses_title": "adlt edu pract",
+            "courses_instructor": "vanwynsberghe, robert",
+            "Sum": 96.46
+        },
+        {
+            "courses_title": "adlt edu pract",
+            "courses_instructor": "",
+            "Sum": 96.46
+        },
+        {
+            "courses_title": "res mthd in educ",
+            "courses_instructor": "morgan, tannis",
+            "Sum": 97.5
+        },
+        {
+            "courses_title": "res mthd in educ",
+            "courses_instructor": "adler, james douglas;scott, sandra",
+            "Sum": 95.16
+        },
+        {
+            "courses_title": "multimedia sys",
+            "courses_instructor": "coria, lino",
+            "Sum": 98.75
+        },
+        {
+            "courses_title": "multimedia sys",
+            "courses_instructor": "",
+            "Sum": 98.75
+        },
+        {
+            "courses_title": "tch'g hghly able",
+            "courses_instructor": "porath, marion",
+            "Sum": 96
+        },
+        {
+            "courses_title": "tch'g hghly able",
+            "courses_instructor": "",
+            "Sum": 96
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "stockman, james",
+            "Sum": 96.03
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "",
+            "Sum": 288.08
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "gaster, sean",
+            "Sum": 96.9
+        },
+        {
+            "courses_title": "intro excp child",
+            "courses_instructor": "romero, amber",
+            "Sum": 95.15
+        },
+        {
+            "courses_title": "tchg st visl imp",
+            "courses_instructor": "",
+            "Sum": 190.54
+        },
+        {
+            "courses_title": "ed prg hghly abl",
+            "courses_instructor": "porath, marion",
+            "Sum": 95.22
+        },
+        {
+            "courses_title": "ed prg hghly abl",
+            "courses_instructor": "",
+            "Sum": 95.22
+        },
+        {
+            "courses_title": "augmt&alt comm",
+            "courses_instructor": "mceachern hughes, tammy",
+            "Sum": 95.5
+        },
+        {
+            "courses_title": "augmt&alt comm",
+            "courses_instructor": "",
+            "Sum": 95.5
+        },
+        {
+            "courses_title": "tech for vis imp",
+            "courses_instructor": "levinson, tami",
+            "Sum": 95.67
+        },
+        {
+            "courses_title": "tech for vis imp",
+            "courses_instructor": "",
+            "Sum": 95.67
+        },
+        {
+            "courses_title": "assess lrn diffi",
+            "courses_instructor": "cole, kenneth",
+            "Sum": 390.28
+        },
+        {
+            "courses_title": "assess lrn diffi",
+            "courses_instructor": "",
+            "Sum": 195.65
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "courses_instructor": "ervin, ruth",
+            "Sum": 96.21
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "courses_instructor": "",
+            "Sum": 191.34
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "courses_instructor": "smith, gillian",
+            "Sum": 95.13
+        },
+        {
+            "courses_title": "surv bhvr dis ch",
+            "courses_instructor": "champion, kathleen",
+            "Sum": 95.47
+        },
+        {
+            "courses_title": "surv bhvr dis ch",
+            "courses_instructor": "",
+            "Sum": 95.47
+        },
+        {
+            "courses_title": "educ stds autism",
+            "courses_instructor": "grow, laura",
+            "Sum": 487.85
+        },
+        {
+            "courses_title": "educ stds autism",
+            "courses_instructor": "wilk, diana",
+            "Sum": 97.41
+        },
+        {
+            "courses_title": "educ stds autism",
+            "courses_instructor": "",
+            "Sum": 293.06
+        },
+        {
+            "courses_title": "intr stat rs edu",
+            "courses_instructor": "kishor, nand",
+            "Sum": 95.11
+        },
+        {
+            "courses_title": "hn dev: inf-adlt",
+            "courses_instructor": "porath, marion",
+            "Sum": 96.23
+        },
+        {
+            "courses_title": "able&creatv lrnr",
+            "courses_instructor": "porath, marion",
+            "Sum": 95.41
+        },
+        {
+            "courses_title": "able&creatv lrnr",
+            "courses_instructor": "",
+            "Sum": 95.3
+        },
+        {
+            "courses_title": "dev el sk df&hrd",
+            "courses_instructor": "cannon, joanna",
+            "Sum": 98.45
+        },
+        {
+            "courses_title": "dev el sk df&hrd",
+            "courses_instructor": "",
+            "Sum": 98.45
+        },
+        {
+            "courses_title": "cur dev e df&hrd",
+            "courses_instructor": "",
+            "Sum": 191.66
+        },
+        {
+            "courses_title": "specific lrn dis",
+            "courses_instructor": "mcquarrie, maureen",
+            "Sum": 96.33
+        },
+        {
+            "courses_title": "specific lrn dis",
+            "courses_instructor": "",
+            "Sum": 96.33
+        },
+        {
+            "courses_title": "basic princ meas",
+            "courses_instructor": "kishor, nand",
+            "Sum": 191.14
+        },
+        {
+            "courses_title": "basic princ meas",
+            "courses_instructor": "chan, eric",
+            "Sum": 95.86
+        },
+        {
+            "courses_title": "basic princ meas",
+            "courses_instructor": "",
+            "Sum": 95.86
+        },
+        {
+            "courses_title": "acad assess schl",
+            "courses_instructor": "amaral, deborah;ford, laurie",
+            "Sum": 194.78
+        },
+        {
+            "courses_title": "acad assess schl",
+            "courses_instructor": "",
+            "Sum": 97.41
+        },
+        {
+            "courses_title": "sem in autism",
+            "courses_instructor": "grow, laura",
+            "Sum": 97.69
+        },
+        {
+            "courses_title": "thy cognt assess",
+            "courses_instructor": "ford, laurie",
+            "Sum": 95.31
+        },
+        {
+            "courses_title": "thy cognt assess",
+            "courses_instructor": "",
+            "Sum": 95.31
+        },
+        {
+            "courses_title": "dev neuropsych",
+            "courses_instructor": "weber, rachel",
+            "Sum": 95.17
+        },
+        {
+            "courses_title": "dev neuropsych",
+            "courses_instructor": "",
+            "Sum": 95.17
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "courses_instructor": "wu, amery",
+            "Sum": 191.34
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "courses_instructor": "",
+            "Sum": 95.16
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "courses_instructor": "kishor, nand",
+            "Sum": 95.13
+        },
+        {
+            "courses_title": "cor des ed res",
+            "courses_instructor": "kishor, nand",
+            "Sum": 192.42
+        },
+        {
+            "courses_title": "cor des ed res",
+            "courses_instructor": "",
+            "Sum": 97.09
+        },
+        {
+            "courses_title": "coll&uni teachng",
+            "courses_instructor": "porath, marion",
+            "Sum": 97.67
+        },
+        {
+            "courses_title": "indig, tech&ed",
+            "courses_instructor": "marker, michael",
+            "Sum": 286.89
+        },
+        {
+            "courses_title": "indig, tech&ed",
+            "courses_instructor": "",
+            "Sum": 286.89
+        },
+        {
+            "courses_title": "curric issu",
+            "courses_instructor": "feng, francis",
+            "Sum": 95.33
+        },
+        {
+            "courses_title": "curric issu",
+            "courses_instructor": "petrina, stephen",
+            "Sum": 95.63
+        },
+        {
+            "courses_title": "tech math sci",
+            "courses_instructor": "milner-bolotin, marina",
+            "Sum": 191.15
+        },
+        {
+            "courses_title": "tech math sci",
+            "courses_instructor": "",
+            "Sum": 191.15
+        },
+        {
+            "courses_title": "mo pict prod i",
+            "courses_instructor": "wenzek, rob",
+            "Sum": 96.4
+        },
+        {
+            "courses_title": "mo pict prod i",
+            "courses_instructor": "",
+            "Sum": 96.4
+        },
+        {
+            "courses_title": "ds intl forstry",
+            "courses_instructor": "timko, joleen",
+            "Sum": 96.36
+        },
+        {
+            "courses_title": "ds intl forstry",
+            "courses_instructor": "",
+            "Sum": 96.36
+        },
+        {
+            "courses_title": "islnd wild mgmt",
+            "courses_instructor": "",
+            "Sum": 381.1
+        },
+        {
+            "courses_title": "kin project",
+            "courses_instructor": "",
+            "Sum": 96
+        },
+        {
+            "courses_title": "phyl asp phy act",
+            "courses_instructor": "",
+            "Sum": 382.84
+        },
+        {
+            "courses_title": "acad libraries",
+            "courses_instructor": "farrell, adam",
+            "Sum": 96.1
+        },
+        {
+            "courses_title": "acad libraries",
+            "courses_instructor": "",
+            "Sum": 96.1
+        },
+        {
+            "courses_title": "algebra ii",
+            "courses_instructor": "karu, kalle",
+            "Sum": 96.44
+        },
+        {
+            "courses_title": "algebra ii",
+            "courses_instructor": "",
+            "Sum": 96.44
+        },
+        {
+            "courses_title": "functional analy",
+            "courses_instructor": "murugan, mathav",
+            "Sum": 95.67
+        },
+        {
+            "courses_title": "functional analy",
+            "courses_instructor": "",
+            "Sum": 95.67
+        },
+        {
+            "courses_title": "prt diff equa i",
+            "courses_instructor": "wei, juncheng",
+            "Sum": 96.25
+        },
+        {
+            "courses_title": "prt diff equa i",
+            "courses_instructor": "",
+            "Sum": 96.25
+        },
+        {
+            "courses_title": "diff geometry i",
+            "courses_instructor": "fraser, ailana",
+            "Sum": 97.25
+        },
+        {
+            "courses_title": "diff geometry i",
+            "courses_instructor": "",
+            "Sum": 97.25
+        },
+        {
+            "courses_title": "algb topology i",
+            "courses_instructor": "gomez, jose",
+            "Sum": 99.78
+        },
+        {
+            "courses_title": "algb topology i",
+            "courses_instructor": "",
+            "Sum": 99.78
+        },
+        {
+            "courses_title": "algb geometry i",
+            "courses_instructor": "karu, kalle",
+            "Sum": 97.48
+        },
+        {
+            "courses_title": "algb geometry i",
+            "courses_instructor": "",
+            "Sum": 97.48
+        },
+        {
+            "courses_title": "lie theory i",
+            "courses_instructor": "gordon, julia yulia",
+            "Sum": 95.56
+        },
+        {
+            "courses_title": "lie theory i",
+            "courses_instructor": "",
+            "Sum": 95.56
+        },
+        {
+            "courses_title": "harmonic anal i",
+            "courses_instructor": "laba, izabella",
+            "Sum": 97.09
+        },
+        {
+            "courses_title": "harmonic anal i",
+            "courses_instructor": "",
+            "Sum": 97.09
+        },
+        {
+            "courses_title": "probability ii",
+            "courses_instructor": "nachmias, asaf",
+            "Sum": 96.83
+        },
+        {
+            "courses_title": "probability ii",
+            "courses_instructor": "",
+            "Sum": 96.83
+        },
+        {
+            "courses_title": "msc major essay",
+            "courses_instructor": "",
+            "Sum": 96.33
+        },
+        {
+            "courses_title": "cnsl mat cr prov",
+            "courses_instructor": "mcrae, lorna",
+            "Sum": 96.5
+        },
+        {
+            "courses_title": "cnsl mat cr prov",
+            "courses_instructor": "",
+            "Sum": 96.5
+        },
+        {
+            "courses_title": "seminar",
+            "courses_instructor": "veiga, marcello",
+            "Sum": 96.59
+        },
+        {
+            "courses_title": "seminar",
+            "courses_instructor": "",
+            "Sum": 95.18
+        },
+        {
+            "courses_title": "mgmt sc meth",
+            "courses_instructor": "",
+            "Sum": 95.43
+        },
+        {
+            "courses_title": "mgmt sc meth",
+            "courses_instructor": "dunbar, w scott",
+            "Sum": 191.04
+        },
+        {
+            "courses_title": "hydrmtllgcl rctr",
+            "courses_instructor": "dixon, david",
+            "Sum": 96.25
+        },
+        {
+            "courses_title": "hydrmtllgcl rctr",
+            "courses_instructor": "",
+            "Sum": 96.25
+        },
+        {
+            "courses_title": "orch repertoire",
+            "courses_instructor": "girard, jonathan",
+            "Sum": 95.38
+        },
+        {
+            "courses_title": "orch repertoire",
+            "courses_instructor": "",
+            "Sum": 95.67
+        },
+        {
+            "courses_title": "ubc chamb string",
+            "courses_instructor": "girard, jonathan",
+            "Sum": 96.5
+        },
+        {
+            "courses_title": "ubc chamb string",
+            "courses_instructor": "",
+            "Sum": 96.5
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "brew, nancy",
+            "Sum": 194.14
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "",
+            "Sum": 482.77
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "krist, jennifer",
+            "Sum": 98.21
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "harding, jillian",
+            "Sum": 95.13
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "courses_instructor": "krist, jennifer;mccuaig, fairleth",
+            "Sum": 95.29
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "courses_instructor": "krist, jennifer",
+            "Sum": 96.64
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "courses_instructor": "",
+            "Sum": 489.83
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "courses_instructor": "burrows, marlene;harding, jillian;krist, jennifer;mccuaig, fairleth",
+            "Sum": 196.03
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "courses_instructor": "burrows, marlene",
+            "Sum": 96.73
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "courses_instructor": "",
+            "Sum": 194.06
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "courses_instructor": "brew, nancy",
+            "Sum": 97.33
+        },
+        {
+            "courses_title": "ms thesis",
+            "courses_instructor": "",
+            "Sum": 96
+        },
+        {
+            "courses_title": "admn of injectns",
+            "courses_instructor": "lalji, fawziah;seto, katherine",
+            "Sum": 95.07
+        },
+        {
+            "courses_title": "log & crit think",
+            "courses_instructor": "jackson, howard",
+            "Sum": 96
+        },
+        {
+            "courses_title": "clin make iv",
+            "courses_instructor": "",
+            "Sum": 190.74
+        },
+        {
+            "courses_title": "quant fld theory",
+            "courses_instructor": "stamp, philip c",
+            "Sum": 95.43
+        },
+        {
+            "courses_title": "quant fld theory",
+            "courses_instructor": "",
+            "Sum": 95.43
+        },
+        {
+            "courses_title": "nat resrce mngmt",
+            "courses_instructor": "dorcey, anthony h j",
+            "Sum": 96.47
+        },
+        {
+            "courses_title": "nat resrce mngmt",
+            "courses_instructor": "",
+            "Sum": 96.47
+        },
+        {
+            "courses_title": "health psych",
+            "courses_instructor": "de longis, anita",
+            "Sum": 96
+        },
+        {
+            "courses_title": "health psych",
+            "courses_instructor": "",
+            "Sum": 96
+        },
+        {
+            "courses_title": "eth & prof clin",
+            "courses_instructor": "sochting, ingrid",
+            "Sum": 95.75
+        },
+        {
+            "courses_title": "eth & prof clin",
+            "courses_instructor": "",
+            "Sum": 95.75
+        },
+        {
+            "courses_title": "intro psychthrpy",
+            "courses_instructor": "wagner, john",
+            "Sum": 95.25
+        },
+        {
+            "courses_title": "intro psychthrpy",
+            "courses_instructor": "",
+            "Sum": 95.25
+        },
+        {
+            "courses_title": "masters thesis",
+            "courses_instructor": "",
+            "Sum": 193
+        },
+        {
+            "courses_title": "social analysis",
+            "courses_instructor": "gill, deana",
+            "Sum": 95.93
+        },
+        {
+            "courses_title": "social analysis",
+            "courses_instructor": "",
+            "Sum": 192.08
+        },
+        {
+            "courses_title": "social analysis",
+            "courses_instructor": "bryson, stephanie;o'connor, deborah;stainton, timothy;sullivan, t richard;tester, frank",
+            "Sum": 96.15
+        },
+        {
+            "courses_title": "hlth & soc care",
+            "courses_instructor": "gill, deana",
+            "Sum": 96.09
+        },
+        {
+            "courses_title": "sociocult determ",
+            "courses_instructor": "frankish, charles james",
+            "Sum": 96.96
+        },
+        {
+            "courses_title": "sociocult determ",
+            "courses_instructor": "",
+            "Sum": 95.76
+        },
+        {
+            "courses_title": "work int health",
+            "courses_instructor": "frank, erica",
+            "Sum": 98.98
+        },
+        {
+            "courses_title": "work int health",
+            "courses_instructor": "",
+            "Sum": 98.98
+        },
+        {
+            "courses_title": "an meth epid res",
+            "courses_instructor": "sobolev, boris",
+            "Sum": 95.11
+        },
+        {
+            "courses_title": "survlnc&monitrng",
+            "courses_instructor": "kishchenko, svetlana",
+            "Sum": 96.8
+        },
+        {
+            "courses_title": "survlnc&monitrng",
+            "courses_instructor": "",
+            "Sum": 96.8
+        },
+        {
+            "courses_title": "math mdl com dis",
+            "courses_instructor": "pourbohloul, babak",
+            "Sum": 95.75
+        },
+        {
+            "courses_title": "math mdl com dis",
+            "courses_instructor": "",
+            "Sum": 95.75
+        },
+        {
+            "courses_title": "com hlth prom",
+            "courses_instructor": "frankish, charles james",
+            "Sum": 95.09
+        },
+        {
+            "courses_title": "com hlth prom",
+            "courses_instructor": "",
+            "Sum": 95.09
+        },
+        {
+            "courses_title": "scenery prod i",
+            "courses_instructor": "mclean, jayson",
+            "Sum": 95.2
+        },
+        {
+            "courses_title": "scenery prod i",
+            "courses_instructor": "",
+            "Sum": 95.2
+        }
+    ]
+}
+

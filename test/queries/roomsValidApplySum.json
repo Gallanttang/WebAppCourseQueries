@@ -1,0 +1,74 @@
+{
+    "title": "Find sum number of seats in rooms grouped by rooms shortname and rooms number",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "rooms_seats": 300
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_shortname",
+                "rooms_number",
+                "sumSeats"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_shortname",
+                "rooms_number"
+            ],
+            "APPLY": [
+                {
+                    "sumSeats": {
+                        "SUM": "rooms_seats"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "rooms_shortname": "CIRS",
+            "rooms_number": "1250",
+            "sumSeats": 426
+        },
+        {
+            "rooms_shortname": "ESB",
+            "rooms_number": "1013",
+            "sumSeats": 350
+        },
+        {
+            "rooms_shortname": "HEBB",
+            "rooms_number": "100",
+            "sumSeats": 375
+        },
+        {
+            "rooms_shortname": "LSC",
+            "rooms_number": "1001",
+            "sumSeats": 350
+        },
+        {
+            "rooms_shortname": "LSC",
+            "rooms_number": "1002",
+            "sumSeats": 350
+        },
+        {
+            "rooms_shortname": "OSBO",
+            "rooms_number": "A",
+            "sumSeats": 442
+        },
+        {
+            "rooms_shortname": "WESB",
+            "rooms_number": "100",
+            "sumSeats": 325
+        },
+        {
+            "rooms_shortname": "WOOD",
+            "rooms_number": "2",
+            "sumSeats": 503
+        }
+    ]
+}
+
