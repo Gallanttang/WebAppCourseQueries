@@ -1,0 +1,59 @@
+{
+    "title": "Find avg number of seats in rooms",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "rooms_seats": 300
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_shortname",
+                "avgSeats"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_shortname"
+            ],
+            "APPLY": [
+                {
+                    "avgSeats": {
+                        "AVG": "rooms_seats"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "rooms_shortname": "CIRS",
+            "avgSeats": 426
+        },
+        {
+            "rooms_shortname": "ESB",
+            "avgSeats": 350
+        },
+        {
+            "rooms_shortname": "HEBB",
+            "avgSeats": 375
+        },
+        {
+            "rooms_shortname": "LSC",
+            "avgSeats": 350
+        },
+        {
+            "rooms_shortname": "OSBO",
+            "avgSeats": 442
+        },
+        {
+            "rooms_shortname": "WESB",
+            "avgSeats": 325
+        },
+        {
+            "rooms_shortname": "WOOD",
+            "avgSeats": 503
+        }
+    ]
+}

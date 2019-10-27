@@ -1,0 +1,60 @@
+{
+    "title": "Find min number of seats in rooms",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "rooms_seats": 300
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_shortname",
+                "minSeats"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_shortname"
+            ],
+            "APPLY": [
+                {
+                    "minSeats": {
+                        "MIN": "rooms_seats"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "rooms_shortname": "CIRS",
+            "minSeats": 426
+        },
+        {
+            "rooms_shortname": "ESB",
+            "minSeats": 350
+        },
+        {
+            "rooms_shortname": "HEBB",
+            "minSeats": 375
+        },
+        {
+            "rooms_shortname": "LSC",
+            "minSeats": 350
+        },
+        {
+            "rooms_shortname": "OSBO",
+            "minSeats": 442
+        },
+        {
+            "rooms_shortname": "WESB",
+            "minSeats": 325
+        },
+        {
+            "rooms_shortname": "WOOD",
+            "minSeats": 503
+        }
+    ]
+}
+

@@ -1,0 +1,396 @@
+{
+    "title": "Apply Min course average to averages higher than 95",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 95
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title",
+                "MinAverage"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_title"
+            ],
+            "APPLY": [
+                {
+                    "MinAverage": {
+                        "MIN": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "dev wkshp/sem",
+            "MinAverage": 96.11
+        },
+        {
+            "courses_title": "eng mtls lab",
+            "MinAverage": 95.05
+        },
+        {
+            "courses_title": "aud&non-txt arch",
+            "MinAverage": 96.94
+        },
+        {
+            "courses_title": "audi prctcm iv",
+            "MinAverage": 96.9
+        },
+        {
+            "courses_title": "med tech project",
+            "MinAverage": 95.15
+        },
+        {
+            "courses_title": "thermodynamics",
+            "MinAverage": 95.54
+        },
+        {
+            "courses_title": "math operations",
+            "MinAverage": 95.31
+        },
+        {
+            "courses_title": "dynam struct 2",
+            "MinAverage": 96.27
+        },
+        {
+            "courses_title": "schl counselling",
+            "MinAverage": 95.78
+        },
+        {
+            "courses_title": "counsl adolescnt",
+            "MinAverage": 95.36
+        },
+        {
+            "courses_title": "career planning",
+            "MinAverage": 97.47
+        },
+        {
+            "courses_title": "prgm devl cnsl",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "",
+            "MinAverage": 95.36
+        },
+        {
+            "courses_title": "prep writ career",
+            "MinAverage": 95.7
+        },
+        {
+            "courses_title": "thesis",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "ds tec ii sc c&p",
+            "MinAverage": 95.58
+        },
+        {
+            "courses_title": "fn & educ change",
+            "MinAverage": 95.78
+        },
+        {
+            "courses_title": "adlt edu pract",
+            "MinAverage": 96.46
+        },
+        {
+            "courses_title": "res mthd in educ",
+            "MinAverage": 95.16
+        },
+        {
+            "courses_title": "multimedia sys",
+            "MinAverage": 98.75
+        },
+        {
+            "courses_title": "tch'g hghly able",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "intro excp child",
+            "MinAverage": 95.15
+        },
+        {
+            "courses_title": "tchg st visl imp",
+            "MinAverage": 95.27
+        },
+        {
+            "courses_title": "ed prg hghly abl",
+            "MinAverage": 95.22
+        },
+        {
+            "courses_title": "augmt&alt comm",
+            "MinAverage": 95.5
+        },
+        {
+            "courses_title": "tech for vis imp",
+            "MinAverage": 95.67
+        },
+        {
+            "courses_title": "assess lrn diffi",
+            "MinAverage": 96.21
+        },
+        {
+            "courses_title": "classroom mgmt",
+            "MinAverage": 95.13
+        },
+        {
+            "courses_title": "surv bhvr dis ch",
+            "MinAverage": 95.47
+        },
+        {
+            "courses_title": "educ stds autism",
+            "MinAverage": 95.47
+        },
+        {
+            "courses_title": "intr stat rs edu",
+            "MinAverage": 95.11
+        },
+        {
+            "courses_title": "hn dev: inf-adlt",
+            "MinAverage": 96.23
+        },
+        {
+            "courses_title": "able&creatv lrnr",
+            "MinAverage": 95.3
+        },
+        {
+            "courses_title": "dev el sk df&hrd",
+            "MinAverage": 98.45
+        },
+        {
+            "courses_title": "cur dev e df&hrd",
+            "MinAverage": 95.83
+        },
+        {
+            "courses_title": "specific lrn dis",
+            "MinAverage": 96.33
+        },
+        {
+            "courses_title": "basic princ meas",
+            "MinAverage": 95.14
+        },
+        {
+            "courses_title": "acad assess schl",
+            "MinAverage": 97
+        },
+        {
+            "courses_title": "sem in autism",
+            "MinAverage": 97.69
+        },
+        {
+            "courses_title": "thy cognt assess",
+            "MinAverage": 95.31
+        },
+        {
+            "courses_title": "dev neuropsych",
+            "MinAverage": 95.17
+        },
+        {
+            "courses_title": "exp des anl ed",
+            "MinAverage": 95.13
+        },
+        {
+            "courses_title": "cor des ed res",
+            "MinAverage": 95.33
+        },
+        {
+            "courses_title": "coll&uni teachng",
+            "MinAverage": 97.67
+        },
+        {
+            "courses_title": "indig, tech&ed",
+            "MinAverage": 95.1
+        },
+        {
+            "courses_title": "curric issu",
+            "MinAverage": 95.33
+        },
+        {
+            "courses_title": "tech math sci",
+            "MinAverage": 95.19
+        },
+        {
+            "courses_title": "mo pict prod i",
+            "MinAverage": 96.4
+        },
+        {
+            "courses_title": "ds intl forstry",
+            "MinAverage": 96.36
+        },
+        {
+            "courses_title": "islnd wild mgmt",
+            "MinAverage": 95.26
+        },
+        {
+            "courses_title": "kin project",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "phyl asp phy act",
+            "MinAverage": 95.36
+        },
+        {
+            "courses_title": "acad libraries",
+            "MinAverage": 96.1
+        },
+        {
+            "courses_title": "algebra ii",
+            "MinAverage": 96.44
+        },
+        {
+            "courses_title": "functional analy",
+            "MinAverage": 95.67
+        },
+        {
+            "courses_title": "prt diff equa i",
+            "MinAverage": 96.25
+        },
+        {
+            "courses_title": "diff geometry i",
+            "MinAverage": 97.25
+        },
+        {
+            "courses_title": "algb topology i",
+            "MinAverage": 99.78
+        },
+        {
+            "courses_title": "algb geometry i",
+            "MinAverage": 97.48
+        },
+        {
+            "courses_title": "lie theory i",
+            "MinAverage": 95.56
+        },
+        {
+            "courses_title": "harmonic anal i",
+            "MinAverage": 97.09
+        },
+        {
+            "courses_title": "probability ii",
+            "MinAverage": 96.83
+        },
+        {
+            "courses_title": "msc major essay",
+            "MinAverage": 96.33
+        },
+        {
+            "courses_title": "cnsl mat cr prov",
+            "MinAverage": 96.5
+        },
+        {
+            "courses_title": "seminar",
+            "MinAverage": 95.18
+        },
+        {
+            "courses_title": "mgmt sc meth",
+            "MinAverage": 95.43
+        },
+        {
+            "courses_title": "hydrmtllgcl rctr",
+            "MinAverage": 96.25
+        },
+        {
+            "courses_title": "orch repertoire",
+            "MinAverage": 95.38
+        },
+        {
+            "courses_title": "ubc chamb string",
+            "MinAverage": 96.5
+        },
+        {
+            "courses_title": "cl pro prim care",
+            "MinAverage": 95.13
+        },
+        {
+            "courses_title": "fam nrs pract",
+            "MinAverage": 96.64
+        },
+        {
+            "courses_title": "eth&profl issues",
+            "MinAverage": 96.73
+        },
+        {
+            "courses_title": "ms thesis",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "admn of injectns",
+            "MinAverage": 95.07
+        },
+        {
+            "courses_title": "log & crit think",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "clin make iv",
+            "MinAverage": 95.37
+        },
+        {
+            "courses_title": "quant fld theory",
+            "MinAverage": 95.43
+        },
+        {
+            "courses_title": "nat resrce mngmt",
+            "MinAverage": 96.47
+        },
+        {
+            "courses_title": "health psych",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "eth & prof clin",
+            "MinAverage": 95.75
+        },
+        {
+            "courses_title": "intro psychthrpy",
+            "MinAverage": 95.25
+        },
+        {
+            "courses_title": "masters thesis",
+            "MinAverage": 96
+        },
+        {
+            "courses_title": "social analysis",
+            "MinAverage": 95.93
+        },
+        {
+            "courses_title": "hlth & soc care",
+            "MinAverage": 96.09
+        },
+        {
+            "courses_title": "sociocult determ",
+            "MinAverage": 95.76
+        },
+        {
+            "courses_title": "work int health",
+            "MinAverage": 98.98
+        },
+        {
+            "courses_title": "an meth epid res",
+            "MinAverage": 95.11
+        },
+        {
+            "courses_title": "survlnc&monitrng",
+            "MinAverage": 96.8
+        },
+        {
+            "courses_title": "math mdl com dis",
+            "MinAverage": 95.75
+        },
+        {
+            "courses_title": "com hlth prom",
+            "MinAverage": 95.09
+        },
+        {
+            "courses_title": "scenery prod i",
+            "MinAverage": 95.2
+        }
+    ]
+}
+
