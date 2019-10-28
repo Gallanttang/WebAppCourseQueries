@@ -2,13 +2,16 @@ import Validator from "./Validator";
 import {InsightError} from "./IInsightFacade";
 
 export default class ValidatorTransformation extends Validator {
-    private readonly columnsValidator: string[];
-    private containedColumns: string[] = [];
-    private containedApply: string[] = [];
+    private columnsValidator: any = {};
     private applyValidator: string[] = ["MAX", "MIN", "AVG", "SUM", "COUNT"];
+    private containedApplyKeys: any = {};
     constructor(currDataset: any[], groupBy: string[]) {
         super(currDataset);
-        this.columnsValidator = groupBy;
+        for (let group of groupBy) {
+            if (!this.columnsValidator.hasOwnProperty(group)) {
+                this.columnsValidator[group] = false;
+            }
+        }
     }
 
     public checkValid(trans: any) {
@@ -34,8 +37,8 @@ export default class ValidatorTransformation extends Validator {
         } catch (err) {
             throw err;
         }
-        for (let contained of this.columnsValidator) {
-            if (!this.containedColumns.includes(contained)) {
+        for (let contained of Object.keys(this.columnsValidator)) {
+            if (!this.columnsValidator[contained]) {
                 throw new InsightError("Keys in COLUMNS must be in GROUP or APPLY when TRANSFORMATIONS is present");
             }
         }
@@ -52,10 +55,8 @@ export default class ValidatorTransformation extends Validator {
             if (!this.idCheck.test(grouping)) {
                 throw new InsightError("Invalid Key in Group");
             }
-            if (this.columnsValidator.includes(grouping)) {
-                this.containedColumns.push(grouping);
-            } else {
-                throw new InsightError("Keys in COLUMNS must be in GROUP or APPLY when TRANSFORMATIONS is present");
+            if (this.columnsValidator.hasOwnProperty(grouping)) {
+                this.columnsValidator[grouping] = true;
             }
         }
     }
@@ -72,19 +73,18 @@ export default class ValidatorTransformation extends Validator {
             if (applyKeys.length !== 1) {
                 throw new InsightError("Invalid applyKey in transformation, expects 1 key got" + applyKeys.length);
             }
-            if (!this.columnsValidator.includes(applyKeys[0])) {
-                throw new InsightError("Keys in COLUMNS must be in GROUP or APPLY when TRANSFORMATIONS is present");
+            if (this.columnsValidator.hasOwnProperty(applyKeys[0])) {
+                this.columnsValidator[applyKeys[0]] = true;
             }
-            this.containedColumns.push(applyKeys[0]);
             try {
                 this.checkApplyRule(applyRule[applyKeys[0]]);
             } catch (err) {
                 throw err;
             }
-            if (!this.containedApply.includes(applyKeys[0])) {
-                this.containedApply.push(applyKeys[0]);
+            if (!this.containedApplyKeys.hasOwnProperty(applyKeys[0])) {
+                this.containedApplyKeys[applyKeys[0]] = 1;
             } else {
-                throw new InsightError("APPLY contains duplicate keys");
+                throw new InsightError("Duplicate APPLY key maxAverage");
             }
         }
     }

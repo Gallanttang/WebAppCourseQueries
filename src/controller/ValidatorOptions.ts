@@ -3,7 +3,7 @@ import {InsightError} from "./IInsightFacade";
 
 export default class ValidatorOptions extends Validator {
 
-    private containedColumns: string[] = [];
+    public containedColumns: string[] = [];
     constructor(currDataset: any[]) {
         super(currDataset);
     }
@@ -50,8 +50,6 @@ export default class ValidatorOptions extends Validator {
             }
             if (!this.containedColumns.includes(col)) {
                 this.containedColumns.push(col);
-            } else {
-                throw new InsightError("Column contains duplicate key " + col);
             }
         }
     }
@@ -76,6 +74,9 @@ export default class ValidatorOptions extends Validator {
             }
             if (!Array.isArray(order["keys"])) {
                 throw new InsightError("Invalid ORDER: keys");
+            }
+            if (order["keys"].length === 0) {
+                throw new InsightError("Invalid ORDER: keys must be non-empty array");
             }
             for (const ordKey of order["keys"]) {
                 try {
