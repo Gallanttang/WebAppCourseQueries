@@ -1,0 +1,25 @@
+{
+    "title": "ORDER keys must be a non-empty array",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 95
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_title",
+                "courses_avg"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+
+                ]
+            }
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"ORDER keys must be a non-empty array"}
+}
