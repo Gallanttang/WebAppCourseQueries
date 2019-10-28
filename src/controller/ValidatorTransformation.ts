@@ -22,8 +22,11 @@ export default class ValidatorTransformation extends Validator {
         if (!keys.includes("GROUP")) {
             throw new InsightError("Invalid Transformation, missing group key");
         }
-        if (!Array.isArray(trans["GROUP"]) || !Array.isArray(trans["APPLY"])) {
-            throw new InsightError("Invalid TRANSFORMATIONS " + trans);
+        if (!Array.isArray(trans["GROUP"])) {
+            throw new InsightError("Invalid TRANSFORMATIONS GROUP must be a non-empty array");
+        }
+        if (!Array.isArray(trans["APPLY"])) {
+            throw new InsightError("Invalid TRANSFORMATIONS APPLY must be a non-empty array");
         }
         try {
             this.checkGroup(trans["GROUP"]);
@@ -43,6 +46,12 @@ export default class ValidatorTransformation extends Validator {
             throw new InsightError("GROUP must be a non empty array");
         }
         for (let grouping of group) {
+            if (typeof grouping !== "string") {
+                throw new InsightError("Invalid Key in GROUP " + grouping);
+            }
+            if (!this.idCheck.test(grouping)) {
+                throw new InsightError("Invalid Key in Group");
+            }
             if (this.columnsValidator.includes(grouping)) {
                 this.containedColumns.push(grouping);
             } else {
@@ -75,13 +84,18 @@ export default class ValidatorTransformation extends Validator {
             if (!this.containedApply.includes(applyKeys[0])) {
                 this.containedApply.push(applyKeys[0]);
             } else {
-                throw new InsightError("Apply contains duplicate keys");
+                throw new InsightError("APPLY contains duplicate keys");
             }
         }
     }
 
     private checkApplyRule(applyKey: any) {
-        let applyToken: string[] = super.getKeys(applyKey);
+        let applyToken: string[];
+        try {
+            applyToken = super.getKeys(applyKey);
+        } catch (err) {
+            throw new InsightError(err);
+        }
         let column: string = applyKey[applyToken[0]];
         if (applyToken.length !== 1) {
             throw new InsightError("Invalid applyKey in transformation, expects 1 key got" + applyToken.length);

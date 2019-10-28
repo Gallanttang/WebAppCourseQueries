@@ -74,62 +74,40 @@ export default class QueryTransforming {
     }
 
     private apply(apply: any, section: any[], group: string[]): any[] {
-        let val: Decimal;
-        let that = this;
+        let val: number;
         let applyKey: string = Object.keys(apply)[0];
-        let applyObj: any = apply[applyKey];
-        let applyToken: string = Object.keys(applyObj)[0];
-        let column: string = applyObj[applyToken];
+        let applyToken: string = Object.keys(apply[applyKey])[0];
+        let column: string = apply[applyKey][applyToken];
         if (applyToken === "MAX") {
-            val = new Decimal(section.reduce((acc, curr) =>
-                that.applyHelper(applyToken, acc, curr, column, {}), 0));
+            val = section.reduce((acc, curr) => acc > curr[column] ? acc : curr[column], 0);
         }
         if (applyToken === "AVG") {
-            val = new Decimal(section.reduce((acc, curr) =>
-                that.applyHelper(applyToken, acc, curr, column, {}), 0)).dividedBy(new Decimal(section.length));
+            let sum: number = section.reduce((acc, curr) => Decimal.add(acc, curr[column]), new Decimal(0)).toNumber();
+            val = Number((sum / section.length).toFixed(2));
         }
         if (applyToken === "MIN") {
-            val = new Decimal(section.reduce((acc, curr) =>
-                that.applyHelper(applyToken, acc, curr, column, {}), Number.MAX_SAFE_INTEGER));
+            val = section.reduce((acc, curr) => acc < curr[column] ? acc : curr[column], Number.MAX_SAFE_INTEGER);
         }
         if (applyToken === "SUM") {
-            val = new Decimal(section.reduce((acc, curr) =>
-                that.applyHelper(applyToken, acc, curr, column, {}), 0));
+            let sum: number = section.reduce((acc, curr) => Decimal.add(acc, curr[column]), new Decimal(0)).toNumber();
+            val = Number(sum.toFixed(2));
         }
         if (applyToken === "COUNT") {
             let unique: any = {};
-            val = new Decimal(section.reduce((accumulator, curr) =>
-                that.applyHelper(applyToken, accumulator, curr, column, unique), 0));
+            val = section.reduce(function (acc, curr) {
+                if (unique.hasOwnProperty(curr[column])) {
+                    return acc;
+                } else {
+                    unique[curr[column]] = 0;
+                    return acc + 1;
+                }
+            }, 0);
         }
         let rt: any = {};
         for (let g of group) {
             rt[g] = section[0][g];
         }
-        rt[applyKey] = val.toNearest(0.01, Decimal.ROUND_HALF_CEIL).toNumber();
+        rt[applyKey] = val;
         return rt;
-    }
-
-    private applyHelper(applyToken: string, acc: Decimal, curr: any, column: string, unique: any): Decimal {
-        if (curr[column] || curr[column] === "") {
-            if (applyToken === "COUNT") {
-                if (unique.hasOwnProperty(curr[column])) {
-                    return acc;
-                } else {
-                    unique[curr[column]] = 0;
-                    return Decimal.add(acc, 1);
-                }
-            }
-            if (applyToken === "MIN") {
-                return Decimal.min(acc, curr[column]);
-            }
-            if (applyToken === "MAX") {
-                return Decimal.max(acc, curr[column]);
-            }
-            if (applyToken === "SUM" || applyToken === "AVG") {
-                return Decimal.add(acc, curr[column]);
-            }
-        } else {
-            return acc;
-        }
     }
 }
