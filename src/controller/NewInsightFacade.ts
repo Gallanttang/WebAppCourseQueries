@@ -135,12 +135,12 @@ export default class InsightFacade implements IInsightFacade {
                 //         promisedFiles.push(file.async("text"));
                 //     }
                 // });
-                buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
+                // buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
                 result.folder("rooms/campus/discover/buildings-and-classrooms").forEach(function (relativePath, file) {
                     // todo should look through all keys of buildingsToParse and look for a match. idk if it will work
-                    if (buildingsToParse.includes(relativePath)) {
+                    // if (buildingsToParse.includes(relativePath)) {
                         promisedFiles.push(file.async("text"));
-                    }
+                    // }
                 });
                 Log.trace("before promise.all");
                 Promise.all(promisedFiles).then((results) => {

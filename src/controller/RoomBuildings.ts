@@ -4,8 +4,30 @@ import Log from "../Util";
 const http = require("http");
 
 export default class RoomBuildings {
+    private roomsFullname: string = "";
+    private roomsShortname: string = "";
+    private roomsAddress: string = "";
+    private internalDataStructure: any = {};
+    private columnValidator: any = {
+        // todo add columns
+    };
 
+    constructor() {
+        Log.trace("RoomBuildings::init()");
+    }
+
+    // will probably delete this fxn
     public processFiles(buildingFile: any): any {
+        return null;
+    }
+
+    // todo how should empty string be represented in internal data struct?
+    // returns number of valid rooms for this particular building specified by path
+    public getValidRooms(passToBuilding: string[], path: string): number {
+        return null;
+    }
+
+    public validTableExists(): boolean {
         return null;
     }
 
