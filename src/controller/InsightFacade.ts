@@ -11,6 +11,7 @@ import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryPerformer from "./QueryPerformer";
 import QueryManager from "./QueryManager";
+import NewInsightFacade from "./NewInsightFacade";
 
 /**
  * This is the main programmatic entry point for the project.
