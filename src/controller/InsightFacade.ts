@@ -73,11 +73,13 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string[]>((resolve, reject) => {
             jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                 if (kind === "rooms") {
-                    thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
-                        return reject("not implemented");
-                    }).catch(() => {
-                        return reject("error in roomLoadToDisk");
-                    });
+                    thisClass.addedDatasets.push(id);
+                    resolve(thisClass.addedDatasets);
+                    // thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
+                    //     return reject("not implemented");
+                    // }).catch(() => {
+                    //     return reject("error in roomLoadToDisk");
+                    // });
                 } else {
                     result.folder("courses").forEach(function (relativePath, file) {
                         promisedFiles.push(file.async("text"));
