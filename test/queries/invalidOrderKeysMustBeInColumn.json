@@ -1,0 +1,25 @@
+{
+    "title": "All ORDER keys must be in COLUMNS",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98.5
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_title",
+                "courses_avg"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+                    "courses_depts"
+                ]
+            }
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"All ORDER keys must be in COLUMNS"}
+}

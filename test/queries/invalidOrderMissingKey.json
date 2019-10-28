@@ -1,0 +1,25 @@
+{
+    "title": "ORDER missing 'keys' key",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98.5
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_title",
+                "courses_avg"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "key": [
+                    "courses_dept"
+                ]
+            }
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"ORDER missing 'keys' key"}
+}

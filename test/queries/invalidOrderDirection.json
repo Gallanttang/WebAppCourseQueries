@@ -1,0 +1,25 @@
+{
+    "title": "Invalid key type in SUM",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98.5
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_title",
+                "courses_avg"
+            ],
+            "ORDER": {
+                "dir": "LEFT",
+                "keys": [
+                    "courses_dept"
+                ]
+            }
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid ORDER direction"}
+}
