@@ -121,6 +121,7 @@ export default class InsightFacade implements IInsightFacade {
                 parsedIndexFile = parse5.parse(indexFile);
                 buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
                 for (let building of buildingsToParse) {
+                    Log.trace(building);
                     if (building["rooms_path"]) {
                         result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
                             promisedFiles.push( parse5.parse(file).async("text"));

@@ -39,8 +39,9 @@ export default class RoomTDValueGetter {
         }
     }
 
+    // get value of form "ACU"
     public getShortname(fieldType: any, td: any): string {
-        let reg: RegExp = new RegExp("(?:[A-Z]{4}|[A-Z]{3})");
+        let reg: RegExp = new RegExp(/(?:[A-Z]{4}|[A-Z]{3})/);
         let value: string;
         try {
             value = td.childNodes[0].value;
@@ -50,20 +51,36 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getFullname(fieldType: any, td: any): any {
-        let reg: RegExp = new RegExp("(?:[A-Z]{4}|[A-Z]{3})");
+    // get value of form "Acute Care Unit"
+    public getFullname(fieldType: any, td: any): string {
         let value: string;
         try {
-            value = td.childNodes[0].value;
-            return value = value.match(reg)[0];
+            value = td.childNodes[1].childNodes[0].value;
+            return value.trim();
         } catch {
             return "";
         }
     }
 
-    public getAddress(fieldType: any, td: any): any {
+    public getAddress(fieldType: any, td: any): string {
+        let value: string;
         try {
-            let result = td.childNodes[0].value;
+            value = td.childNodes[0].value;
+            value = value.trim();
+            value = value.replace("\n", "");
+            return value;
+        } catch (err) {
+            return "";
+        }
+    }
+
+    public getHref(fieldType: any, td: any): any {
+        let value: string;
+        try {
+            value = td.childNodes[1].attrs[0].value;
+            value = value.trim();
+            value = value.replace(".", "");
+            return value;
         } catch (err) {
             return "";
         }
@@ -83,11 +100,6 @@ export default class RoomTDValueGetter {
     }
 
     public getFurniture(fieldType: any, td: any): any {
-        return null;
-        // use a chained if statement here
-    }
-
-    public getHref(fieldType: any, td: any): any {
         return null;
         // use a chained if statement here
     }

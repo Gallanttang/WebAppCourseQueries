@@ -16,7 +16,6 @@ export default class RoomBuildings {
         Log.trace("RoomBuildings::init()");
     }
 
-    // will probably delete this fxn
     public processFiles(buildingFile: any): any {
         return null;
     }

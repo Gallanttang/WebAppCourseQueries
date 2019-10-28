@@ -45,7 +45,6 @@ export default class RoomIndex {
             for (let child of indexAST.childNodes) {
                 result = thisClass.buildingsToParse(child);
                 if (result.length > 0) {
-                    Log.trace(result);
                     return result;
                 }
             }
