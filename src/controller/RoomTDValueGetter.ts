@@ -34,17 +34,31 @@ export default class RoomTDValueGetter {
             return this.getHref(fieldType, td);
         }
         // todo this one is a bit unconventional. I'm using it to get to buildings
-        if (fieldType === "rooms_href") {
+        if (fieldType === "rooms_path") {
             return this.getHref(fieldType, td);
         }
     }
 
-    public getShortname(fieldType: any, td: any): any {
-        return null;
+    public getShortname(fieldType: any, td: any): string {
+        let reg: RegExp = new RegExp("(?:[A-Z]{4}|[A-Z]{3})");
+        let value: string;
+        try {
+            value = td.childNodes[0].value;
+            return value = value.match(reg)[0];
+        } catch {
+            return "";
+        }
     }
 
     public getFullname(fieldType: any, td: any): any {
-        return null;
+        let reg: RegExp = new RegExp("(?:[A-Z]{4}|[A-Z]{3})");
+        let value: string;
+        try {
+            value = td.childNodes[0].value;
+            return value = value.match(reg)[0];
+        } catch {
+            return "";
+        }
     }
 
     public getAddress(fieldType: any, td: any): any {
