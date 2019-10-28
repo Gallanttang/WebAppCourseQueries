@@ -5,7 +5,7 @@ export default class ValidatorTransformation extends Validator {
     private readonly columnsValidator: string[];
     private containedColumns: string[] = [];
     private containedApply: string[] = [];
-    private applyValidator: string[] = ["MAX", " MIN", "AVG", "SUM", "COUNT"];
+    private applyValidator: string[] = ["MAX", "MIN", "AVG", "SUM", "COUNT"];
     constructor(currDataset: any[], groupBy: string[]) {
         super(currDataset);
         this.columnsValidator = groupBy;
@@ -108,7 +108,7 @@ export default class ValidatorTransformation extends Validator {
         } else {
             type = this.roomsvalidator[key];
         }
-        if (applyToken[0] === "MAX" || applyToken[0] === " MIN" || applyToken[0] === "AVG" || applyToken[0] === "SUM") {
+        if (applyToken[0] === "MAX" || applyToken[0] === "MIN" || applyToken[0] === "AVG" || applyToken[0] === "SUM") {
             if (type !== "number") {
                 throw new InsightError("Expected field on " + column + " to be type of number, got a " + type);
             }
