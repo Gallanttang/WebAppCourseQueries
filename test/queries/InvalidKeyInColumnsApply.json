@@ -1,0 +1,32 @@
+{
+    "title": "Invalid key AvgPass in COLUMNS",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "AvgPass"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "APPLY": [
+                {
+                    "AvgPasse": {
+                        "AVG": "courses_pass"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid key AvgPass in COLUMNS"}
+}

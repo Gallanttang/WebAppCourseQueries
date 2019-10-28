@@ -1,0 +1,32 @@
+{
+    "title": "Invalid transformation operator",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "AvgPass"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "APPLY": [
+                {
+                    "AvgPass": {
+                        "AVGS": "courses_pass"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid transformation operator"}
+}

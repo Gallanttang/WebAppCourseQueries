@@ -1,0 +1,32 @@
+{
+    "title": "TRANSFORMATIONS missing APPLY",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "AvgPass"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "APPLYs": [
+                {
+                    "AvgPass": {
+                        "AVG": "courses_pass"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"TRANSFORMATIONS missing APPLY"}
+}

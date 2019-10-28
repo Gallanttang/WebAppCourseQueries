@@ -1,0 +1,32 @@
+{
+    "title": "Invalid key type in SUM",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "SumPass"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "APPLY": [
+                {
+                    "SumPass": {
+                        "SUM": "courses_dept"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid key type in SUM"}
+}

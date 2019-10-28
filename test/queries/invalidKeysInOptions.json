@@ -1,0 +1,25 @@
+{
+    "title": "Invalid keys in OPTIONS",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98.5
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_title",
+                "courses_avg"
+            ],
+            "ORDERs": {
+                "dir": "UP",
+                "keys": [
+                    "courses_dept"
+                ]
+            }
+        }
+    },
+    "isQueryValid": false,
+    "result": {"error":"Invalid keys in OPTIONS"}
+}
