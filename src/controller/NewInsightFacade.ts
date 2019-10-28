@@ -125,23 +125,15 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string[]>((resolve, reject) => {
             result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
                 parsedIndexFile = parse5.parse(indexFile);
-
                 // TODO check if there is one html file
-
-                // roomsToParse = thisClass.roomMemMan.roomsToParse(parsedIndexFile);
-                // result.folder("rooms/campus/discover/buildings-and-classrooms")
-                // .forEach(function (relativePath, file) {
-                //     if (roomsToParse.includes(relativePath)) {
-                //         promisedFiles.push(file.async("text"));
-                //     }
-                // });
-                // buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
-                result.folder("rooms/campus/discover/buildings-and-classrooms").forEach(function (relativePath, file) {
-                    // todo should look through all keys of buildingsToParse and look for a match. idk if it will work
-                    // if (buildingsToParse.includes(relativePath)) {
-                        promisedFiles.push(file.async("text"));
-                    // }
-                });
+                buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
+                for (let building of buildingsToParse) {
+                    if (building["rooms_path"]) {
+                        result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
+                            promisedFiles.push( parse5.parse(file).async("text"));
+                        });
+                    }
+                }
                 Log.trace("before promise.all");
                 Promise.all(promisedFiles).then((results) => {
                     for (let result0 of results) {
