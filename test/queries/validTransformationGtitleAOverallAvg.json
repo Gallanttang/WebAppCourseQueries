@@ -1,0 +1,215 @@
+{
+    "title": "",
+    "query": {
+        "WHERE": {
+            "EQ": {
+                "courses_avg": 70
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title",
+                "overallAvg"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_title"
+            ],
+            "APPLY": [
+                {
+                    "overallAvg": {
+                        "AVG": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "anth of media",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "agroforestry",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "technical commun",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "eng materials",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "cult fndt e asia",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "fund cell bio",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "cell biology 1",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "integ chem lab i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "the roman army",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "roman art & arch",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "business finance",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "prncpls micrecon",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "money & banking",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "intro literature",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "strat univ writ",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "brit lit 18c-21c",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "lit in u.s.",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "human sexuality",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "beginnr fren iv",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "fren lang&lit i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "fr prc nnspec i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "2nd-year ital i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "begin japn i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "adv  read&writ i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "exer physolgy i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "df calc ap ph sc",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "int calc ap c&ss",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "linear systems",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "intro math compu",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "elem diff eq i",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "multivrbl calc",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "ord diff equtns",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "intr complex var",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "intr number thry",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "calculus iv",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "intr mod diff ge",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "fuel cell system",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "musical forms",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "msn major essay",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "directed reading",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "aplic quant mech",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "dev soc cli psy",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "cultural psych",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "psyc of gender",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "masters thesis",
+            "overallAvg": 70
+        },
+        {
+            "courses_title": "int rom lang cin",
+            "overallAvg": 70
+        }
+    ]
+}

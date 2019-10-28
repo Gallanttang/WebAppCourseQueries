@@ -29,15 +29,15 @@ export default class QueryPerformer {
             if (this.filtering.checkCond(section, filter)) {
                 result.push(section);
             }
-            if (result.length > 5000) {
-                throw new ResultTooLargeError("Only queries with a maximum of 5000 results are supported.");
-            }
         }
         if (result.length === 0) {
             return result;
         }
         if (query.hasOwnProperty("TRANSFORMATIONS")) {
             result = this.transformer.transform(query["TRANSFORMATIONS"], result);
+        }
+        if (result.length > 5000) {
+            throw new ResultTooLargeError("Only queries with a maximum of 5000 results are supported.");
         }
         result = this.selectColumns(result, query["OPTIONS"]["COLUMNS"]);
         // assume that result is only of the columns chosen
@@ -47,9 +47,15 @@ export default class QueryPerformer {
             if (typeof order === "string") {
                 // order should be "courses_avg" or something else
                 // sort by given key to order (orderBy) in result
-                result.sort((a, b) =>
-                    (a[order] > b[order]) ? 1 :
-                        (b[order] > a[order]) ? -1 : 0);
+                result.sort(function (a, b) {
+                    if (a[order] > b[order]) {
+                        return 1;
+                    } else if (b[order] > a[order]) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                });
             } else {
                 let dir: string = order["dir"];
                 let keys: string[] = order["keys"];
@@ -71,7 +77,7 @@ export default class QueryPerformer {
         let nextIndex: number = index + 1;
         if (a[keys[index]] < b[keys[index]]) {
             return 1;
-        } else if (a[keys[index]] < b[keys[index]]) {
+        } else if (a[keys[index]] > b[keys[index]]) {
             return -1;
         } else if (nextIndex !== keys.length) {
             return this.advanceSort(a, b, keys, index);

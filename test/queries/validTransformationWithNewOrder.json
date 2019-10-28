@@ -34,7 +34,7 @@
             "APPLY": [
                 {
                     "numCourseSections": {
-                        "COUNT": "courses_id"
+                        "COUNT": "courses_instructor"
                     }
                 }
             ]
@@ -43,47 +43,67 @@
     "isQueryValid": true,
     "result": [
         {
-            "courses_title": "risk mgt&fnc eng",
-            "numCourseSections": 1
-        },
-        {
             "courses_title": "research theory",
-            "numCourseSections": 1
+            "numCourseSections": 3
         },
         {
-            "courses_title": "invest theory",
-            "numCourseSections": 1
+            "courses_title": "sem in marketing",
+            "numCourseSections": 3
         },
         {
-            "courses_title": "int fin mar/inst",
-            "numCourseSections": 1
+            "courses_title": "int org res mthd",
+            "numCourseSections": 3
         },
         {
-            "courses_title": "dsgn stat prct",
-            "numCourseSections": 1
+            "courses_title": "adv tpc th co pr",
+            "numCourseSections": 2
+        },
+        {
+            "courses_title": "theory of financ",
+            "numCourseSections": 2
         },
         {
             "courses_title": "creativity busns",
-            "numCourseSections": 1
+            "numCourseSections": 2
         },
         {
             "courses_title": "real est develop",
-            "numCourseSections": 1
+            "numCourseSections": 2
         },
         {
-            "courses_title": "database tech",
-            "numCourseSections": 1
+            "courses_title": "buyer behaviour",
+            "numCourseSections": 2
         },
         {
             "courses_title": "bus telecommun",
-            "numCourseSections": 1
+            "numCourseSections": 2
         },
         {
             "courses_title": "new venture des",
-            "numCourseSections": 1
+            "numCourseSections": 2
         },
         {
-            "courses_title": "fixed inc mrk",
+            "courses_title": "adv tpc emp corp",
+            "numCourseSections": 2
+        },
+        {
+            "courses_title": "emp res meth",
+            "numCourseSections": 2
+        },
+        {
+            "courses_title": "stats methlgy i",
+            "numCourseSections": 2
+        },
+        {
+            "courses_title": "rsrch meth 1",
+            "numCourseSections": 2
+        },
+        {
+            "courses_title": "risk mgt&fnc eng",
+            "numCourseSections": 2
+        },
+        {
+            "courses_title": "new enter devel",
             "numCourseSections": 1
         },
         {
@@ -91,43 +111,23 @@
             "numCourseSections": 1
         },
         {
-            "courses_title": "new enter devel",
+            "courses_title": "fixed inc mrk",
             "numCourseSections": 1
         },
         {
-            "courses_title": "int org res mthd",
+            "courses_title": "database tech",
             "numCourseSections": 1
         },
         {
-            "courses_title": "stats methlgy i",
+            "courses_title": "dsgn stat prct",
             "numCourseSections": 1
         },
         {
-            "courses_title": "emp res meth",
+            "courses_title": "int fin mar/inst",
             "numCourseSections": 1
         },
         {
-            "courses_title": "sem in marketing",
-            "numCourseSections": 1
-        },
-        {
-            "courses_title": "buyer behaviour",
-            "numCourseSections": 1
-        },
-        {
-            "courses_title": "theory of financ",
-            "numCourseSections": 1
-        },
-        {
-            "courses_title": "adv tpc th co pr",
-            "numCourseSections": 1
-        },
-        {
-            "courses_title": "rsrch meth 1",
-            "numCourseSections": 1
-        },
-        {
-            "courses_title": "adv tpc emp corp",
+            "courses_title": "invest theory",
             "numCourseSections": 1
         }
     ]
