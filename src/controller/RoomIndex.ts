@@ -6,7 +6,9 @@ export default class RoomIndex {
     private columnValidator: any = {
         "views-field views-field-title": "rooms_fullname",
         "views-field views-field-field-building-code": "rooms_shortname",
-        "views-field views-field-field-building-address": "rooms_address"
+        "views-field views-field-field-building-address": "rooms_address",
+        "views-field views-field-field-room-number": "room_number",
+
     };
 
     // returns all rooms to parse found in index.htm

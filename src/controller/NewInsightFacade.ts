@@ -125,6 +125,9 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string[]>((resolve, reject) => {
             result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
                 parsedIndexFile = parse5.parse(indexFile);
+
+                // TODO check if there is one html file
+
                 // roomsToParse = thisClass.roomMemMan.roomsToParse(parsedIndexFile);
                 // result.folder("rooms/campus/discover/buildings-and-classrooms")
                 // .forEach(function (relativePath, file) {
