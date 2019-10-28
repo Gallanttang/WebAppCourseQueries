@@ -66,7 +66,7 @@ export default class RoomMemoryManager {
             if (reg.test(table.value)) {
                 let buildingName: string = table.value.slice(4, -1);
                 // todo for some reason table.value 's type is a number???
-                //  todo even though it doesn't show up that way in the AST playground online
+                // todo even though it doesn't show up that way in the AST playground online
                 result.push(buildingName);
                 return result;
             }
