@@ -58,7 +58,7 @@ export default class QueryTransforming {
         return returnValue;
     }
 
-    private transformApplyHelper(apply: any[], group: any, groups: string[]): any {
+    private transformApplyHelper(apply: any[], group: any, groups: string[]): any[] {
         if (!Array.isArray(group)) {
             return this.transformApply(apply, group, groups);
         } else {
@@ -66,7 +66,7 @@ export default class QueryTransforming {
         }
     }
 
-    private apply(applies: any[], sec: any[], groups: string[]): any {
+    private apply(applies: any[], sec: any[], groups: string[]): any[] {
         let rt: any = {};
         let group: string[] = groups;
         let val: number = 0;

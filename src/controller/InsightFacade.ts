@@ -41,9 +41,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        const promisedFiles: any = [];
         const thisClass = this;
-        let validSections: any[] = [];
         const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
             this.addedDatasets.some((s) => s === id);
         if (idIsInvalid) {
@@ -109,51 +107,51 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
-    public roomLoadToDisk( id: string, content: string, kind: InsightDatasetKind, result: jszip): Promise<string[]> {
-        let buildingsToParse: any[];
-        const promisedFiles: any = [];
-        let sections: any[] = [];
-        let thisClass = this;
-        let parsedIndexFile: object;
-        let count: number = 0;
-        const parse5 = require("parse5");
-        Log.trace("inside roomLoadToDisk");
-        return new Promise<string[]>((resolve, reject) => {
-            result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
-                parsedIndexFile = parse5.parse(indexFile);
-                buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
-                for (let building of buildingsToParse) {
-                    if (building["rooms_path"]) {
-                        result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
-                            promisedFiles.push( parse5.parse(file).async("text"));
-                        });
-                    }
-                }
-                Promise.all(promisedFiles).then((results) => {
-                    for (let result0 of results) {
-                        sections = thisClass.roomBuildings.processFiles(result0);
-                    }
-                }).then(function () {
-                    count = thisClass.roomBuildings.addValidSections(sections);
-                    if (count > 0) {
-                        // this part is the same as courses, can stay as memMan
-                        thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
-                            if (successful) {
-                                thisClass.addedDatasets.push(id);
-                                thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                return resolve(thisClass.addedDatasets);
-                            } else {
-                                return reject(new InsightError("Could not write " + id + "to memory"));
-                            }
-                        });
-                    } else {
-                        return reject(new InsightError("Could not add invalid dataset: " + id));
-                    }
-                });
-            });
-            // todo am I done at this point? do aI need a catch block
-        });
-    }
+    // public roomLoadToDisk( id: string, content: string, kind: InsightDatasetKind, result: jszip): Promise<string[]> {
+    //     let buildingsToParse: any[];
+    //     const promisedFiles: any = [];
+    //     let sections: any[] = [];
+    //     let thisClass = this;
+    //     let parsedIndexFile: object;
+    //     let count: number = 0;
+    //     const parse5 = require("parse5");
+    //     Log.trace("inside roomLoadToDisk");
+    //     return new Promise<string[]>((resolve, reject) => {
+    //         result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
+    //             parsedIndexFile = parse5.parse(indexFile);
+    //             buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
+    //             for (let building of buildingsToParse) {
+    //                 if (building["rooms_path"]) {
+    //                     result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
+    //                         promisedFiles.push( parse5.parse(file).async("text"));
+    //                     });
+    //                 }
+    //             }
+    //             Promise.all(promisedFiles).then((results) => {
+    //                 for (let result0 of results) {
+    //                     sections = thisClass.roomBuildings.processFiles(result0);
+    //                 }
+    //             }).then(function () {
+    //                 count = thisClass.roomBuildings.addValidSections(sections);
+    //                 if (count > 0) {
+    //                     // this part is the same as courses, can stay as memMan
+    //                     thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
+    //                         if (successful) {
+    //                             thisClass.addedDatasets.push(id);
+    //                             thisClass.forListDS.push({id: id, kind: kind, numRows: count});
+    //                             return resolve(thisClass.addedDatasets);
+    //                         } else {
+    //                             return reject(new InsightError("Could not write " + id + "to memory"));
+    //                         }
+    //                     });
+    //                 } else {
+    //                     return reject(new InsightError("Could not add invalid dataset: " + id));
+    //                 }
+    //             });
+    //         });
+    //         // todo am I done at this point? do aI need a catch block
+    //     });
+    // }
 
     public processFiles(file: any, validSections: any[]) {
         let processed: any;
