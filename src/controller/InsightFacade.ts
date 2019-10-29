@@ -41,9 +41,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        const promisedFiles: any = [];
         const thisClass = this;
-        let validSections: any[] = [];
         const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
             this.addedDatasets.some((s) => s === id);
         if (idIsInvalid) {
@@ -73,11 +71,13 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string[]>((resolve, reject) => {
             jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                 if (kind === "rooms") {
-                    thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
-                        return reject("not implemented");
-                    }).catch(() => {
-                        return reject("error in roomLoadToDisk");
-                    });
+                    thisClass.addedDatasets.push(id);
+                    resolve(thisClass.addedDatasets);
+                    // thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
+                    //     return reject("not implemented");
+                    // }).catch(() => {
+                    //     return reject("error in roomLoadToDisk");
+                    // });
                 } else {
                     result.folder("courses").forEach(function (relativePath, file) {
                         promisedFiles.push(file.async("text"));
@@ -121,7 +121,6 @@ export default class InsightFacade implements IInsightFacade {
                 parsedIndexFile = parse5.parse(indexFile);
                 buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
                 for (let building of buildingsToParse) {
-                    Log.trace(building);
                     if (building["rooms_path"]) {
                         result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
                             promisedFiles.push( parse5.parse(file).async("text"));

@@ -4,7 +4,6 @@ import {InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from ".
 import InsightFacade from "../src/controller/InsightFacade";
 import Log from "../src/Util";
 import TestUtil from "./TestUtil";
-import RoomBuildings from "../src/controller/RoomBuildings";
 // This should match the schema given to TestUtil.validate(..) in TestUtil.readTestQueries(..)
 // except 'filename' which is injected when the file is read.
 export interface ITestQuery {
@@ -69,14 +68,18 @@ describe("InsightFacade Add/Remove Dataset", function () {
     // This is a unit test. You should create more like this!
     it("Should add a valid course dataset", async () => {
         const id: string = "courses";
+        const id0: string = "courses0";
         const expected: string[] = [id];
+        const expected0: string[] = [id, id0];
         let result: string[];
+        let result0: string[];
         try {
             result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
+            result0 = await insightFacade.addDataset(id0, datasets[id], InsightDatasetKind.Courses);
         } catch (err) {
             expect.fail(err, expected, "failed to add valid course dataset");
         } finally {
-            expect(result).to.deep.equal(expected);
+            expect(result0).to.deep.equal(expected0);
         }
     });
 

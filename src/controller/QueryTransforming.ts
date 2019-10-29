@@ -52,62 +52,63 @@ export default class QueryTransforming {
                 temp = that.transformApplyHelper(apply, temp, groups);
                 temp.forEach((section: any) => returnValue.push(section));
             } else {
-                for (const applyRule of apply) {
-                    temp = this.apply(applyRule, temp, groups);
-                    returnValue.push(temp);
-                }
+                this.apply(apply, temp, groups).forEach((section: any) => returnValue.push(section));
             }
         }
         return returnValue;
     }
 
-    private transformApplyHelper(apply: any[], returnValue: any, groups: string[]): any[] {
-        if (!Array.isArray(returnValue)) {
-            return this.transformApply(apply, returnValue, groups);
+    private transformApplyHelper(apply: any[], group: any, groups: string[]): any[] {
+        if (!Array.isArray(group)) {
+            return this.transformApply(apply, group, groups);
         } else {
-            for (const applyRule of apply) {
-                returnValue = this.apply(applyRule, returnValue, groups);
-                returnValue.push(returnValue);
-            }
-            return returnValue;
+            return this.apply(apply, group, groups);
         }
     }
 
-    private apply(apply: any, section: any[], group: string[]): any[] {
-        let val: number;
-        let applyKey: string = Object.keys(apply)[0];
-        let applyToken: string = Object.keys(apply[applyKey])[0];
-        let column: string = apply[applyKey][applyToken];
-        if (applyToken === "MAX") {
-            val = section.reduce((acc, curr) => acc > curr[column] ? acc : curr[column], 0);
-        }
-        if (applyToken === "AVG") {
-            let sum: number = section.reduce((acc, curr) => Decimal.add(acc, curr[column]), new Decimal(0)).toNumber();
-            val = Number((sum / section.length).toFixed(2));
-        }
-        if (applyToken === "MIN") {
-            val = section.reduce((acc, curr) => acc < curr[column] ? acc : curr[column], Number.MAX_SAFE_INTEGER);
-        }
-        if (applyToken === "SUM") {
-            let sum: number = section.reduce((acc, curr) => Decimal.add(acc, curr[column]), new Decimal(0)).toNumber();
-            val = Number(sum.toFixed(2));
-        }
-        if (applyToken === "COUNT") {
-            let unique: any = {};
-            val = section.reduce(function (acc, curr) {
-                if (unique.hasOwnProperty(curr[column])) {
-                    return acc;
-                } else {
-                    unique[curr[column]] = 0;
-                    return acc + 1;
-                }
-            }, 0);
-        }
+    private apply(applies: any[], sec: any[], groups: string[]): any[] {
         let rt: any = {};
+        let group: string[] = groups;
+        let val: number = 0;
         for (let g of group) {
-            rt[g] = section[0][g];
+            rt[g] = sec[0][g];
         }
-        rt[applyKey] = val;
-        return rt;
+        for (const apply of applies) {
+            let section: any[] = sec;
+            let applyKey: string = Object.keys(apply)[0];
+            let applyToken: string = Object.keys(apply[applyKey])[0];
+            let column: string = apply[applyKey][applyToken];
+            if (applyToken === "MAX") {
+                val = section.reduce((acc, curr) => acc > curr[column] ? acc : curr[column], 0);
+            }
+            if (applyToken === "AVG") {
+                let sum: number = section.reduce((acc, curr) =>
+                    Decimal.add(acc, curr[column]), new Decimal(0)).toNumber();
+                val = Number((sum / section.length).toFixed(2));
+            }
+            if (applyToken === "MIN") {
+                val = section.reduce((acc, curr) =>
+                    acc < curr[column] ? acc : curr[column], Number.MAX_SAFE_INTEGER);
+            }
+            if (applyToken === "SUM") {
+                let sum: number = section.reduce((acc, curr) =>
+                    Decimal.add(acc, curr[column]), new Decimal(0)).toNumber();
+                val = Number(sum.toFixed(2));
+            }
+            if (applyToken === "COUNT") {
+                let unique: any = {};
+                val = section.reduce(function (acc, curr) {
+                    if (unique.hasOwnProperty(curr[column])) {
+                        return acc;
+                    } else {
+                        unique[curr[column]] = 0;
+                        return acc + 1;
+                    }
+                }, 0);
+            }
+            group.push(applyKey);
+            rt[applyKey] = val;
+        }
+        return [rt];
     }
 }
