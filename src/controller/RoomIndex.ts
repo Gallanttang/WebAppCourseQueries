@@ -24,7 +24,7 @@ export default class RoomIndex {
         this.RoomBuildings = new RoomBuildings();
     }
 
-    // should return count of overall # of valid sections
+    // should return array of building objects
     // fn 1
     public buildingsToParse(indexAST: any): any[] {
         let result: any[];
@@ -52,78 +52,6 @@ export default class RoomIndex {
         return result;
     }
 
-    // // Given thead, returns any{key: value} where key = shortname
-    // // and value is: index = col#, value = key at that table col#
-    // // fn 2
-    // public getTableOrdering(table: any): string[] {
-    //     const thisClass = this;
-    //     let result: string[] = [];
-    //     let res: string;
-    //     let trArray: any[];
-    //     let tdArray: any[];
-    //     let thead: any = "";
-    //     if (table.childNodes) {
-    //         for (let tableChild of table.childNodes) {
-    //             if (tableChild.nodeName === "thead") {
-    //                 thead = tableChild;
-    //             }
-    //         }
-    //     } else {
-    //         return [];
-    //     }
-    //     if (thead && thead.childNodes && thead.childNodes.length > 0) {
-    //         trArray = thead.childNodes.filter(function (elem: any) {
-    //             return (elem.nodeName === "tr" && elem.childNodes && elem.childNodes.length > 0);
-    //         });
-    //         for (let tr of trArray) {
-    //             tdArray = tr.childNodes.filter(function (elem: any) {
-    //                 return (elem.nodeName === "th" && elem.childNodes && elem.childNodes.length > 0);
-    //             });
-    //             for (let td of tdArray) {
-    //                 res = thisClass.getTableOrderingRecursion(td);
-    //                 if (res) {
-    //                     result.push(res);
-    //                 }
-    //             }
-    //         }
-    //         return result;
-    //     } else {
-    //         return [];
-    //     }
-    // }
-    //
-    // // given td, returns string of td
-    // public getTableOrderingRecursion(table: any): string {
-    //     let thisClass = this;
-    //     let result: string = "";
-    //     let returnedResult: any;
-    //     let columnValue: string;
-    //     let fixedColumnValue: string;
-    //     if (table.nodeName === "th" && table.attrs && table.attrs.length > 0) {
-    //         columnValue = table.attrs[0].value;
-    //         if (this.columnValidator.hasOwnProperty(columnValue)) {
-    //             fixedColumnValue = thisClass.columnValidator[columnValue];
-    //             return fixedColumnValue;
-    //         } else {
-    //             return " ";
-    //         }
-    //     } else if (!table.childNodes || table.childNodes.length <= 0) {
-    //         return null;
-    //     } else {
-    //         // recurse on each indexAST childNode
-    //         for (let child of table.childNodes) {
-    //             returnedResult = thisClass.getTableOrderingRecursion(child);
-    //             if (returnedResult) {
-    //                 return returnedResult;
-    //             }
-    //         }
-    //     }
-    //     return result;
-    // }
-    //
-    // Given tbody, gets each trand calls fn 4 on each tr
-    // Then returns [] of all valid buildings in the tbody
-    // fn 3
     public getTableBuildings( tbody: any): any[] {
         let thisClass = this;
         let result: any[] = [];

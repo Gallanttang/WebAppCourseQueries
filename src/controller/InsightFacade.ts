@@ -13,7 +13,6 @@ import QueryPerformer from "./QueryPerformer";
 import QueryManager from "./QueryManager";
 import RoomBuildings from "./RoomBuildings";
 import RoomIndex from "./RoomIndex";
-import NewInsightFacade from "./NewInsightFacade";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -123,16 +122,22 @@ export default class InsightFacade implements IInsightFacade {
                 for (let building of buildingsToParse) {
                     if (building["rooms_path"]) {
                         result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
-                            promisedFiles.push( parse5.parse(file).async("text"));
+                            promisedFiles.push( new Promise((res, rej) => {
+                                parse5.parse(file).async("text").then((resultFile: any) => {
+                                    let obj: any[] = [building, resultFile];
+                                    res (obj);
+                                });
+                            }));
                         });
                     }
                 }
+                // todo finish this
                 Promise.all(promisedFiles).then((results) => {
                     for (let result0 of results) {
-                        sections = thisClass.roomBuildings.processFiles(result0);
+                        thisClass.roomBuildings.processBuilding(result0);
                     }
                 }).then(function () {
-                    count = thisClass.roomBuildings.addValidSections(sections);
+                    count = thisClass.roomBuildings.getRoomsCount();
                     if (count > 0) {
                         // this part is the same as courses, can stay as memMan
                         thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
