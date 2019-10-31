@@ -70,13 +70,13 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<string[]>((resolve, reject) => {
             jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
                 if (kind === "rooms") {
-                    thisClass.addedDatasets.push(id);
-                    resolve(thisClass.addedDatasets);
-                    // thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
-                    //     return reject("not implemented");
-                    // }).catch(() => {
-                    //     return reject("error in roomLoadToDisk");
-                    // });
+                    // thisClass.addedDatasets.push(id);
+                    // resolve(thisClass.addedDatasets);
+                    thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
+                        return reject("not implemented");
+                    }).catch(() => {
+                        return reject("error in roomLoadToDisk");
+                    });
                 } else {
                     result.folder("courses").forEach(function (relativePath, file) {
                         promisedFiles.push(file.async("text"));
@@ -121,14 +121,20 @@ export default class InsightFacade implements IInsightFacade {
                 buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
                 for (let building of buildingsToParse) {
                     if (building["rooms_path"]) {
-                        result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
-                            promisedFiles.push( new Promise((res, rej) => {
-                                parse5.parse(file).async("text").then((resultFile: any) => {
-                                    let obj: any[] = [building, resultFile];
-                                    res (obj);
-                                });
-                            }));
-                        });
+                        // result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
+                        //     promisedFiles.push( new Promise((resolve0) => {
+                        //             let obj: any[] = [building, file];
+                        //             resolve0 (obj);
+                        //     }));
+                        promisedFiles.push( new Promise((resolve0, reject0) => {
+                           // let obj: any[] = [building, this.getFile(result, building["rooms_path"])];
+                            this.getFile(result, building["rooms_path"]).then((buildingFile) => {
+                                let obj: any[] = [building, buildingFile];
+                                resolve0(obj);
+                            });
+                        }).catch((err) => {
+                            return reject(err);
+                        }));
                     }
                 }
                 // todo finish this
@@ -137,8 +143,7 @@ export default class InsightFacade implements IInsightFacade {
                         thisClass.roomBuildings.processBuilding(result0);
                     }
                 }).then(function () {
-                    count = thisClass.roomBuildings.getRoomsCount();
-                    if (count > 0) {
+                    if (thisClass.roomBuildings.hasValidRoom()) {
                         // this part is the same as courses, can stay as memMan
                         thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
                             if (successful) {
@@ -155,6 +160,15 @@ export default class InsightFacade implements IInsightFacade {
                 });
             });
             // todo am I done at this point? do aI need a catch block
+        });
+    }
+
+    public getFile(result: any, path: any): Promise<any> {
+        const parse5 = require("parse5");
+        return new Promise<any>((resolve, reject) => {
+            result.folder("rooms").file(path).async("text").then((file: any) => {
+                return resolve(parse5.parse(file));
+            });
         });
     }
 

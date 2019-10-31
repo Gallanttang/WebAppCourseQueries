@@ -11,14 +11,13 @@ export default class RoomBuildings {
     private internalDataStructure: any = {};
     private columnValidator: any = {
         "views-field views-field-field-room-number": "rooms_number",
-        "views-field views-field-field-room-capacity" : "rooms_capacity",
+        "views-field views-field-field-room-capacity" : "rooms_seats",
         "views-field views-field-field-room-furniture" : "rooms_furniture",
         "views-field views-field-field-room-type" : "rooms_type",
         "views-field views-field-nothing" : "rooms_href"
     };
 
     private ast: any;
-
     private lat: number;
     private lon: number;
 
@@ -33,12 +32,12 @@ export default class RoomBuildings {
         thisClass.dataFromIndex = buildingAndFile[0];
         thisClass.ast = buildingAndFile[1];
         return new Promise<any> ((reject, resolve) => {
-            thisClass.getLatLon(thisClass.dataFromIndex["room_address"]).then((result: any) => {
+            thisClass.getLatLon(thisClass.dataFromIndex["rooms_address"]).then((result: any) => {
                 thisClass.lat = result["lat"];
                 thisClass.lon = result["lon"];
-                return resolve;
-            }).then (() => {
                 thisClass.getTableData(thisClass.ast);
+                Log.trace(thisClass.internalDataStructure);
+                return resolve();
             }).catch ((err) => {
                 return reject("not a valid building");
             });
@@ -62,6 +61,7 @@ export default class RoomBuildings {
         } else {
             // recurse on each indexAST childNode
             for (let child of ast.childNodes) {
+                result = thisClass.getTableData(ast.childNodes);
                 if (result) {
                     return result;
                 }
@@ -70,8 +70,8 @@ export default class RoomBuildings {
         return result;
     }
 
-    public getRoomsCount(): number {
-        return null;
+    public hasValidRoom(): boolean {
+        return (Object.keys(this.internalDataStructure).length >= 0);
     }
 
     // Given tbody, gets each trand calls fn 4 on each tr
@@ -110,13 +110,14 @@ export default class RoomBuildings {
             return (elem.nodeName === "td" && elem.childNodes && elem.childNodes.length > 0);
         });
         for (let td of tdArray) {
-            if (td.attrs && td.attrs[0] && td.attrs[0]) {
+            if (td.attrs && td.attrs[0]) {
                 if (this.columnValidator.hasOwnProperty(td.attrs[0].value)) {
                     count++;
                     key = thisClass.columnValidator[td.attrs[0].value];
                     value = thisClass.ValueGetter.getValue(key, td);
                     // todo if key is number, convert to number and also make name with it
                     if (key === "rooms_number") {
+                        thisClass.getRoomsName(value);
                         value = parseInt(value, 10);
                     }
                     if (thisClass.internalDataStructure.hasOwnProperty(key)) {
@@ -129,6 +130,17 @@ export default class RoomBuildings {
             }
         }
         return (count > 0);
+    }
+
+    public getRoomsName(roomNum: number): void {
+        // rooms_shortname+"_"+rooms_number
+        let shortname = this.dataFromIndex["rooms_shortname"];
+        let name: string = shortname.concat("_", roomNum);
+        if (this.internalDataStructure.hasOwnProperty("rooms_name")) {
+            this.internalDataStructure["rooms_name"].push(name);
+        } else {
+            this.internalDataStructure["rooms_name"] = [];
+        }
     }
 
     public saveOtherValues(): any {
@@ -155,8 +167,8 @@ export default class RoomBuildings {
 
     // inspired by: https://www.twilio.com/blog/2017/08/http-requests-in-node-js.html
     public getLatLon(address: string): Promise<any> {
-        return new Promise(function (fulfill, reject) {
-            let URLaddress = address.replace(" ", "%20");
+        return new Promise( (fulfill, reject) => {
+            let URLaddress = address.replace(new RegExp(/\s/, "g"), "%20");
             let url: string = "http://cs310.students.cs.ubc.ca:11316/api/v1/project_team234/" + URLaddress;
             let geo: any;
             try {
@@ -190,9 +202,5 @@ export default class RoomBuildings {
                 throw new InsightError(404);
             }
         });
-    }
-
-    public addValidSections(section: any): any {
-        return null;
     }
 }

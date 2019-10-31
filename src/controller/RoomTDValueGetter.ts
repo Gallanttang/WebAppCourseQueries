@@ -33,7 +33,6 @@ export default class RoomTDValueGetter {
         if (fieldType === "rooms_href") {
             return this.getHref(fieldType, td);
         }
-        // todo this one is a bit unconventional. I'm using it to get to buildings
         if (fieldType === "rooms_path") {
             return this.getHref(fieldType, td);
         }
@@ -45,7 +44,7 @@ export default class RoomTDValueGetter {
         let value: string;
         try {
             value = td.childNodes[0].value;
-            return value = value.match(reg)[0];
+            return value.match(reg)[0];
         } catch {
             return "";
         }
@@ -74,33 +73,62 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getHref(fieldType: any, td: any): any {
+    public getHref(fieldType: any, td: any): string {
         let value: string;
         try {
             value = td.childNodes[1].attrs[0].value;
             value = value.trim();
-            value = value.replace(".", "");
+            value = value.replace("./", "");
             return value;
         } catch (err) {
             return "";
         }
     }
 
-    public getType(fieldType: any, td: any): any {
-        return null;
-        // use a chained if statement here
+    public getType(fieldType: any, td: any): string {
+        let value: string;
+        try {
+            value = td.childNodes[0].value;
+            value = value.replace("\n", "");
+            value = value.trim();
+            return value;
+        } catch {
+            return "";
+        }
     }
 
-    public getNumber(fieldType: any, td: any): any {
-        return null;
+    public getNumber(fieldType: any, td: any): string {
+        let value: string;
+        try {
+            value = td.childNodes[1].childNodes[0].value;
+            value = value.trim();
+            return value;
+        } catch {
+            return "";
+        }
     }
 
-    public getSeats(fieldType: any, td: any): any {
-        return null;
+    public getSeats(fieldType: any, td: any): string {
+        let value: string;
+        try {
+            value = td.childNodes[0].value;
+            value = value.replace("\n", "");
+            value = value.trim();
+            return value;
+        } catch {
+            return "";
+        }
     }
 
-    public getFurniture(fieldType: any, td: any): any {
-        return null;
-        // use a chained if statement here
+    public getFurniture(fieldType: any, td: any): string {
+        let value: string;
+        try {
+            value = td.childNodes[0].value;
+            value = value.replace("\n", "");
+            value = value.trim();
+            return value;
+        } catch {
+            return "";
+        }
     }
 }
