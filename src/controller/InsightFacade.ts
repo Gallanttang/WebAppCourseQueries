@@ -121,16 +121,11 @@ export default class InsightFacade implements IInsightFacade {
                 buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
                 for (let building of buildingsToParse) {
                     if (building["rooms_path"]) {
-                        // result.folder("rooms").file(building["rooms_path"]).async("text").then((file) => {
-                        //     promisedFiles.push( new Promise((resolve0) => {
-                        //             let obj: any[] = [building, file];
-                        //             resolve0 (obj);
-                        //     }));
+                        // todo merge the call for processBuilding(building) into this!!
                         promisedFiles.push( new Promise((resolve0, reject0) => {
-                           // let obj: any[] = [building, this.getFile(result, building["rooms_path"])];
                             this.getFile(result, building["rooms_path"]).then((buildingFile) => {
-                                let obj: any[] = [building, buildingFile];
-                                resolve0(obj);
+                               building["rooms_ast"] = buildingFile;
+                               resolve0(building);
                             });
                         }).catch((err) => {
                             return reject(err);
@@ -142,8 +137,10 @@ export default class InsightFacade implements IInsightFacade {
                     for (let result0 of results) {
                         thisClass.roomBuildings.processBuilding(result0);
                     }
+                    resolve();
                 }).then(function () {
-                    if (thisClass.roomBuildings.hasValidRoom()) {
+                    let hasValidRooms = thisClass.roomBuildings.storeBuildings();
+                    if (hasValidRooms) {
                         // this part is the same as courses, can stay as memMan
                         thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
                             if (successful) {

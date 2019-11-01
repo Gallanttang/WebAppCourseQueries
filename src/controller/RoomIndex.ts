@@ -83,7 +83,10 @@ export default class RoomIndex {
             rooms_fullname: "",
             rooms_shortname: "",
             rooms_address: "",
-            rooms_path: ""
+            rooms_path: "",
+            rooms_lat: null,
+            rooms_lon: null,
+            rooms_ast: null
         };
         let value: string;
         let key: string;

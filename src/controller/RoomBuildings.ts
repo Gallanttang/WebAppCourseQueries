@@ -6,8 +6,8 @@ import {Building} from "./IBuilding";
 const http = require("http");
 
 export default class RoomBuildings {
-    private dataFromIndex: any;
     private ValueGetter: ValueGetter;
+    private buildings: any[] = [];
     private internalDataStructure: any = {};
     private columnValidator: any = {
         "views-field views-field-field-room-number": "rooms_number",
@@ -17,31 +17,81 @@ export default class RoomBuildings {
         "views-field views-field-nothing" : "rooms_href"
     };
 
-    private ast: any;
-    private lat: number;
-    private lon: number;
-
     constructor() {
         Log.trace("RoomBuildings::init()");
     }
 
     // adds valid rooms, if any, to internal struct.
     // doesn't really return anything
-    public processBuilding(buildingAndFile: any): any {
+    public processBuilding(building: any): any {
+        // const thisClass = this;
+        // thisClass.dataFromIndex = buildingAndFile[0];
+        // thisClass.ast = buildingAndFile[1];
+        // return new Promise<any> ((reject, resolve) => {
+        //     thisClass.getLatLon(thisClass.dataFromIndex["rooms_address"]).then((result: any) => {
+        //         thisClass.lat = result["lat"];
+        //         thisClass.lon = result["lon"];
+        //         // thisClass.getTableData(thisClass.ast);
+        //         Log.trace(thisClass.internalDataStructure);
+        //         return resolve();
+        //     }).catch ((err) => {
+        //         // todo maybe I have to return resolve here ...
+        //         return reject("not a valid building");
+        //     });
+        // });
         const thisClass = this;
-        thisClass.dataFromIndex = buildingAndFile[0];
-        thisClass.ast = buildingAndFile[1];
         return new Promise<any> ((reject, resolve) => {
-            thisClass.getLatLon(thisClass.dataFromIndex["rooms_address"]).then((result: any) => {
-                thisClass.lat = result["lat"];
-                thisClass.lon = result["lon"];
-                thisClass.getTableData(thisClass.ast);
-                Log.trace(thisClass.internalDataStructure);
+            thisClass.getLatLon(building["rooms_address"]).then((result: any) => {
+                building["rooms_lat"] = result["lat"];
+                building["rooms_lon"] = result["lon"];
+                thisClass.buildings.push(building);
                 return resolve();
             }).catch ((err) => {
-                return reject("not a valid building");
+                // todo maybe I have to return resolve here ...
+                return resolve("not a valid building");
             });
         });
+    }
+
+    public storeBuildings(): boolean {
+        let thisClass = this;
+        let result = false;
+        for (let building of thisClass.buildings) {
+            let r = thisClass.getTableData(building["rooms_ast"]);
+            if (r) {
+                thisClass.storeRoomName(building);
+                thisClass.storeOtherValues(building);
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    // for each appropriate key of building, save to internal data struct
+    public storeOtherValues(building: any) {
+        let thisClass = this;
+        for (let key in building) {
+            if (building.hasOwnProperty(key) && key !== "rooms_ast" && key !== "rooms_path") {
+                let value = building[key];
+                if (thisClass.internalDataStructure.hasOwnProperty(key)) {
+                    thisClass.internalDataStructure[key].push(value);
+                } else {
+                    thisClass.internalDataStructure[key] = [];
+                }
+            }
+        }
+    }
+
+    // todo get the room name using last elem of appropriate data struct array & building shortname
+    public storeRoomName(building: any) {
+        let num = this.internalDataStructure[this.internalDataStructure.length - 1];
+        let shortname = building["rooms_shortname"];
+        let name = shortname.concat("_" + num);
+        if (this.internalDataStructure.hasOwnProperty("rooms_name")) {
+            this.internalDataStructure["rooms_name"].push(name);
+        } else {
+            this.internalDataStructure["rooms_name"] = [];
+        }
     }
 
     public getTableData(ast: any): boolean {
@@ -68,10 +118,6 @@ export default class RoomBuildings {
             }
         }
         return result;
-    }
-
-    public hasValidRoom(): boolean {
-        return (Object.keys(this.internalDataStructure).length >= 0);
     }
 
     // Given tbody, gets each trand calls fn 4 on each tr
@@ -103,7 +149,7 @@ export default class RoomBuildings {
     // fn 4
     public getTRData(tr: any): boolean {
         const thisClass = this;
-        let count: number = 0;
+        let result = false;
         let value: any;
         let key: string;
         let tdArray: any[] = tr.filter(function (elem: any) {
@@ -112,58 +158,56 @@ export default class RoomBuildings {
         for (let td of tdArray) {
             if (td.attrs && td.attrs[0]) {
                 if (this.columnValidator.hasOwnProperty(td.attrs[0].value)) {
-                    count++;
+                    result = true;
                     key = thisClass.columnValidator[td.attrs[0].value];
                     value = thisClass.ValueGetter.getValue(key, td);
-                    // todo if key is number, convert to number and also make name with it
-                    if (key === "rooms_number") {
-                        thisClass.getRoomsName(value);
-                        value = parseInt(value, 10);
-                    }
                     if (thisClass.internalDataStructure.hasOwnProperty(key)) {
                         thisClass.internalDataStructure[key].push(value);
                     } else {
                         thisClass.internalDataStructure[key] = [];
                     }
-                    thisClass.saveOtherValues();
                 }
             }
         }
-        return (count > 0);
+        return result;
     }
 
-    public getRoomsName(roomNum: number): void {
-        // rooms_shortname+"_"+rooms_number
-        let shortname = this.dataFromIndex["rooms_shortname"];
-        let name: string = shortname.concat("_", roomNum);
-        if (this.internalDataStructure.hasOwnProperty("rooms_name")) {
-            this.internalDataStructure["rooms_name"].push(name);
-        } else {
-            this.internalDataStructure["rooms_name"] = [];
-        }
-    }
+    // public getRoomsName(roomNum: number): void {
+    //     // rooms_shortname+"_"+rooms_number
+    //     let shortname = this.dataFromIndex["rooms_shortname"];
+    //     let name: string = shortname.concat("_", roomNum);
+    //     if (this.internalDataStructure.hasOwnProperty("rooms_name")) {
+    //         this.internalDataStructure["rooms_name"].push(name);
+    //     } else {
+    //         this.internalDataStructure["rooms_name"] = [];
+    //     }
+    // }
 
-    public saveOtherValues(): any {
-        if (this.internalDataStructure.hasOwnProperty("rooms_lat")) {
-            this.internalDataStructure["rooms_lat"].push(this.lat);
-        } else {
-            this.internalDataStructure["rooms_lat"] = [];
-        }
-        if (this.internalDataStructure.hasOwnProperty("rooms_lon")) {
-            this.internalDataStructure["rooms_lon"].push(this.lon);
-        } else {
-            this.internalDataStructure["rooms_lon"] = [];
-        }
-        for (let property of this.dataFromIndex) {
-            if (property !== "rooms_path") {
-                if (this.internalDataStructure.hasOwnProperty(property)) {
-                    this.internalDataStructure[property].push(this.dataFromIndex[property]);
-                } else {
-                    this.internalDataStructure[property] = [];
-                }
-            }
-        }
-    }
+    // public saveOtherValues(): any {
+    //     if (this.internalDataStructure.hasOwnProperty("rooms_lat")) {
+    //         this.internalDataStructure["rooms_lat"].push(this.lat);
+    //     } else {
+    //         this.internalDataStructure["rooms_lat"] = [];
+    //     }
+    //     if (this.internalDataStructure.hasOwnProperty("rooms_lon")) {
+    //         this.internalDataStructure["rooms_lon"].push(this.lon);
+    //     } else {
+    //         this.internalDataStructure["rooms_lon"] = [];
+    //     }
+    //     for (let property of this.dataFromIndex) {
+    //         if (property !== "rooms_path") {
+    //             if (this.internalDataStructure.hasOwnProperty(property)) {
+    //                 this.internalDataStructure[property].push(this.dataFromIndex[property]);
+    //             } else {
+    //                 this.internalDataStructure[property] = [];
+    //             }
+    //         }
+    //     }
+    // }
+
+    // public hasValidRoom(): boolean {
+    //     return (Object.keys(this.internalDataStructure).length >= 0);
+    // }
 
     // inspired by: https://www.twilio.com/blog/2017/08/http-requests-in-node-js.html
     public getLatLon(address: string): Promise<any> {

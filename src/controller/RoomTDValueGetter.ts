@@ -108,15 +108,16 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getSeats(fieldType: any, td: any): string {
+    public getSeats(fieldType: any, td: any): number {
         let value: string;
         try {
             value = td.childNodes[0].value;
             value = value.replace("\n", "");
             value = value.trim();
-            return value;
+            let svalue = parseInt(value, 10);
+            return svalue;
         } catch {
-            return "";
+            return null;
         }
     }
 
