@@ -1,45 +1,43 @@
-import {IInsightFacade, InsightError} from "./IInsightFacade";
-import {IMemoryManager} from "./IMemoryManager";
 import Log from "../Util";
 
-export default class RoomTDValueGetter {
+export default class AddRoomValueGetter {
 
     constructor() {
-        Log.trace("RoomTDValueGetter::init()");
+        Log.trace("AddRoomValueGetter::init()");
     }
 
     public getValue(fieldType: any, td: any): any {
         if (fieldType === "rooms_shortname") {
-            return this.getShortname(fieldType, td);
+            return this.getShortname(td);
         }
         if (fieldType === "rooms_fullname") {
-            return this.getFullname(fieldType, td);
+            return this.getFullname(td);
         }
         if (fieldType === "rooms_address") {
-            return this.getAddress(fieldType, td);
+            return this.getAddress(td);
         }
         if (fieldType === "rooms_type") {
-            return this.getType(fieldType, td);
+            return this.getType(td);
         }
         if (fieldType === "rooms_number") {
-            return this.getNumber(fieldType, td);
+            return this.getNumber(td);
         }
         if (fieldType === "rooms_seats") {
-            return this.getSeats(fieldType, td);
+            return this.getSeats(td);
         }
         if (fieldType === "rooms_furniture") {
-            return this.getFurniture(fieldType, td);
+            return this.getFurniture(td);
         }
         if (fieldType === "rooms_href") {
-            return this.getHref(fieldType, td);
+            return this.getHref(td);
         }
         if (fieldType === "rooms_path") {
-            return this.getHref(fieldType, td);
+            return this.getPath(td);
         }
     }
 
     // get value of form "ACU"
-    public getShortname(fieldType: any, td: any): string {
+    private getShortname(td: any): string {
         let reg: RegExp = new RegExp(/(?:[A-Z]{4}|[A-Z]{3})/);
         let value: string;
         try {
@@ -51,7 +49,7 @@ export default class RoomTDValueGetter {
     }
 
     // get value of form "Acute Care Unit"
-    public getFullname(fieldType: any, td: any): string {
+    private getFullname(td: any): string {
         let value: string;
         try {
             value = td.childNodes[1].childNodes[0].value;
@@ -61,7 +59,7 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getAddress(fieldType: any, td: any): string {
+    private getAddress(td: any): string {
         let value: string;
         try {
             value = td.childNodes[0].value;
@@ -73,7 +71,18 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getHref(fieldType: any, td: any): string {
+    private getHref(td: any): string {
+        let value: string;
+        try {
+            value = td.childNodes[1].attrs[0].value;
+            value = value.trim();
+            return value;
+        } catch (err) {
+            return "";
+        }
+    }
+
+    private getPath(td: any): string {
         let value: string;
         try {
             value = td.childNodes[1].attrs[0].value;
@@ -85,7 +94,7 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getType(fieldType: any, td: any): string {
+    private getType(td: any): string {
         let value: string;
         try {
             value = td.childNodes[0].value;
@@ -97,7 +106,7 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getNumber(fieldType: any, td: any): string {
+    private getNumber(td: any): string {
         let value: string;
         try {
             value = td.childNodes[1].childNodes[0].value;
@@ -108,20 +117,20 @@ export default class RoomTDValueGetter {
         }
     }
 
-    public getSeats(fieldType: any, td: any): number {
+    public getSeats(td: any): number {
         let value: string;
         try {
             value = td.childNodes[0].value;
             value = value.replace("\n", "");
             value = value.trim();
-            let svalue = parseInt(value, 10);
-            return svalue;
+            let rv = parseInt(value, 10);
+            return rv;
         } catch {
             return null;
         }
     }
 
-    public getFurniture(fieldType: any, td: any): string {
+    private getFurniture(td: any): string {
         let value: string;
         try {
             value = td.childNodes[0].value;

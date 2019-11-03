@@ -7,12 +7,12 @@ import {
     NotFoundError
 } from "./IInsightFacade";
 import "./MemoryManager";
-import * as jszip from "jszip";
 import MemoryManager from "./MemoryManager";
 import QueryPerformer from "./QueryPerformer";
 import QueryManager from "./QueryManager";
-import RoomBuildings from "./RoomBuildings";
-import RoomIndex from "./RoomIndex";
+import addCourses from "./AddCourses";
+import addRooms from "./AddRooms";
+
 
 /**
  * This is the main programmatic entry point for the project.
@@ -25,160 +25,36 @@ export default class InsightFacade implements IInsightFacade {
     private forListDS: any[] = [];
     private internalDataStructure: any = {};
     private queryMan: QueryManager;
-    private roomBuildings: RoomBuildings;
-    private roomIndex: RoomIndex;
+    private addCourse: addCourses;
+    private addRoom: addRooms;
 
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.memMan = new MemoryManager();
         this.queryMan = new QueryManager(this.forListDS);
         this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
-        this.memMan = new MemoryManager();
-        this.queryMan = new QueryManager(this.forListDS);
-        this.roomIndex = new RoomIndex();
-        this.roomBuildings = new RoomBuildings();
+        this.addCourse = new addCourses(this.addedDatasets, this.forListDS);
+        this.addRoom = new addRooms(this.addedDatasets, this.forListDS);
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        const thisClass = this;
-        const idIsInvalid: boolean = !id || id.includes("_") || id.length === 0 || /^.*\s+.*$/.test(id) ||
-            this.addedDatasets.some((s) => s === id);
-        if (idIsInvalid) {
-            return Promise.reject(new InsightError("Invalid id used"));
-        }
         return new Promise<string[]>((resolve, reject) => {
-            thisClass.memMan.alreadyInDisk(id).then((isInDisk) => {
-                if (isInDisk) {
-                    this.memMan.helpInitialize(this.addedDatasets, this.forListDS);
-                    return Promise.resolve(id);
-                } else {
-                    thisClass.loadToDisk(id, content, kind).then((result: string[]) => {
-                        return resolve(result);
-                    }).catch(() => {
-                        return reject(new InsightError("Invalid file " + id + "cannot be added"));
-                    });
-                }
-            });
-        });
-    }
-
-    public loadToDisk( id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        const promisedFiles: any = [];
-        let sections: any[] = [];
-        let thisClass = this;
-        let count: number = 0;
-        return new Promise<string[]>((resolve, reject) => {
-            jszip.loadAsync(content, {base64: true}).then((result: jszip) => {
-                if (kind === "rooms") {
-                    // thisClass.addedDatasets.push(id);
-                    // resolve(thisClass.addedDatasets);
-                    thisClass.roomLoadToDisk(id, content, kind, result).then((roomResult: string[]) => {
-                        return reject("not implemented");
-                    }).catch(() => {
-                        return reject("error in roomLoadToDisk");
-                    });
-                } else {
-                    result.folder("courses").forEach(function (relativePath, file) {
-                        promisedFiles.push(file.async("text"));
-                    });
-                    Promise.all(promisedFiles).then((results) => {
-                        for (let result0 of results) {
-                            thisClass.processFiles(result0, sections);
-                        }
-                    }).then(function () {
-                        count = thisClass.memMan.checkValidSections(sections);
-                        if (count > 0) {
-                            thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
-                                if (successful) {
-                                    thisClass.addedDatasets.push(id);
-                                    thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                    return resolve(thisClass.addedDatasets);
-                                } else {
-                                    return reject(new InsightError("Could not write " + id + "to memory"));
-                                }
-                            });
-                        } else {
-                            return reject(new InsightError("Could not add invalid dataset: " + id));
-                        }
-                    });
-                }
-            });
-        });
-    }
-
-    public roomLoadToDisk( id: string, content: string, kind: InsightDatasetKind, result: jszip): Promise<string[]> {
-        let buildingsToParse: any[];
-        const promisedFiles: any = [];
-        let sections: any[] = [];
-        let thisClass = this;
-        let parsedIndexFile: object;
-        let count: number = 0;
-        const parse5 = require("parse5");
-        Log.trace("inside roomLoadToDisk");
-        return new Promise<string[]>((resolve, reject) => {
-            result.folder("rooms").file("index.htm").async("text").then((indexFile) => {
-                parsedIndexFile = parse5.parse(indexFile);
-                buildingsToParse = thisClass.roomIndex.buildingsToParse(parsedIndexFile);
-                for (let building of buildingsToParse) {
-                    if (building["rooms_path"]) {
-                        // todo merge the call for processBuilding(building) into this!!
-                        promisedFiles.push( new Promise((resolve0, reject0) => {
-                            this.getFile(result, building["rooms_path"]).then((buildingFile) => {
-                               building["rooms_ast"] = buildingFile;
-                               resolve0(building);
-                            });
-                        }).catch((err) => {
-                            return reject(err);
-                        }));
-                    }
-                }
-                // todo finish this
-                Promise.all(promisedFiles).then((results) => {
-                    for (let result0 of results) {
-                        thisClass.roomBuildings.processBuilding(result0);
-                    }
-                    resolve();
-                }).then(function () {
-                    let hasValidRooms = thisClass.roomBuildings.storeBuildings();
-                    if (hasValidRooms) {
-                        // this part is the same as courses, can stay as memMan
-                        thisClass.memMan.writeToMemory(id + "_" + kind + "_" + count).then((successful) => {
-                            if (successful) {
-                                thisClass.addedDatasets.push(id);
-                                thisClass.forListDS.push({id: id, kind: kind, numRows: count});
-                                return resolve(thisClass.addedDatasets);
-                            } else {
-                                return reject(new InsightError("Could not write " + id + "to memory"));
-                            }
-                        });
-                    } else {
-                        return reject(new InsightError("Could not add invalid dataset: " + id));
-                    }
+            if (kind === "courses") {
+                this.addCourse.add(id, content).then((result: string[]) => {
+                    return resolve(result);
+                }).catch((err) => {
+                    return reject(err);
                 });
-            });
-            // todo am I done at this point? do aI need a catch block
-        });
-    }
-
-    public getFile(result: any, path: any): Promise<any> {
-        const parse5 = require("parse5");
-        return new Promise<any>((resolve, reject) => {
-            result.folder("rooms").file(path).async("text").then((file: any) => {
-                return resolve(parse5.parse(file));
-            });
-        });
-    }
-
-    public processFiles(file: any, validSections: any[]) {
-        let processed: any;
-        try {
-            processed = this.memMan.parseFile(file);
-        } catch (err) { // ignore
-        } finally {
-            if (processed !== null) {
-                validSections.push(processed);
+            } else if (kind === "rooms") {
+                this.addRoom.add(id, content).then((result: string[]) => {
+                    return resolve(result);
+                }).catch((err) => {
+                    return reject(err);
+                });
+            } else {
+                return reject(new InsightError("Trying to add invalid dataset kind"));
             }
-        }
+        });
     }
 
     public removeDataset(id: string): Promise<string> {

@@ -80,7 +80,7 @@ export default class QueryPerformer {
         } else if (a[keys[index]] > b[keys[index]]) {
             return -1;
         } else if (nextIndex !== keys.length) {
-            return this.advanceSort(a, b, keys, index);
+            return this.advanceSort(a, b, keys, nextIndex);
         } else {
             return 0;
         }

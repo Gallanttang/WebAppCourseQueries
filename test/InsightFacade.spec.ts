@@ -72,14 +72,14 @@ describe("InsightFacade Add/Remove Dataset", function () {
         const expected: string[] = [id];
         const expected0: string[] = [id, id0];
         let result: string[];
-        let result0: string[];
         try {
             result = await insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses);
-            result0 = await insightFacade.addDataset(id0, datasets[id], InsightDatasetKind.Courses);
+            expect(result).to.deep.equal(expected);
+            result = await insightFacade.addDataset(id0, datasets[id], InsightDatasetKind.Courses);
         } catch (err) {
             expect.fail(err, expected, "failed to add valid course dataset");
         } finally {
-            expect(result0).to.deep.equal(expected0);
+            expect(result).to.deep.equal(expected0);
         }
     });
 
@@ -316,17 +316,6 @@ describe("InsightFacade listDataset", () => {
         }
     });
 
-    it("test my regex understanding", async () => {
-        const idTrue: string = "/n         CHBE      ";
-        const idFalse1: string = "/n            ";
-        const idFalse2: string = "";
-        const assert = require("assert");
-        let reg: RegExp = new RegExp(/\/n\s*(?:[A-Z]{4}|[A-Z]{3})\s*/);
-        assert(reg.test(idTrue));
-        assert(!reg.test(idFalse1));
-        assert(!reg.test(idFalse2));
-    });
-
     it("should add a valid rooms dataset", async () => {
         const id: string = "rooms";
         const expected: string[] = [id];
@@ -343,8 +332,8 @@ describe("InsightFacade listDataset", () => {
 
 describe("InsightFacade PerformQuery", () => {
     const datasetsToQuery: { [id: string]: any } = {
-        courses: {id: "courses", path: "./test/data/courses.zip", kind: InsightDatasetKind.Courses}
-        // course: {id: "course", path: "./test/data/course.zip", kind: InsightDatasetKind.Courses}
+        courses: {id: "courses", path: "./test/data/courses.zip", kind: InsightDatasetKind.Courses},
+        rooms: {id: "rooms", path: "./test/data/rooms.zip", kind: InsightDatasetKind.Rooms}
     };
     let insightFacade: InsightFacade;
     let testQueries: ITestQuery[] = [];

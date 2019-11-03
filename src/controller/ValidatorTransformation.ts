@@ -84,7 +84,7 @@ export default class ValidatorTransformation extends Validator {
             if (!this.containedApplyKeys.hasOwnProperty(applyKeys[0])) {
                 this.containedApplyKeys[applyKeys[0]] = 1;
             } else {
-                throw new InsightError("Duplicate APPLY key maxAverage");
+                throw new InsightError("Duplicate APPLY key " + applyKeys[0]);
             }
         }
     }
