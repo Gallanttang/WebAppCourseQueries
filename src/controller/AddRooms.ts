@@ -234,10 +234,8 @@ export default class AddRooms extends addDataset {
                     const statusCode = res.statusCode;
                     const contentType = res.headers["content-type"];
                     if (statusCode !== 200) {
-                        geo = {error: "failed response" + statusCode};
                         resolve(404);
                     } else if (!/^application\/json/.test(contentType)) {
-                        geo = {error: "failed response" + statusCode};
                         resolve(404);
                     }
                     res.setEncoding("utf8");

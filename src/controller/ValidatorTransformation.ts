@@ -25,10 +25,10 @@ export default class ValidatorTransformation extends Validator {
         if (!keys.includes("GROUP")) {
             throw new InsightError("Invalid Transformation, missing group key");
         }
-        if (!Array.isArray(trans["GROUP"])) {
+        if (!Array.isArray(trans["GROUP"]) || trans["GROUP"].length < 1) {
             throw new InsightError("Invalid TRANSFORMATIONS GROUP must be a non-empty array");
         }
-        if (!Array.isArray(trans["APPLY"])) {
+        if (!Array.isArray(trans["APPLY"]) || trans["APPLY"].length < 1) {
             throw new InsightError("Invalid TRANSFORMATIONS APPLY must be a non-empty array");
         }
         try {
@@ -45,9 +45,6 @@ export default class ValidatorTransformation extends Validator {
     }
 
     private checkGroup(group: string[]) {
-        if (group.length < 1) {
-            throw new InsightError("GROUP must be a non empty array");
-        }
         for (let grouping of group) {
             if (typeof grouping !== "string") {
                 throw new InsightError("Invalid Key in GROUP " + grouping);
@@ -62,9 +59,6 @@ export default class ValidatorTransformation extends Validator {
     }
 
     private checkApply(apply: any[]) {
-        if (apply.length < 1) {
-            throw new InsightError("Expects non-empty array for apply");
-        }
         for (let applyRule of apply) {
             if (!applyRule.hasOwnProperty) {
                 throw new InsightError("Invalid apply rule in transformations " + applyRule);

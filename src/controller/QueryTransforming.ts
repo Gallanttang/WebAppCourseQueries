@@ -10,7 +10,6 @@ export default class QueryTransforming {
         let group: string[] = queryElement["GROUP"];
         let apply: any[] = queryElement["APPLY"];
         let returnValue: any[] = this.transformGroup(group, result);
-        Log.trace("Finished Grouping");
         returnValue = this.transformApply(apply, returnValue, group);
         return returnValue;
     }
