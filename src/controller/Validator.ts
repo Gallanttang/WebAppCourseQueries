@@ -9,7 +9,7 @@ export default abstract class Validator {
 
     protected roomsvalidator: any = {
         fullname: "string", shortname: "string", number: "string", address: "string", lat: "number",
-        lon: "number", seats: "number", type: "string", furniture: "string", href: "string"
+        lon: "number", seats: "number", type: "string", furniture: "string", href: "string", name: "string"
     };
 
     private readonly currentDS: any[];
