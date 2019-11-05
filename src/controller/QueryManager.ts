@@ -39,7 +39,7 @@ export default class QueryManager {
             } catch (err) {
                 throw err;
             }
-            if (keys.length > 3 || (keys.length === 3 && !keys.includes("TRANSFORMATIONS"))) {
+            if ((keys.length >= 3 && !keys.includes("TRANSFORMATIONS"))) {
                 throw new InsightError("Malformed Query " + query);
             } else if (keys.length === 3) {
                 let tValidator: ValidatorTransformation =

@@ -49,8 +49,10 @@ export default class ValidatorTransformation extends Validator {
             if (typeof grouping !== "string") {
                 throw new InsightError("Invalid Key in GROUP " + grouping);
             }
-            if (!this.idCheck.test(grouping)) {
-                throw new InsightError("Invalid Key in Group");
+            try {
+                this.checkDataset(grouping);
+            } catch (err) {
+                throw new InsightError("Invalid Key " + grouping + " in Group");
             }
             if (this.columnsValidator.hasOwnProperty(grouping)) {
                 this.columnsValidator[grouping] = true;

@@ -1,4 +1,3 @@
-import Log from "../Util";
 import {ResultTooLargeError} from "./IInsightFacade";
 import QueryFiltering from "./QueryFiltering";
 import QueryTransforming from "./QueryTransforming";
@@ -7,13 +6,15 @@ export default class QueryPerformer {
     private filtering: QueryFiltering = new QueryFiltering();
     private transformer: QueryTransforming = new QueryTransforming();
     constructor() {
-        Log.trace("QueryPerformer::init()");
+        //
     }
 
     /**
+     * @param dataStructure
      * @param query
      * Promise resolves with result of query (an array of courses)
      *  A result should have a max size of 5,000. If this is exceeded, promise should reject with a ResultTooLargeError.
+     * @param numRows
      */
     public returnQueriedCourses(dataStructure: any, query: any, numRows: number): any[] {
         let result: any[] = [];

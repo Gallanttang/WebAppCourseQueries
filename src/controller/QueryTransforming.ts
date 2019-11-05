@@ -1,9 +1,8 @@
-import Log from "../Util";
 import {Decimal} from "decimal.js";
 
 export default class QueryTransforming {
     constructor() {
-        Log.trace("QueryTransforming::init()");
+        //
     }
 
     public transform(queryElement: any, result: any[]): any[] {
