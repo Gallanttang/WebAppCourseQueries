@@ -8,8 +8,10 @@ export default abstract class Validator {
     };
 
     protected roomsvalidator: any = {
-        fullname: "string", shortname: "string", number: "string", address: "string", lat: "number",
-        lon: "number", seats: "number", type: "string", furniture: "string", href: "string", name: "string"
+        fullname: "string", shortname: "string", number: "string",
+        name: "string", address: "string", lat: "number",
+        lon: "number", seats: "number", type: "string",
+        furniture: "string", href: "string"
     };
 
     private readonly currentDS: any[];
@@ -45,10 +47,6 @@ export default abstract class Validator {
             throw new InsightError("Invalid key" + key + " in OPTIONS");
         }
     }
-
-    // protected checkIsApplyKey(key: string): boolean {
-    //
-    // }
 
     protected checkDataset(key: string) {
         let that = this;

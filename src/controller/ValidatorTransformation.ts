@@ -67,6 +67,9 @@ export default class ValidatorTransformation extends Validator {
             if (applyKeys.length !== 1) {
                 throw new InsightError("Invalid applyKey in transformation, expects 1 key got" + applyKeys.length);
             }
+            if (!this.applyCheck.test(applyKeys[0])) {
+                throw new InsightError("Invalid Apply Key in transformations");
+            }
             if (this.columnsValidator.hasOwnProperty(applyKeys[0])) {
                 this.columnsValidator[applyKeys[0]] = true;
             }
@@ -97,11 +100,10 @@ export default class ValidatorTransformation extends Validator {
         if (!this.applyValidator.includes(applyToken[0])) {
             throw new InsightError("Invalid applyKey in transformation " + applyToken[0]);
         }
-        if (!this.idCheck.test(column) && !this.applyCheck.test(column)) {
+        try {
+            this.checkApplyOrID(column);
+        } catch (err) {
             throw new InsightError("Invalid key in apply " + column);
-        }
-        if (!this.checkSingleKey(applyKey[applyToken[0]])) {
-            throw new InsightError("Invalid key in Transformation's " + applyKey[applyToken[0]]);
         }
         let key: string;
         try {
@@ -109,9 +111,8 @@ export default class ValidatorTransformation extends Validator {
         } catch (err) {
             throw new InsightError(err);
         }
-        let columns: boolean = this.coursevalidator.hasOwnProperty(key);
         let type: string;
-        if (columns) {
+        if (this.coursevalidator.hasOwnProperty(key)) {
             type = this.coursevalidator[key];
         } else {
             type = this.roomsvalidator[key];

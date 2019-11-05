@@ -1,0 +1,53 @@
+{
+    "title": "",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 98.5
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_title",
+                "courses_id",
+                "maxAverage",
+                "minAverage"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+                    "minAverage"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept",
+                "courses_title",
+                "courses_id"
+            ],
+            "APPLY": [
+                {
+                    "max_Average": {
+                        "MAX": "courses_avg"
+                    }
+                },
+                {
+                    "maxAverage": {
+                        "MAX": "courses_avg"
+                    }
+                },
+                {
+                    "minAverage": {
+                        "MIN": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": {
+        "error": "Cannot have underscore in applyKey"
+    }
+}

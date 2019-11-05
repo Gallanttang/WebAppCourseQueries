@@ -23,8 +23,10 @@ export default class AddRooms extends addDataset {
         "views-field views-field-nothing": "rooms_href"
     };
 
-    private finalV: string[] = ["fullname", "shortname", "number", "name", "address",
-        "lat", "lon", "seats", "type", "furniture", "href"];
+    private finalV: string[] = ["fullname", "shortname", "number",
+        "name", "address", "lat",
+        "lon", "seats", "type",
+        "furniture", "href"];
 
     constructor(addedDataset: string[], forListDS: any[]) {
         super(addedDataset, forListDS);
@@ -226,7 +228,7 @@ export default class AddRooms extends addDataset {
 
     private getLatLon(address: string, building: any): Promise<any> {
         return new Promise(function (resolve) {
-            let URLaddress = address.replace(" ", "%20");
+            let URLaddress: string = address.replace(" ", "%20");
             let url: string = "http://cs310.students.cs.ubc.ca:11316/api/v1/project_team234/" + URLaddress;
             let geo: any;
             try {

@@ -72,10 +72,7 @@ export default class ValidatorOptions extends Validator {
             if (order["dir"] !== "UP" && order["dir"] !== "DOWN") {
                 throw new InsightError("Invalid ORDER: dir " + order["dir"]);
             }
-            if (!Array.isArray(order["keys"])) {
-                throw new InsightError("Invalid ORDER: keys");
-            }
-            if (order["keys"].length === 0) {
+            if (!Array.isArray(order["keys"]) || order["keys"].length === 0) {
                 throw new InsightError("Invalid ORDER: keys must be non-empty array");
             }
             for (const ordKey of order["keys"]) {
