@@ -12,8 +12,48 @@ CampusExplorer.buildQuery = function () {
         "courses-conditiontype-none": "NOT",
         "rooms-conditiontype-all": "AND",
         "rooms-conditiontype-any": "OR",
-        "rooms-conditiontype-none": "NOT"
+        "rooms-conditiontype-none": "NOT",
+        "Audit": "courses_audit",
+        "Average": "courses_avg",
+        "Department": "courses_dept",
+        "Fail": "courses_fail",
+        "ID": "courses_id",
+        "Instructor": "courses_instructor",
+        "Pass": "courses_pass",
+        "Title": "courses_title",
+        "UUID": "courses_uuid",
+        "Year": "courses_year",
+        "Address": "rooms_address",
+        "Full Name": "rooms_fullname",
+        "Furniture": "rooms_furniture",
+        "Link": "rooms_href",
+        "Latitude": "rooms_lat",
+        "Longitude": "rooms_lon",
+        "Name": "rooms_name",
+        "Number": "rooms_number",
+        "Seats": "rooms_seats",
+        "Short Name": "rooms_shortname",
+        "Type": "rooms_type"
     };
+    let coursesColumns = ["courses-columns-field-audit", "courses-columns-field-avg",
+        "courses-columns-field-dept", "courses-columns-field-fail",
+        "courses-columns-field-id", "courses-columns-field-instructor",
+        "courses-columns-field-pass", "courses-columns-field-title",
+        "courses-columns-field-uuid", "courses-columns-field-year"];
+    let roomsColumns = ["rooms-columns-field-address", "rooms-columns-field-fullname",
+        "rooms-columns-field-furniture", "rooms-columns-field-href", "rooms-columns-field-lat",
+        "rooms-columns-field-lon", "rooms-columns-field-name", "rooms-columns-field-number",
+        "rooms-columns-field-seats", "rooms-columns-field-shortname", "rooms-columns-field-type"]
+    let coursesGroups = ["courses-groups-field-audit", "courses-groups-field-avg",
+        "courses-groups-field-dept", "courses-groups-field-fail",
+        "courses-groups-field-id", "courses-groups-field-instructor",
+        "courses-groups-field-pass", "courses-groups-field-title",
+        "courses-groups-field-uuid", "courses-groups-field-year"];
+    let roomsGroups = ["rooms-groups-field-address", "rooms-groups-field-fullname",
+        "rooms-groups-field-furniture", "rooms-groups-field-href", "rooms-groups-field-lat",
+        "rooms-groups-field-lon", "rooms-groups-field-name", "rooms-groups-field-number",
+        "rooms-groups-field-seats", "rooms-groups-field-shortname", "rooms-groups-field-type"]
+
     let query = {};
     // the active query panel: courses or rooms
     let activePanel = document.getElementsByClassName("tab-panel active");
@@ -47,7 +87,6 @@ CampusExplorer.buildQuery = function () {
         return cond;
     }
 
-
     for(let child of conditionsPanel) {
         if (child.className === "control-group condition-type") {
             for (let input of child.getElementsByTagName("input")) {
@@ -79,6 +118,59 @@ CampusExplorer.buildQuery = function () {
     } else if (!condition[outerMostFilter].hasOwnProperty) {
         delete condition[outerMostFilter];
     }
+
+    activePanel = document.getElementsByClassName("tab-panel active").item(0).getAttribute("data-type");
+    let checkedColumns = [], columns = [], groups = [], checkedGroups = [];
+    let orderBy;
+    if (activePanel == "courses") {
+        columns = coursesColumns;
+        groups = coursesGroups;
+        orderBy = document.getElementById("courses-order");
+    } else if (activePanel == "rooms") {
+        columns = roomsColumns;
+        groups = roomsGroups;
+        orderBy = document.getElementById("rooms-order");
+    }
+    for (let i = 0; i < columns.length; i++) {
+        if (document.getElementById(columns[i]).checked) {
+            let x = document.getElementById(columns[i]);
+            checkedColumns.push(activePanel + "_" + x.value);
+        }
+    }
+    // GROUPS
+    for (let i = 0; i < groups.length; i++) {
+        if (document.getElementById(groups[i]).checked) {
+            let x = document.getElementById(groups[i]);
+            checkedGroups.push(activePanel + "_" + x.value);
+        }
+    }
+
+    // ORDER
+    let orderFields = document.getElementsByClassName("tab-panel active");
+    orderFields = orderFields.item(0).getElementsByClassName("form-group order");
+    orderFields = orderFields.item(0).getElementsByClassName("control-group").item(0);
+    orderFields = orderFields.getElementsByClassName("control order fields").item(0).getElementsByTagName("select").item(0);
+    let checkedOrders = [];
+    for (let i = 0; i < orderFields.length; i++) {
+        if (orderFields[i].selected) {
+            checkedOrders.push(converter[orderFields[i].label]);
+        }
+    }
+    orderBy = orderBy.checked; // if true = descending
+    if (orderBy) {
+        orderBy = "DOWN";
+    } else {
+        orderBy = "UP"
+    }
+    let orderStuff = {"dir": orderBy,"keys": checkedOrders};
+
+    let queryColumns = {"COLUMNS": checkedColumns, "ORDER": orderStuff}
+    query["OPTIONS"] = queryColumns;
+
+    //TRANSFORMATIONS
+    let transformations = {"GROUP": checkedGroups, "APPLY": []};
+    query["TRANSFORMATIONS"] = transformations;
+
     console.log(query);
     return query;
 };
