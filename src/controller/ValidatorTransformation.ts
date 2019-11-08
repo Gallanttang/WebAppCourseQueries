@@ -28,8 +28,8 @@ export default class ValidatorTransformation extends Validator {
         if (!Array.isArray(trans["GROUP"]) || trans["GROUP"].length < 1) {
             throw new InsightError("Invalid TRANSFORMATIONS GROUP must be a non-empty array");
         }
-        if (!Array.isArray(trans["APPLY"]) || trans["APPLY"].length < 1) {
-            throw new InsightError("Invalid TRANSFORMATIONS APPLY must be a non-empty array");
+        if (!Array.isArray(trans["APPLY"])) {
+            throw new InsightError("Invalid TRANSFORMATIONS APPLY must be an array");
         }
         try {
             this.checkGroup(trans["GROUP"]);
