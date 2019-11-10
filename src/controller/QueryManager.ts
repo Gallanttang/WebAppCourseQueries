@@ -34,6 +34,7 @@ export default class QueryManager {
                     whereValidator.checkValid(query["WHERE"]);
                 }
                 optionsValidator.dsToQuery = whereValidator.dsToQuery;
+                optionsValidator.type = whereValidator.type;
                 optionsValidator.checkValid(query["OPTIONS"]);
                 this.dsToQuery = optionsValidator.dsToQuery;
             } catch (err) {
@@ -45,6 +46,7 @@ export default class QueryManager {
                 let tValidator: ValidatorTransformation =
                     new ValidatorTransformation(this.currentDS, optionsValidator.containedColumns);
                 tValidator.dsToQuery = optionsValidator.dsToQuery;
+                tValidator.type = optionsValidator.type;
                 try {
                     tValidator.checkValid(query["TRANSFORMATIONS"]);
                 } catch (err) {

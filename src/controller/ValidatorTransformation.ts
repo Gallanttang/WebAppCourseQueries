@@ -33,7 +33,9 @@ export default class ValidatorTransformation extends Validator {
         }
         try {
             this.checkGroup(trans["GROUP"]);
-            this.checkApply(trans["APPLY"]);
+            if (trans["APPLY"].length > 0) {
+                this.checkApply(trans["APPLY"]);
+            }
         } catch (err) {
             throw err;
         }

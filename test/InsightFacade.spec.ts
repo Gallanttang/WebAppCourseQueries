@@ -4,6 +4,8 @@ import {InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from ".
 import InsightFacade from "../src/controller/InsightFacade";
 import Log from "../src/Util";
 import TestUtil from "./TestUtil";
+import Scheduler from "../src/scheduler/Scheduler";
+import {IScheduler} from "../src/scheduler/IScheduler";
 // This should match the schema given to TestUtil.validate(..) in TestUtil.readTestQueries(..)
 // except 'filename' which is injected when the file is read.
 export interface ITestQuery {
@@ -394,5 +396,55 @@ describe("InsightFacade PerformQuery", () => {
                 });
             }
         });
+    });
+});
+
+describe("InsightFacade Schedule", function () {
+    // This is a unit test. You should create more like this!
+    it("Should Schedule Properly", async () => {
+        // const idC: string = "courses";
+        // const idR: string = "rooms";
+        // const expected: string[] = [idC, idR];
+        // let result: string[];
+        // try {
+        //     result = await insightFacade.addDataset(idC, datasets[idC], InsightDatasetKind.Courses);
+        //     result = await insightFacade.addDataset(idR, datasets[idR], InsightDatasetKind.Courses);
+        // } catch (err) {
+        //     expect.fail(err, expected, "failed to add valid course dataset");
+        // } finally {
+        //     expect(result).to.deep.equal(expected);
+        // }
+        let sections = [
+            { courses_dept: "cpsc", courses_id: "340", courses_uuid: "1319",
+                courses_pass: 101, courses_fail: 7, courses_audit: 2
+            },
+            { courses_dept: "cpsc", courses_id: "340", courses_uuid: "3397",
+                courses_pass: 171, courses_fail: 3, courses_audit: 1
+            },
+            { courses_dept: "cpsc", courses_id: "344", courses_uuid: "62413",
+                courses_pass: 93, courses_fail: 2, courses_audit: 0
+            },
+            { courses_dept: "cpsc", courses_id: "344", courses_uuid: "72385",
+                courses_pass: 43, courses_fail: 1, courses_audit: 0
+            }
+        ];
+
+        let rooms = [
+            { rooms_shortname: "AERL", rooms_number: "120", rooms_seats: 14,
+                rooms_lat: 49.26372, rooms_lon: -123.25099, rooms_name: "AERL_120"
+            },
+            { rooms_shortname: "ALRD", rooms_number: "105", rooms_seats: 175,
+                rooms_lat: 49.2699, rooms_lon: -123.25318, rooms_name: "ALRD_105"
+            },
+            { rooms_shortname: "ANGU", rooms_number: "098", rooms_seats: 95,
+                rooms_lat: 49.26486, rooms_lon: -123.25364, rooms_name: "ANGU_098"
+            },
+            { rooms_shortname: "BUCH", rooms_number: "A101", rooms_seats: 25,
+                rooms_lat: 49.26826, rooms_lon: -123.25468, rooms_name: "BUCH_A101"
+            }
+        ];
+        let scheduler: Scheduler = new Scheduler();
+        let rt: any[];
+        rt = scheduler.schedule(sections, rooms);
     });
 });

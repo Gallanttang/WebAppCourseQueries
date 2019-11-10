@@ -158,9 +158,9 @@ CampusExplorer.buildQuery = function () {
     orderFields = orderFields.item(0).getElementsByClassName("control-group").item(0);
     orderFields = orderFields.getElementsByClassName("control order fields").item(0).getElementsByTagName("select").item(0);
     let checkedOrders = [];
-    for (let i in orderFields) {
-        if (orderFields[i].selected) {
-            checkedOrders.push(converter[orderFields[i].label]);
+    for (let i of orderFields) {
+        if (i.selected) {
+            checkedOrders.push(converter[i.label]);
         }
     }
     orderBy = orderBy.checked; // if true = descending

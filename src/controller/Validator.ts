@@ -81,6 +81,9 @@ export default abstract class Validator {
     protected checkKey(filter: any, key: string, parent: string, expected: string) {
         let field: string;
         try {
+            if (this.type === "") {
+                this.type = key.split("_")[0];
+            }
             field = key.split("_")[1];
         } catch (err) {
             throw new InsightError(err);
@@ -110,6 +113,10 @@ export default abstract class Validator {
         } catch (err) {
             throw new InsightError(err);
         }
-        return this.coursevalidator.hasOwnProperty(col) || this.roomsvalidator.hasOwnProperty(col);
+        if (this.type === "courses") {
+            return this.coursevalidator.hasOwnProperty(col);
+        } else {
+            return this.roomsvalidator.hasOwnProperty(col);
+        }
     }
 }
