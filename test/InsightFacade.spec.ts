@@ -446,5 +446,6 @@ describe("InsightFacade Schedule", function () {
         let scheduler: Scheduler = new Scheduler();
         let rt: any[];
         rt = scheduler.schedule(sections, rooms);
+        Log.trace(rt);
     });
 });

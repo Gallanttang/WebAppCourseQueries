@@ -16,11 +16,8 @@ export default class Scheduler implements IScheduler {
     public schedule(sections: SchedSection[], rooms: SchedRoom[]): Array<[SchedRoom, SchedSection, TimeSlot]> {
         let rt: any = {};
         this.getDistance(rooms);
-        // Log.trace(this.distance);
-        rooms.sort(function (a, b) {
-            return (a.rooms_seats > b.rooms_seats) ? 1 : (b.rooms_seats > a.rooms_seats) ? -1 : 0;
-        });
-        while (sections.length > 0) {
+        this.prepare(sections, rooms);
+        while (sections.length > 0 && Object.keys(rt).length < rooms.length * 15) {
             let section = sections.shift();
             if (!this.scheduledSections.hasOwnProperty(section.courses_dept)) {
                 this.scheduledSections[section.courses_dept] = {};
@@ -29,12 +26,24 @@ export default class Scheduler implements IScheduler {
                 this.scheduledSections[section.courses_dept][section.courses_id] = {room: [], time: []};
             }
             this.addHelper(section, rooms, sections, rt);
-            if (Object.keys(rt).length === rooms.length * 15) {
-                break;
-            }
         }
-        // Log.trace(rt);
-        return rt;
+        let final: Array<[SchedRoom, SchedSection, TimeSlot]> = [];
+        for (let key of Object.keys(rt)) {
+            final.push(rt[key]);
+        }
+        return final;
+        Log.trace(final);
+    }
+
+    private prepare(sections: SchedSection[], rooms: SchedRoom[]) {
+        rooms.sort(function (a, b) {
+            return (a.rooms_seats > b.rooms_seats) ? 1 : (b.rooms_seats > a.rooms_seats) ? -1 : 0;
+        });
+        sections.sort(function (a, b) {
+            let aCap: number = (a.courses_pass + a.courses_fail + a.courses_audit);
+            let bCap: number = (b.courses_pass + b.courses_fail + b.courses_audit);
+            return (aCap > bCap) ? 1 : (bCap > aCap) ? -1 : 0;
+        });
     }
 
     private calcDist(room1: SchedRoom, room2: SchedRoom): number {
@@ -70,16 +79,14 @@ export default class Scheduler implements IScheduler {
                 continue;
             }
             let timeRoom: TimeSlot[] = this.scheduledRooms[room.rooms_name].times;
+            if (timeRoom.length === 15) {
+                continue;
+            }
             for (let time of this.ts) {
-                if (sec.time.includes(time)) {
+                if (sec.time.includes(time) || timeRoom.includes(time)) {
                     continue;
                 }
-                let check: any[];
-                if (timeRoom.length === 15) {
-                    check = this.checkMax(room, section, rt, min);
-                } else {
-                    check = this.addCheck(section, room, min);
-                }
+                let check: any[] =  this.addCheck(section, room, min);
                 if (check[0]) {
                     min = check[1];
                     minR = room;
@@ -96,34 +103,6 @@ export default class Scheduler implements IScheduler {
         } else {
             sections.push(section);
         }
-    }
-
-    private checkMax(room: SchedRoom, section: SchedSection, rt: any, min: number): any[] {
-        let numSeats: number = room.rooms_seats;
-        let newCap: number = numSeats - (section.courses_fail + section.courses_pass + section.courses_audit);
-        for (let booked = 0; booked < this.scheduledRooms[room.rooms_name].sections.length; booked++) {
-            let scheduled: SchedSection = this.scheduledRooms[room.rooms_name].sections[booked];
-            let oldCap: number = numSeats - (scheduled.courses_pass + scheduled.courses_fail + scheduled.courses_audit);
-            let oldTime: TimeSlot = this.scheduledRooms[room.rooms_name].times[booked];
-            let time: boolean = this.scheduledSections[section.courses_dept][section.courses_id].time.includes(oldTime);
-            if (newCap < oldCap && !time) {
-                let rt0: any[] = this.addCheck(section, room, min);
-                if (rt0[0] && rt[1] < min) {
-                    this.updateSections(room, scheduled, booked, rt);
-                    return rt0;
-                }
-            }
-        }
-        return [false, 0];
-    }
-
-    private updateSections(room: SchedRoom, tr: SchedSection, index: number, rt: any) {
-        this.scheduledRooms[room.rooms_name].sections.slice(index);
-        this.scheduledRooms[room.rooms_name].times.slice(index);
-        delete rt[tr.courses_uuid];
-        let ind: number = this.scheduledSections[tr.courses_dept][tr.courses_id].room.indexOf(room.rooms_name);
-        this.scheduledSections[tr.courses_dept][tr.courses_id].room.slice(ind);
-        this.scheduledSections[tr.courses_dept][tr.courses_id].time.slice(ind);
     }
 
     private addCheck(section: SchedSection, room: SchedRoom, dist: number): any[] {
