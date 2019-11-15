@@ -125,6 +125,7 @@ CampusExplorer.buildQuery = function () {
         delete condition[outerMostFilter];
     }
 
+    // COLUMNS
     activePanel = document.getElementsByClassName("tab-panel active").item(0).getAttribute("data-type");
     let checkedColumns = [], columns = [], groups = [], checkedGroups = [];
     let orderBy;
@@ -170,11 +171,44 @@ CampusExplorer.buildQuery = function () {
         orderBy = "UP"
     }
 
-    query["OPTIONS"] = {COLUMNS: checkedColumns, ORDER: {dir: orderBy,keys: checkedOrders}};
-
     //TRANSFORMATIONS
-    query["TRANSFORMATIONS"] = {GROUP: checkedGroups, APPLY: []};
+    let controlTerm, controlOperator, controlFields, listOfControlTerms = [];
+    let applyData = [];
+    let transformationContainer = document.getElementsByClassName("transformations-container").item(0).childNodes;
+    for (let child of transformationContainer) {
+        let getControlOperator, getControlFields;
+        controlTerm = child.childNodes.item(1).childNodes.item(1).value;
+        listOfControlTerms.push(controlTerm);
+        controlOperator = child.childNodes.item(3).children.item(0);
+        for (let i of controlOperator) {
+            if (i.selected) {
+                getControlOperator = i.value;
+            }
+        }
+        controlFields = child.childNodes.item(5).children.item(0);
+        for (let i of controlFields) {
+            if (i.selected) {
+                getControlFields = activePanel + "_" + i.value;
+            }
+        }
+        let applyNode = {};
+        applyNode[controlTerm] = {};
+        applyNode[controlTerm][getControlOperator] = getControlFields;
+        applyData.push(applyNode);
+    }
+    // Add Control Terms to Checked Columns
+    let allInputs = document.getElementsByTagName("input");
+    for (let i of allInputs) {
+        for (let x of listOfControlTerms) {
+            if (i.value === x && i.checked) {
+                checkedColumns.push(x);
+            }
+        }
+    }
 
+    query["OPTIONS"] = {COLUMNS: checkedColumns, ORDER: {dir: orderBy,keys: checkedOrders}};
+    let transformations = {GROUP: checkedGroups, APPLY: applyData};
+    query["TRANSFORMATIONS"] = transformations;
     console.log(query);
     return query;
 };
