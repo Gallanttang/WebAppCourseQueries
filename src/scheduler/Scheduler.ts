@@ -16,7 +16,14 @@ export default class Scheduler implements IScheduler {
     public schedule(sections: SchedSection[], rooms: SchedRoom[]): Array<[SchedRoom, SchedSection, TimeSlot]> {
         let rt: any = {};
         this.getDistance(rooms);
-        this.prepare(sections, rooms);
+        rooms.sort(function (a, b) {
+            return (a.rooms_seats < b.rooms_seats) ? 1 : (b.rooms_seats < a.rooms_seats) ? -1 : 0;
+        });
+        sections.sort(function (a, b) {
+            let aCap: number = (a.courses_pass + a.courses_fail + a.courses_audit);
+            let bCap: number = (b.courses_pass + b.courses_fail + b.courses_audit);
+            return (aCap < bCap) ? 1 : (bCap < aCap) ? -1 : 0;
+        });
         for (let section of sections) {
             if (!this.scheduledSections.hasOwnProperty(section.courses_dept)) {
                 this.scheduledSections[section.courses_dept] = {};
@@ -24,27 +31,13 @@ export default class Scheduler implements IScheduler {
             if (!this.scheduledSections[section.courses_dept].hasOwnProperty(section.courses_id)) {
                 this.scheduledSections[section.courses_dept][section.courses_id] = {room: [], time: []};
             }
-            this.addHelper(section, rooms, sections, rt);
+            this.addHelper(section, rooms, rt);
         }
-        // while (sections.length > 0 && Object.keys(rt).length < rooms.length * 15) {
-        //     let section = sections.shift();
-        // }
         let final: Array<[SchedRoom, SchedSection, TimeSlot]> = [];
         for (let key of Object.keys(rt)) {
             final.push(rt[key]);
         }
         return final;
-    }
-
-    private prepare(sections: SchedSection[], rooms: SchedRoom[]) {
-        rooms.sort(function (a, b) {
-            return (a.rooms_seats > b.rooms_seats) ? 1 : (b.rooms_seats > a.rooms_seats) ? -1 : 0;
-        });
-        sections.sort(function (a, b) {
-            let aCap: number = (a.courses_pass + a.courses_fail + a.courses_audit);
-            let bCap: number = (b.courses_pass + b.courses_fail + b.courses_audit);
-            return (aCap > bCap) ? 1 : (bCap > aCap) ? -1 : 0;
-        });
     }
 
     private calcDist(room1: SchedRoom, room2: SchedRoom): number {
@@ -67,7 +60,7 @@ export default class Scheduler implements IScheduler {
         return deg * (Math.PI / 180);
     }
 
-    private addHelper(section: SchedSection, rooms: SchedRoom[], sections: SchedSection[], rt: any) {
+    private addHelper(section: SchedSection, rooms: SchedRoom[], rt: any) {
         let min: number = Number.MAX_SAFE_INTEGER;
         let minR: SchedRoom;
         let sTime: TimeSlot;

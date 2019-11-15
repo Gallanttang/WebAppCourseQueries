@@ -22,7 +22,11 @@ export default class ValidatorWhere extends Validator {
         } else if (keys[0] === "OR" || keys[0] === "AND") {
             this.checkLCOMP(filter[keys[0]]);
         } else if (keys[0] === "NOT") {
-            this.checkValid(filter[keys[0]]);
+            if (Object.keys(filter[keys[0]]).length === 1) {
+                this.checkValid(filter[keys[0]]);
+            } else {
+                throw new InsightError("Invalid NOT: empty filter");
+            }
         } else {
             throw new InsightError("Invalid filter key " + keys[0]);
         }
