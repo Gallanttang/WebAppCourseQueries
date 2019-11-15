@@ -5,6 +5,8 @@
 import fs = require("fs");
 import restify = require("restify");
 import Log from "../Util";
+import InsightFacade from "../controller/InsightFacade";
+import {InsightError, NotFoundError} from "../controller/IInsightFacade";
 
 /**
  * This configures the REST endpoints for the server.
@@ -13,6 +15,7 @@ export default class Server {
 
     private port: number;
     private rest: restify.Server;
+    private static insightFacade: any;
 
     constructor(port: number) {
         Log.info("Server::<init>( " + port + " )");
@@ -47,7 +50,8 @@ export default class Server {
         return new Promise(function (fulfill, reject) {
             try {
                 Log.info("Server::start() - start");
-
+                // todo instantiate insightFacade here
+                Server.insightFacade = new InsightFacade();
                 that.rest = restify.createServer({
                     name: "insightUBC",
                 });
@@ -62,7 +66,10 @@ export default class Server {
                 // This is an example endpoint that you can invoke by accessing this URL in your browser:
                 // http://localhost:4321/echo/hello
                 that.rest.get("/echo/:msg", Server.echo);
-                // NOTE: your endpoints should go here
+                that.rest.put("/dataset/:id/:kind", Server.put);
+                that.rest.del("/dataset/:id/", Server.delete);
+                that.rest.post("/query", Server.post);
+                that.rest.get("/dataset", Server.get);
                 // This must be the last endpoint!
                 that.rest.get("/.*", Server.getStatic);
                 that.rest.listen(that.port, function () {
@@ -84,6 +91,113 @@ export default class Server {
         });
     }
 
+    /**
+     * Sends a zip file as a 'raw' buffer to the server, to be parsed and used for future queries
+     * response code 200 when InsightFacade.addDataset() resolves
+     * response code 400 when InsightFacade.addDataset() rejects
+     */
+    public static put(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
+        try {
+            let encodedData = req.body.toString("base64");
+            Server.insightFacade.addDataset(req.params.id, encodedData, req.params.kind)
+                .then(function (response: any) {
+                    res.json(200, {result: response});
+                    Log.info("Server::addDataset - responding 200");
+                    return next();
+                }).catch((err: any) => {
+                res.json(400, {error: err.message});
+                Log.error("Server::addDataset - responding 400");
+                return next();
+            });
+        } catch (err) {
+            Log.error("Server::put - responding 400");
+            res.json(400, {error: err.message});
+            return next();
+        }
+    }
+
+    /**
+     * Calls server to delete (both disk and memory) for the dataset with the input id
+     * code 200 when InsightFacade.removeDataset() resolves
+     * code 400 when InsightFacade.removeDataset() rejects with InsightError
+     * code 404 when InsightFacade.removeDataset() rejects with NotFoundError
+     */
+    public static delete(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
+        try {
+            Server.insightFacade.removeDataset(req.params.id)
+                .then(function (response: any) {
+                    Log.info("Server::addDataset - responding 200");
+                    res.json(200, {result: response});
+                    return next();
+                }).catch(function (err: any) {
+                if (err instanceof InsightError) {
+                    Log.info("Server::addDataset - responding 400");
+                    res.json(400, {result: err.message});
+                } else if (err instanceof NotFoundError) {
+                    Log.info("Server::addDataset - responding 404");
+                    res.json(404, {result: err.message});
+                } else { // some other error
+                    Log.info("Server::addDataset ERROR - responding 400" + err);
+                    res.json(400, {result: err.message});
+                }
+                return next();
+            });
+        } catch (err) {
+            Log.info("Server::addDataset ERROR - responding 400" + err);
+            res.json(400, {result: err.message});
+            return next();
+        }
+    }
+
+    /**
+     * Sends the query, in JSON format, to the application
+     * resolves with code 200 when InsightFacade.performQuery() resolves
+     * rejects with code 400 when InsightFacade.performQuery() rejects
+     */
+    public static post(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
+        try {
+            Server.insightFacade.performQuery(req.params.query)
+                .then(function (response: any) {
+                    Log.info("Server::addDataset - responding 200");
+                    res.json(200, {result: response});
+                    return next();
+                }).catch((err: any) => {
+                Log.error("Server::addDataset - responding 400");
+                res.json(400, {error: err.message});
+                return next();
+            });
+        } catch (err) {
+            Log.error("Server::query - ERROR responding 400: " + err);
+            res.json(400, {error: err.message});
+            return next();
+        }
+    }
+
+    /**
+     * Returns a list of datasets that were added
+     * code 200 when InsightFacade.listDatasets() resolves
+     */
+    public static get(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
+        try {
+            Server.insightFacade.listDatasets().then(
+                function (response: any) {
+                    Log.info("Server::listDataset - responding 200");
+                    res.json(200, {result: response});
+                    return next();
+                }).catch((err: any) => {
+                // this should never happen because listDatasets should always resolve
+                Log.error("Server::get() - ERROR responding 200: " + err);
+                res.json(200, {result: err.message});
+                return next();
+            });
+        } catch (err) {
+            Log.error("Server::get() - ERROR responding 200: " + err);
+            res.json(200, {result: err.message});
+            return next();
+        }
+    }
+
+    // __________________Example Echo Code_______________________________________________________________________
     // The next two methods handle the echo service.
     // These are almost certainly not the best place to put these, but are here for your reference.
     // By updating the Server.echo function pointer above, these methods can be easily moved.
