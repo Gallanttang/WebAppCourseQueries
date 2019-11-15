@@ -12,6 +12,9 @@ export default class ValidatorWhere extends Validator {
         if (keys.length > 1) {
             throw new InsightError("Invalid Filter, contains more than 1 filter");
         }
+        if (keys.length === 0) {
+            return;
+        }
         if (keys[0] === "IS") {
             this.checkSCOMP(filter[keys[0]]);
         } else if (keys[0] === "EQ" || keys[0] === "GT" || keys[0] === "LT") {

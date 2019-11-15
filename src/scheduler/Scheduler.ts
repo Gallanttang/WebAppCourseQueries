@@ -17,8 +17,7 @@ export default class Scheduler implements IScheduler {
         let rt: any = {};
         this.getDistance(rooms);
         this.prepare(sections, rooms);
-        while (sections.length > 0 && Object.keys(rt).length < rooms.length * 15) {
-            let section = sections.shift();
+        for (let section of sections) {
             if (!this.scheduledSections.hasOwnProperty(section.courses_dept)) {
                 this.scheduledSections[section.courses_dept] = {};
             }
@@ -27,12 +26,14 @@ export default class Scheduler implements IScheduler {
             }
             this.addHelper(section, rooms, sections, rt);
         }
+        // while (sections.length > 0 && Object.keys(rt).length < rooms.length * 15) {
+        //     let section = sections.shift();
+        // }
         let final: Array<[SchedRoom, SchedSection, TimeSlot]> = [];
         for (let key of Object.keys(rt)) {
             final.push(rt[key]);
         }
         return final;
-        Log.trace(final);
     }
 
     private prepare(sections: SchedSection[], rooms: SchedRoom[]) {
@@ -75,11 +76,11 @@ export default class Scheduler implements IScheduler {
             if (!this.scheduledRooms.hasOwnProperty(room.rooms_name)) {
                 this.scheduledRooms[room.rooms_name] = {sections: [], times: []};
             }
-            if (room.rooms_seats < section.courses_fail + section.courses_pass + section.courses_audit) {
+            if (room.rooms_seats < (section.courses_fail + section.courses_pass + section.courses_audit)) {
                 continue;
             }
             let timeRoom: TimeSlot[] = this.scheduledRooms[room.rooms_name].times;
-            if (timeRoom.length === 15) {
+            if (timeRoom.length >= 15) {
                 continue;
             }
             for (let time of this.ts) {
@@ -100,8 +101,6 @@ export default class Scheduler implements IScheduler {
             this.scheduledSections[section.courses_dept][section.courses_id].room.push(minR);
             this.scheduledSections[section.courses_dept][section.courses_id].time.push(sTime);
             rt[section.courses_uuid] = [section, minR, sTime];
-        } else {
-            sections.push(section);
         }
     }
 
