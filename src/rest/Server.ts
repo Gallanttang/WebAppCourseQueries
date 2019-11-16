@@ -68,8 +68,7 @@ export default class Server {
                 that.rest.get("/echo/:msg", Server.echo);
                 that.rest.put("/dataset/:id/:kind", Server.put);
                 that.rest.del("/dataset/:id/", Server.delete);
-                that.rest.post("/query/", Server.post);
-                that.rest.post("/query/:query", Server.post);
+                that.rest.post("/query", Server.post);
                 that.rest.get("/dataset", Server.get);
                 // This must be the last endpoint!
                 that.rest.get("/.*", Server.getStatic);
@@ -157,7 +156,7 @@ export default class Server {
      */
     public static post(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
-            Server.insightFacade.performQuery(req.body)
+            Server.insightFacade.performQuery(req.params.query)
                 .then(function (response: any) {
                     Log.info("Server::addDataset - responding 200");
                     res.json(200, {result: response});
