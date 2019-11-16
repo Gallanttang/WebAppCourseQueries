@@ -8,20 +8,20 @@ CampusExplorer.sendQuery = function (query) {
     return new Promise(function (fulfill, reject) {
         try {
             let xhr = new XMLHttpRequest();
-            let URL = "http://localhost:4321/";
+            let URL = "http://localhost:4321/query";
             xhr.open("POST", URL, true);
             xhr.setRequestHeader("content-type", "application/json");
-            xhr.addEventListener("load", () => {
-                let response = xhr.responseText;
-                console.log("...");
-                console.log(response);
-            });
-            xhr.addEventListener("error", () => {
+            xhr.onload = function () {
+                let response = JSON.parse(xhr.responseText);
+                return fulfill(response);
+            };
+            xhr.onerror = function () {
                 console.log("some kind of error");
-            });
+                return reject("http request unsuccessful");
+            };
             xhr.send(JSON.stringify(query));
         } catch {
-            return Promise.reject("Ajax request unsuccessful");
+            return reject("Ajax request unsuccessful");
         }
     });
 };

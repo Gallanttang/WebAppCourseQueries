@@ -1,3 +1,11 @@
 {
-    "query1": "simple query IS comparison for department with two columns and old order syntax"
+    "query1": "simple query IS comparison for department with two columns and old order syntax",
+    "coursesANDISComparator": "2 IS in an AND",
+    "coursesApplyAvg": "Testing apply with overallAvg",
+    "coursesConditions": "simple query with courses Conditions",
+    "coursesSortDown": "testing order",
+    "coursesTransformation2Apply": "testing 2 applys in transformation",
+    "roomsApplyCount": "testing apply in rooms with count",
+    "roomsComplex": "testing a complex rooms query",
+    "roomsSortUp": "testing sort up in rooms"
 }
