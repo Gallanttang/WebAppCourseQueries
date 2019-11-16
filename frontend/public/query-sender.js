@@ -21,7 +21,7 @@ CampusExplorer.sendQuery = function (query) {
             });
             xhr.send(JSON.stringify(query));
         } catch {
-            return Promise.reject("Ajax request unsuccessful");
+            return reject("Ajax request unsuccessful");
         }
     });
 };

@@ -9,6 +9,9 @@ export default class Scheduler implements IScheduler {
         "MWF 1300-1400", "MWF 1400-1500", "MWF 1500-1600", "MWF 1600-1700", "TR  0800-0930", "TR  0930-1100",
         "TR  1100-1230", "TR  1230-1400", "TR  1400-1530", "TR  1530-1700"];
 
+    private max: number;
+    private totalEnrollment: number;
+
     constructor() {
         //
     }
@@ -16,27 +19,30 @@ export default class Scheduler implements IScheduler {
     public schedule(sections: SchedSection[], rooms: SchedRoom[]): Array<[SchedRoom, SchedSection, TimeSlot]> {
         let rt: any = {};
         this.getDistance(rooms);
-        rooms.sort(function (a, b) {
-            return (a.rooms_seats < b.rooms_seats) ? 1 : (b.rooms_seats < a.rooms_seats) ? -1 : 0;
-        });
-        sections.sort(function (a, b) {
-            let aCap: number = (a.courses_pass + a.courses_fail + a.courses_audit);
-            let bCap: number = (b.courses_pass + b.courses_fail + b.courses_audit);
-            return (aCap < bCap) ? 1 : (bCap < aCap) ? -1 : 0;
-        });
-        for (let section of sections) {
-            if (!this.scheduledSections.hasOwnProperty(section.courses_dept)) {
-                this.scheduledSections[section.courses_dept] = {};
-            }
-            if (!this.scheduledSections[section.courses_dept].hasOwnProperty(section.courses_id)) {
-                this.scheduledSections[section.courses_dept][section.courses_id] = {room: [], time: []};
-            }
-            this.addHelper(section, rooms, rt);
-        }
+        this.totalEnrollment = sections.reduce( (acc, curr) =>
+            acc + curr.courses_pass + curr.courses_fail + curr.courses_audit, 0);
         let final: Array<[SchedRoom, SchedSection, TimeSlot]> = [];
-        for (let key of Object.keys(rt)) {
-            final.push(rt[key]);
+        this.prepare(sections, rooms, final);
+        if (sections.length > 0) {
+            for (let section of sections) {
+                if (!this.scheduledSections.hasOwnProperty(section.courses_dept)) {
+                    this.scheduledSections[section.courses_dept] = {};
+                }
+                if (!this.scheduledSections[section.courses_dept].hasOwnProperty(section.courses_id)) {
+                    this.scheduledSections[section.courses_dept][section.courses_id] = [];
+                }
+                this.addHelper(section, rooms, rt);
+            }
+            for (let key of Object.keys(rt)) {
+                final.push(rt[key]);
+            }
         }
+        let currEnroll: number = 0;
+        let maxDist: number = 0;
+        for (let entry of final) {
+            currEnroll += Number(entry[1].courses_audit + entry[1].courses_pass + entry[1].courses_fail);
+        }
+        Log.trace("E = " + (currEnroll / this.totalEnrollment));
         return final;
     }
 
@@ -61,59 +67,49 @@ export default class Scheduler implements IScheduler {
     }
 
     private addHelper(section: SchedSection, rooms: SchedRoom[], rt: any) {
-        let min: number = Number.MAX_SAFE_INTEGER;
-        let minR: SchedRoom;
-        let sTime: TimeSlot;
-        let sec: any = this.scheduledSections[section.courses_dept][section.courses_id];
+        let cap: number = Number(section.courses_fail + section.courses_pass + section.courses_audit);
+        let sec: TimeSlot[] = this.scheduledSections[section.courses_dept][section.courses_id];
         for (let room of rooms) {
             if (!this.scheduledRooms.hasOwnProperty(room.rooms_name)) {
-                this.scheduledRooms[room.rooms_name] = {sections: [], times: []};
+                this.scheduledRooms[room.rooms_name] = [];
             }
-            if (room.rooms_seats < (section.courses_fail + section.courses_pass + section.courses_audit)) {
+            if (room.rooms_seats < cap) {
                 continue;
             }
-            let timeRoom: TimeSlot[] = this.scheduledRooms[room.rooms_name].times;
+            let timeRoom: TimeSlot[] = this.scheduledRooms[room.rooms_name];
             if (timeRoom.length >= 15) {
                 continue;
             }
+            Log.trace(room.rooms_name);
             for (let time of this.ts) {
-                if (sec.time.includes(time) || timeRoom.includes(time)) {
-                    continue;
-                }
-                let check: any[] =  this.addCheck(section, room, min);
-                if (check[0]) {
-                    min = check[1];
-                    minR = room;
-                    sTime = time;
+                if (!sec.includes(time) && !timeRoom.includes(time)) {
+                    Log.trace("Added");
+                    this.scheduledRooms[room.rooms_name].push(time);
+                    this.scheduledSections[section.courses_dept][section.courses_id].push(time);
+                    rt[section.courses_uuid] = [room, section, time];
+                    return;
                 }
             }
-        }
-        if (minR) {
-            this.scheduledRooms[minR.rooms_name].times.push(sTime);
-            this.scheduledRooms[minR.rooms_name].sections.push(section);
-            this.scheduledSections[section.courses_dept][section.courses_id].room.push(minR);
-            this.scheduledSections[section.courses_dept][section.courses_id].time.push(sTime);
-            rt[section.courses_uuid] = [section, minR, sTime];
         }
     }
 
-    private addCheck(section: SchedSection, room: SchedRoom, dist: number): any[] {
-        let nearby: SchedRoom[] = this.scheduledSections[section.courses_dept][section.courses_id].room;
-        let min: number = dist;
-        if (nearby.length < 1) {
-            return [true, 0];
-        }
-        for (let near of nearby) {
-            if (near.rooms_name === room.rooms_name) {
-                return [true, 0];
-            }
-            if (min >= this.distance[near.rooms_name][room.rooms_name]) {
-                min = this.distance[near.rooms_name][room.rooms_name];
-            }
-        }
-        let rt: boolean = min <= dist;
-        return [rt, min];
-    }
+    // private addCheck(section: SchedSection, room: SchedRoom, dist: number): any[] {
+    //     let nearby: string[] = Object.keys(this.scheduledRooms);
+    //     let min: number = dist;
+    //     if (nearby.length < 1) {
+    //         return [true, 0];
+    //     }
+    //     for (let near of nearby) {
+    //         if (near === room.rooms_name) {
+    //             return [true, 0];
+    //         }
+    //         if (min >= this.distance[near][room.rooms_name]) {
+    //             min = this.distance[near][room.rooms_name];
+    //         }
+    //     }
+    //     let rt: boolean = min <= dist;
+    //     return [rt, min];
+    // }
 
     private getDistance(rooms: SchedRoom[]) {
         for (let i = 0; i < rooms.length; i++) {
@@ -125,8 +121,55 @@ export default class Scheduler implements IScheduler {
                     this.distance[rooms[j].rooms_name] = {};
                 }
                 let dist: number = this.calcDist(rooms[i], rooms[j]);
+                if (dist > this.max) {
+                    this.max = dist;
+                }
                 this.distance[rooms[i].rooms_name][rooms[j].rooms_name] = dist;
                 this.distance[rooms[j].rooms_name][rooms[i].rooms_name] = dist;
+            }
+        }
+    }
+
+    private sortRooms(rooms: SchedRoom[]) {
+        let that = this;
+        let first = rooms[0];
+        rooms.sort(function (a, b) {
+            if (that.distance[first.rooms_name][a.rooms_name] < that.distance[first.rooms_name][b.rooms_name]) {
+                return 1;
+            }
+            if (that.distance[first.rooms_name][a.rooms_name] > that.distance[first.rooms_name][b.rooms_name]) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+
+    private prepare(sections: SchedSection[], rooms: SchedRoom[], final: Array<[SchedRoom, SchedSection, TimeSlot]>) {
+        rooms.sort(function (a, b) {
+            return (a.rooms_seats < b.rooms_seats) ? 1 : (b.rooms_seats < a.rooms_seats) ? -1 : 0;
+        });
+        sections.sort(function (a, b) {
+            let aCap: number = (a.courses_pass + a.courses_fail + a.courses_audit);
+            let bCap: number = (b.courses_pass + b.courses_fail + b.courses_audit);
+            return (aCap < bCap) ? 1 : (bCap < aCap) ? -1 : 0;
+        });
+        let first: boolean = true;
+        while (first) {
+            if (sections.length > 0) {
+                let fSec: SchedSection = sections.shift();
+                let cap: number = fSec.courses_pass + fSec.courses_fail + fSec.courses_audit;
+                if (cap <= rooms[0].rooms_seats) {
+                    final.push([rooms[0], fSec, this.ts[0]]);
+                    this.scheduledRooms[rooms[0].rooms_name] = [];
+                    this.scheduledRooms[rooms[0].rooms_name].push(this.ts[0]);
+                    this.scheduledSections[fSec.courses_dept] = {};
+                    this.scheduledSections[fSec.courses_dept][fSec.courses_id] = [];
+                    this.scheduledSections[fSec.courses_dept][fSec.courses_id].push(this.ts[0]);
+                    first = false;
+                    this.sortRooms(rooms);
+                }
+            } else {
+                first = false;
             }
         }
     }

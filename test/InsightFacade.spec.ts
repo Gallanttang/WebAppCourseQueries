@@ -430,7 +430,6 @@ describe("InsightFacade Schedule", function () {
         describe("Dynamic InsightFacade schedule tests", function () {
             for (const test of testQueries) {
                 let sections = test.section;
-                Log.trace(sections.length);
                 let rooms = test.room;
                 let scheduler: Scheduler = new Scheduler();
                 let rt: any[] = [];
