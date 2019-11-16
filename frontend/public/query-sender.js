@@ -16,7 +16,6 @@ CampusExplorer.sendQuery = function (query) {
                 return fulfill(response);
             };
             xhr.onerror = function () {
-                console.log("some kind of error");
                 return reject("http request unsuccessful");
             };
             xhr.send(JSON.stringify(query));
