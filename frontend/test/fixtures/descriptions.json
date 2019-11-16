@@ -4,7 +4,8 @@
     "coursesApplyAvg": "Testing apply with overallAvg",
     "coursesConditions": "simple query with courses Conditions",
     "coursesSortDown": "testing order",
-    "coursesTransformation2Apply": "testing 2 applys in transformation",
+    "coursesTransformation2Apply": "testing 2 applies in transformation",
+    "coursesApplyMax": "testing single apply",
     "roomsApplyCount": "testing apply in rooms with count",
     "roomsComplex": "testing a complex rooms query",
     "roomsSortUp": "testing sort up in rooms"

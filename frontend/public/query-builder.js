@@ -5,6 +5,7 @@
  *
  * @returns query object adhering to the query EBNF
  */
+
 CampusExplorer.buildQuery = function () {
     const converter = {
         "courses-conditiontype-all": "AND",
@@ -13,46 +14,7 @@ CampusExplorer.buildQuery = function () {
         "rooms-conditiontype-all": "AND",
         "rooms-conditiontype-any": "OR",
         "rooms-conditiontype-none": "NOT",
-        "Audit": "courses_audit",
-        "Average": "courses_avg",
-        "Department": "courses_dept",
-        "Fail": "courses_fail",
-        "ID": "courses_id",
-        "Instructor": "courses_instructor",
-        "Pass": "courses_pass",
-        "Title": "courses_title",
-        "UUID": "courses_uuid",
-        "Year": "courses_year",
-        "Address": "rooms_address",
-        "Full Name": "rooms_fullname",
-        "Furniture": "rooms_furniture",
-        "Link": "rooms_href",
-        "Latitude": "rooms_lat",
-        "Longitude": "rooms_lon",
-        "Name": "rooms_name",
-        "Number": "rooms_number",
-        "Seats": "rooms_seats",
-        "Short Name": "rooms_shortname",
-        "Type": "rooms_type"
     };
-    let coursesColumns = ["courses-columns-field-audit", "courses-columns-field-avg",
-        "courses-columns-field-dept", "courses-columns-field-fail",
-        "courses-columns-field-id", "courses-columns-field-instructor",
-        "courses-columns-field-pass", "courses-columns-field-title",
-        "courses-columns-field-uuid", "courses-columns-field-year"];
-    let roomsColumns = ["rooms-columns-field-address", "rooms-columns-field-fullname",
-        "rooms-columns-field-furniture", "rooms-columns-field-href", "rooms-columns-field-lat",
-        "rooms-columns-field-lon", "rooms-columns-field-name", "rooms-columns-field-number",
-        "rooms-columns-field-seats", "rooms-columns-field-shortname", "rooms-columns-field-type"];
-    let coursesGroups = ["courses-groups-field-audit", "courses-groups-field-avg",
-        "courses-groups-field-dept", "courses-groups-field-fail",
-        "courses-groups-field-id", "courses-groups-field-instructor",
-        "courses-groups-field-pass", "courses-groups-field-title",
-        "courses-groups-field-uuid", "courses-groups-field-year"];
-    let roomsGroups = ["rooms-groups-field-address", "rooms-groups-field-fullname",
-        "rooms-groups-field-furniture", "rooms-groups-field-href", "rooms-groups-field-lat",
-        "rooms-groups-field-lon", "rooms-groups-field-name", "rooms-groups-field-number",
-        "rooms-groups-field-seats", "rooms-groups-field-shortname", "rooms-groups-field-type"];
 
     let query = {};
     // the active query panel: courses or rooms
@@ -98,7 +60,6 @@ CampusExplorer.buildQuery = function () {
                 if (input.checked && converter[input.id] === "NOT") {
                     outerMostFilter = converter[input.id];
                     condition[outerMostFilter] = {};
-                    condition[outerMostFilter]["AND"] = [];
                 } else if (input.checked && converter.hasOwnProperty(input.id)){
                     outerMostFilter = converter[input.id];
                     condition[outerMostFilter] = [];
@@ -108,7 +69,8 @@ CampusExplorer.buildQuery = function () {
         if (child.className === "conditions-container") {
             for (let cond of child.childNodes) {
                 if (outerMostFilter === "NOT") {
-                    condition[outerMostFilter]["AND"].push(this.getCond(cond));
+                    let filter = this.getCond(cond);
+                    condition[outerMostFilter][Object.keys(filter)[0]] = filter[Object.keys(filter)[0]];
                 } else {
                     let c = this.getCond(cond);
                     condition[outerMostFilter].push(c);
@@ -118,7 +80,12 @@ CampusExplorer.buildQuery = function () {
     }
 
     if (outerMostFilter !== "NOT") {
-        if (condition[outerMostFilter].length === 0) {
+        if (condition[outerMostFilter].length === 1) {
+            let onlyKey = Object.keys(condition[outerMostFilter][0])[0];
+            let onlyCond = condition[outerMostFilter][0][onlyKey];
+            delete condition[outerMostFilter];
+            condition[onlyKey] = onlyCond;
+        } else if (condition[outerMostFilter].length === 0) {
             delete condition[outerMostFilter];
         }
     } else if (!condition[outerMostFilter].hasOwnProperty) {
@@ -126,44 +93,31 @@ CampusExplorer.buildQuery = function () {
     }
 
     // COLUMNS
-    activePanel = document.getElementsByClassName("tab-panel active").item(0).getAttribute("data-type");
-    let checkedColumns = [], columns = [], groups = [], checkedGroups = [];
+    let columnsPanel, groupsPanel, checkedGroups = [], columns = [];
     let orderBy;
-    if (activePanel === "courses") {
-        columns = coursesColumns;
-        groups = coursesGroups;
-        orderBy = document.getElementById("courses-order");
-    } else if (activePanel === "rooms") {
-        columns = roomsColumns;
-        groups = roomsGroups;
-        orderBy = document.getElementById("rooms-order");
-    }
-
-    for (let i in columns) {
-        if (document.getElementById(columns[i]).checked) {
-            let x = document.getElementById(columns[i]);
-            checkedColumns.push(activePanel + "_" + x.value);
-        }
-    }
-    // GROUPS
-    for (let i in groups) {
-        if (document.getElementById(groups[i]).checked) {
-            let x = document.getElementById(groups[i]);
-            checkedGroups.push(activePanel + "_" + x.value);
+    columnsPanel = activePanel.item(0).getElementsByClassName("form-group columns").item(0).children;
+    for (let child of columnsPanel.item(1).children) {
+        let checked = child.getElementsByTagName("input").item(0).checked;
+        if (checked && child.className === "control field") {
+            columns.push(type + "_" + child.getElementsByTagName("input").item(0).value);
+        } else if (checked && child.className === "control transformation") {
+            columns.push(child.getElementsByTagName("input").item(0).value);
         }
     }
 
-    // ORDER
-    let orderFields = document.getElementsByClassName("tab-panel active");
-    orderFields = orderFields.item(0).getElementsByClassName("form-group order");
+// ORDER
+    let orderFields = activePanel.item(0).getElementsByClassName("form-group order");
     orderFields = orderFields.item(0).getElementsByClassName("control-group").item(0);
     orderFields = orderFields.getElementsByClassName("control order fields").item(0).getElementsByTagName("select").item(0);
-    let checkedOrders = [];
-    for (let i of orderFields) {
-        if (i.selected) {
-            checkedOrders.push(converter[i.label]);
+    let orders = [];
+    for (let child of orderFields) {
+        if (child.selected && child.className === "transformation") {
+            orders.push(child.value);
+        } else if (child.selected) {
+            orders.push(type + "_" + child.value);
         }
     }
+    orderBy = document.getElementById(type + "-order");
     orderBy = orderBy.checked; // if true = descending
     if (orderBy) {
         orderBy = "DOWN";
@@ -171,14 +125,20 @@ CampusExplorer.buildQuery = function () {
         orderBy = "UP"
     }
 
+    // GROUPS
+    groupsPanel = activePanel.item(0).getElementsByClassName("form-group groups").item(0).children[1];
+    for (let child of groupsPanel.children) {
+        if (child.getElementsByTagName("input").item(0).checked) {
+            checkedGroups.push(type + "_" + child.getElementsByTagName("input").item(0).value);
+        }
+    }
     //TRANSFORMATIONS
-    let controlTerm, controlOperator, controlFields, listOfControlTerms = [];
+    let controlTerm, controlOperator, controlFields;
     let applyData = [];
-    let transformationContainer = document.getElementsByClassName("transformations-container").item(0).childNodes;
+    let transformationContainer = activePanel.item(0).getElementsByClassName("transformations-container").item(0).childNodes;
     for (let child of transformationContainer) {
         let getControlOperator, getControlFields;
         controlTerm = child.childNodes.item(1).childNodes.item(1).value;
-        listOfControlTerms.push(controlTerm);
         controlOperator = child.childNodes.item(3).children.item(0);
         for (let i of controlOperator) {
             if (i.selected) {
@@ -188,7 +148,7 @@ CampusExplorer.buildQuery = function () {
         controlFields = child.childNodes.item(5).children.item(0);
         for (let i of controlFields) {
             if (i.selected) {
-                getControlFields = activePanel + "_" + i.value;
+                getControlFields = type + "_" + i.value;
             }
         }
         let applyNode = {};
@@ -196,23 +156,14 @@ CampusExplorer.buildQuery = function () {
         applyNode[controlTerm][getControlOperator] = getControlFields;
         applyData.push(applyNode);
     }
-    // Add Control Terms to Checked Columns
-    let allInputs = document.getElementsByTagName("input");
-    for (let i of allInputs) {
-        for (let x of listOfControlTerms) {
-            if (i.value === x && i.checked) {
-                checkedColumns.push(x);
-            }
-        }
-    }
 
-    if (orderBy.length > 0 && checkedOrders.length > 0) {
-        query["OPTIONS"] = {COLUMNS: checkedColumns, ORDER: {dir: orderBy,keys: checkedOrders}};
+    if (orderBy.length > 0 && orders.length > 0) {
+        query["OPTIONS"] = {COLUMNS: columns, ORDER: {dir: orderBy,keys: orders}};
     } else {
-        query["OPTIONS"] = {COLUMNS: checkedColumns};
+        query["OPTIONS"] = {COLUMNS: columns};
     }
     let transformations;
-    if (checkedGroups.length > 0 && applyData.length > 0) {
+    if (checkedGroups.length > 0 || applyData.length > 0) {
         transformations = {GROUP: checkedGroups, APPLY: applyData};
         query["TRANSFORMATIONS"] = transformations;
     }

@@ -68,7 +68,7 @@
         "WHERE": {
             "NOT": {
                 "GT": {
-                    "courses_avg": 95
+                    "courses_avg": 99
                 }
             }
         },
@@ -102,6 +102,45 @@
             }
         }
     },
+    "coursesApplyMax": {
+        "WHERE": {
+            "NOT": {
+                "EQ": {
+                    "courses_avg": 94
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_avg",
+                "courses_instructor",
+                "courses_year",
+                "asdf"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+                    "courses_dept",
+                    "courses_fail",
+                    "courses_id",
+                    "asdf"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "APPLY": [
+                {
+                    "asdf": {
+                        "MAX": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
     "coursesTransformation2Apply": {
         "WHERE": {
             "NOT": {
@@ -113,13 +152,13 @@
         "OPTIONS": {
             "COLUMNS": [
                 "courses_dept",
-                "courses_title",
                 "courses_id",
+                "courses_title",
                 "maxAverage",
                 "minAverage"
             ],
             "ORDER": {
-                "dir": "UP",
+                "dir": "DOWN",
                 "keys": [
                     "minAverage"
                 ]
@@ -153,15 +192,15 @@
         },
         "OPTIONS": {
             "COLUMNS": [
-                "rooms_shortname",
                 "rooms_number",
+                "rooms_shortname",
                 "countSeats"
             ]
         },
         "TRANSFORMATIONS": {
             "GROUP": [
-                "rooms_shortname",
-                "rooms_number"
+                "rooms_number",
+                "rooms_shortname"
             ],
             "APPLY": [
                 {
@@ -214,20 +253,22 @@
     },
     "roomsSortUp": {
         "WHERE": {
-            "GT": {
+            "NOT": {
+                "GT": {
                 "rooms_seats": 300
+                }
             }
         },
         "OPTIONS": {
             "COLUMNS": [
-                "rooms_shortname",
-                "rooms_number"
+                "rooms_number",
+                "rooms_shortname"
             ],
             "ORDER": {
                 "dir": "UP",
                 "keys": [
-                    "rooms_shortname",
-                    "rooms_number"
+                    "rooms_number",
+                    "rooms_shortname"
                 ]
             }
         }

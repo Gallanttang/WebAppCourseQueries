@@ -162,7 +162,7 @@ export default class Server {
                     res.json(200, {result: response});
                     return next();
                 }).catch((err: any) => {
-                Log.error("Server::addDataset - responding 400");
+                Log.error("Server::performQuery - responding 400");
                 res.json(400, {error: err.message});
                 return next();
             });
