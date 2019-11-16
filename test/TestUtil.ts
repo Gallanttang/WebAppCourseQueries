@@ -29,7 +29,7 @@ export default class TestUtil {
      * Recursively searches for test query JSON files in the path and returns those matching the specified schema.
      * @param path The path to the sample query JSON files.
      */
-    public static readTestQueries(path: string = "test/queries"): ITestQuery[] {
+    public static readTestQueries(path: string): ITestQuery[] {
         const methodName: string = "TestUtil::readTestQueries --";
         const testQueries: ITestQuery[] = [];
         let files: string[];
@@ -57,7 +57,9 @@ export default class TestUtil {
 
             try {
                 const query = JSON.parse(content.toString());
-                TestUtil.validate(query, {title: "string", query: null, isQueryValid: "boolean", result: null});
+                if (path === "test/queries") {
+                    TestUtil.validate(query, {title: "string", query: null, isQueryValid: "boolean", result: null});
+                }
                 query["filename"] = file;
                 testQueries.push(query);
             } catch (err) {
