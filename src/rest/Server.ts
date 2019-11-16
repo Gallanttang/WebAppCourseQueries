@@ -50,7 +50,6 @@ export default class Server {
         return new Promise(function (fulfill, reject) {
             try {
                 Log.info("Server::start() - start");
-                // todo instantiate insightFacade here
                 Server.insightFacade = new InsightFacade();
                 that.rest = restify.createServer({
                     name: "insightUBC",
@@ -69,7 +68,7 @@ export default class Server {
                 that.rest.put("/dataset/:id/:kind", Server.put);
                 that.rest.del("/dataset/:id/", Server.delete);
                 that.rest.post("/query", Server.post);
-                that.rest.get("/dataset", Server.get);
+                that.rest.get("/datasets", Server.get);
                 // This must be the last endpoint!
                 that.rest.get("/.*", Server.getStatic);
                 that.rest.listen(that.port, function () {
@@ -110,8 +109,8 @@ export default class Server {
                 return next();
             });
         } catch (err) {
-            Log.error("Server::put - responding 400");
             res.json(400, {error: err.message});
+            Log.error("Server::put - responding 400");
             return next();
         }
     }
@@ -121,6 +120,7 @@ export default class Server {
      * code 200 when InsightFacade.removeDataset() resolves
      * code 400 when InsightFacade.removeDataset() rejects with InsightError
      * code 404 when InsightFacade.removeDataset() rejects with NotFoundError
+     * Todo this is failing 1/3 tests!!!
      */
     public static delete(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
@@ -132,13 +132,13 @@ export default class Server {
                 }).catch(function (err: any) {
                 if (err instanceof InsightError) {
                     Log.info("Server::addDataset - responding 400");
-                    res.json(400, {result: err.message});
+                    res.json(400, {error: err.message});
                 } else if (err instanceof NotFoundError) {
                     Log.info("Server::addDataset - responding 404");
-                    res.json(404, {result: err.message});
+                    res.json(404, {error: err.message});
                 } else { // some other error
                     Log.info("Server::addDataset ERROR - responding 400" + err);
-                    res.json(400, {result: err.message});
+                    res.json(400, {error: err.message});
                 }
                 return next();
             });
@@ -153,6 +153,7 @@ export default class Server {
      * Sends the query, in JSON format, to the application
      * resolves with code 200 when InsightFacade.performQuery() resolves
      * rejects with code 400 when InsightFacade.performQuery() rejects
+     * todo this is failing 1/3 tests !!!!!!!!!!!
      */
     public static post(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
@@ -176,6 +177,7 @@ export default class Server {
     /**
      * Returns a list of datasets that were added
      * code 200 when InsightFacade.listDatasets() resolves
+     * todo this is failing 1/1 test!!!!!!!!
      */
     public static get(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {

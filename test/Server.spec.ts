@@ -103,7 +103,7 @@ describe("Facade D3", function () {
         let expected: InsightDataset[] = [ds];
         try {
             return chai.request("http://localhost:4321")
-                .get("/dataset")
+                .get("/datasets")
                 .then(function (res: Response) {
                     Log.test(res.status);
                     expect(res.status).to.be.equal(200);
@@ -156,25 +156,25 @@ describe("Facade D3", function () {
         }
     });
 
-    // it ("GET test for listing two datasets", function () {
-    //     const ds: InsightDataset = {id: "courses", kind: InsightDatasetKind.Courses, numRows: 64612};
-    //     let expected: InsightDataset[] = [ds];
-    //     try {
-    //         return chai.request("http://localhost:4321")
-    //             .get("/dataset")
-    //             .then(function (res: Response) {
-    //                 Log.test(res.status);
-    //                 expect(res.status).to.be.equal(200);
-    //                 expect(res.body.result.length).to.equal(2);
-    //             })
-    //             .catch(function (err) {
-    //                 Log.error(err);
-    //                 expect.fail(err);
-    //             });
-    //     } catch (err) {
-    //         Log.error("could not return from chai request" + err);
-    //     }
-    // });
+    it ("GET test for listing two datasets", function () {
+        const ds: InsightDataset = {id: "courses", kind: InsightDatasetKind.Courses, numRows: 64612};
+        let expected: InsightDataset[] = [ds];
+        try {
+            return chai.request("http://localhost:4321")
+                .get("/datasets")
+                .then(function (res: Response) {
+                    Log.test(res.status);
+                    expect(res.status).to.be.equal(200);
+                    expect(res.body.result.length).to.equal(2);
+                })
+                .catch(function (err) {
+                    Log.error(err);
+                    expect.fail(err);
+                });
+        } catch (err) {
+            Log.error("could not return from chai request" + err);
+        }
+    });
 
     // it("DELETE test for valid c1 courses dataset", function () {
     //     try {
