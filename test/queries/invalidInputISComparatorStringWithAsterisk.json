@@ -1,0 +1,29 @@
+{
+    "title": "SELECT dept, avg, instructor WHERE instructor == '', ORDER by avg",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_instructor": "cox, * barbara"
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "comm"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg",
+                "courses_instructor"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,20 @@
+{
+    "title": "Invalid Key in EQ detection",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "EQ": {
+                    "rooms_seats": "95"
+                }
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_seats"
+            ],
+            "ORDER": "seats"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

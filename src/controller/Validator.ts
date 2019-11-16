@@ -2,9 +2,8 @@ import {InsightError} from "./IInsightFacade";
 
 export default abstract class Validator {
     protected coursevalidator: any = {
-        dept: "string", id: "string", avg: "number",
-        instructor: "string", title: "string", pass: "number",
-        fail: "number", audit: "number", uuid: "string", year: "number"
+        dept: "string", id: "string", instructor: "string", title: "string", uuid: "string",
+        pass: "number", fail: "number", audit: "number", avg: "number", year: "number"
     };
 
     protected roomsvalidator: any = {
@@ -92,8 +91,7 @@ export default abstract class Validator {
             throw new InsightError("The queried column " + key + " does not exist");
         } else {
             let invalidFilter: boolean = (
-                this.coursevalidator[field] !== typeof filter[key] &&
-                this.roomsvalidator[field] !== typeof filter[key])
+                this.coursevalidator[field] !== typeof filter[key] && this.roomsvalidator[field] !== typeof filter[key])
                 || typeof filter[key] !== expected;
             if (invalidFilter) {
                 throw new InsightError(parent + " expects a " + expected + " in the filter, got " + filter[key]);

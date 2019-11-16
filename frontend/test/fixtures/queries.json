@@ -39,8 +39,10 @@
     },
     "coursesApplyAvg": {
         "WHERE": {
-            "GT": {
-                "courses_avg": 95
+            "NOT": {
+                "GT": {
+                    "courses_avg": 95
+                }
             }
         },
         "OPTIONS": {
@@ -64,8 +66,10 @@
     },
     "coursesConditions": {
         "WHERE": {
-            "GT": {
-                "courses_avg":99
+            "NOT": {
+                "GT": {
+                    "courses_avg": 95
+                }
             }
         },
         "OPTIONS": {
@@ -78,8 +82,10 @@
     },
     "coursesSortDown": {
         "WHERE": {
-            "GT": {
-                "courses_avg": 95
+            "NOT": {
+                "GT": {
+                    "courses_avg": 95
+                }
             }
         },
         "OPTIONS": {
@@ -98,8 +104,10 @@
     },
     "coursesTransformation2Apply": {
         "WHERE": {
-            "GT": {
-                "courses_avg": 98.5
+            "NOT": {
+                "GT": {
+                    "courses_avg": 98.5
+                }
             }
         },
         "OPTIONS": {
