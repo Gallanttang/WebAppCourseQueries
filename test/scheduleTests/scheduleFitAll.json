@@ -306,12 +306,19 @@
         {
             "rooms_shortname": "ALRD",
             "rooms_number": "112",
-            "rooms_seats": 30,
+            "rooms_seats": 100,
             "rooms_lat": 49.2699,
             "rooms_lon": -123.25318
         },
         {
             "rooms_shortname": "WOOD",
+            "rooms_number": "3",
+            "rooms_seats": 88,
+            "rooms_lat": 49.26478,
+            "rooms_lon": -123.24673
+        },
+        {
+            "rooms_shortname": "IKBB",
             "rooms_number": "3",
             "rooms_seats": 88,
             "rooms_lat": 49.26478,
