@@ -348,7 +348,7 @@ describe("InsightFacade PerformQuery", () => {
         // Load the query JSON files under test/queries.
         // Fail if there is a problem reading ANY query.
         try {
-            testQueries = TestUtil.readTestQueries("test/queries");
+            testQueries = TestUtil.readTestQueries();
         } catch (err) {
             expect.fail("", "", `Failed to read one or more test queries. ${err}`);
         }
@@ -400,42 +400,42 @@ describe("InsightFacade PerformQuery", () => {
     });
 });
 
-describe("InsightFacade Schedule", function () {
-    // This is a unit test. You should create more like this!
-    let testQueries: any[] = [];
-    before(function () {
-        Log.test(`Before: ${this.test.parent.title}`);
-
-        // Load the query JSON files under test/queries.
-        // Fail if there is a problem reading ANY query.
-        try {
-            testQueries = TestUtil.readTestQueries("test/scheduleTests");
-        } catch (err) {
-            expect.fail("", "", `Failed to read one or more test queries. ${err}`);
-        }
-    });
-    beforeEach(function () {
-        Log.test(`BeforeTest: ${this.currentTest.title}`);
-    });
-
-    after(function () {
-        Log.test(`After: ${this.test.parent.title}`);
-    });
-
-    afterEach(function () {
-        Log.test(`AfterTest: ${this.currentTest.title}`);
-    });
-
-    it("Should schedule test queries", function () {
-        describe("Dynamic InsightFacade schedule tests", function () {
-            for (const test of testQueries) {
-                let sections = test.section;
-                let rooms = test.room;
-                let scheduler: Scheduler = new Scheduler();
-                let rt: any[] = [];
-                rt = scheduler.schedule(sections, rooms);
-                Log.trace(rt.length);
-            }
-        });
-    });
-});
+// describe("InsightFacade Schedule", function () {
+//     // This is a unit test. You should create more like this!
+//     let testQueries: any[] = [];
+//     before(function () {
+//         Log.test(`Before: ${this.test.parent.title}`);
+//
+//         // Load the query JSON files under test/queries.
+//         // Fail if there is a problem reading ANY query.
+//         try {
+//             testQueries = TestUtil.readTestQueries("test/scheduleTests");
+//         } catch (err) {
+//             expect.fail("", "", `Failed to read one or more test queries. ${err}`);
+//         }
+//     });
+//     beforeEach(function () {
+//         Log.test(`BeforeTest: ${this.currentTest.title}`);
+//     });
+//
+//     after(function () {
+//         Log.test(`After: ${this.test.parent.title}`);
+//     });
+//
+//     afterEach(function () {
+//         Log.test(`AfterTest: ${this.currentTest.title}`);
+//     });
+//
+//     it("Should schedule test queries", function () {
+//         describe("Dynamic InsightFacade schedule tests", function () {
+//             for (const test of testQueries) {
+//                 let sections = test.section;
+//                 let rooms = test.room;
+//                 let scheduler: Scheduler = new Scheduler();
+//                 let rt: any[] = [];
+//                 rt = scheduler.schedule(sections, rooms);
+//                 Log.trace(rt.length);
+//             }
+//         });
+//     });
+// });
