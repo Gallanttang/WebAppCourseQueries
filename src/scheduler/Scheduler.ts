@@ -1,5 +1,4 @@
 import {IScheduler, SchedRoom, SchedSection, TimeSlot} from "./IScheduler";
-import Log from "../Util";
 
 export default class Scheduler implements IScheduler {
     private scheduledSections: any = {};
@@ -37,12 +36,12 @@ export default class Scheduler implements IScheduler {
                 final.push(rt[key]);
             }
         }
-        let currEnroll: number = 0;
-        let maxDist: number = 0;
-        for (let entry of final) {
-            currEnroll += Number(entry[1].courses_audit + entry[1].courses_pass + entry[1].courses_fail);
-        }
-        Log.trace("E = " + (currEnroll / this.totalEnrollment));
+        // let currEnroll: number = 0;
+        // let maxDist: number = 0;
+        // for (let entry of final) {
+        //     currEnroll += Number(entry[1].courses_audit + entry[1].courses_pass + entry[1].courses_fail);
+        // }
+        // Log.trace("E = " + (currEnroll / this.totalEnrollment));
         return final;
     }
 
@@ -80,10 +79,8 @@ export default class Scheduler implements IScheduler {
             if (timeRoom.length >= 15) {
                 continue;
             }
-            Log.trace(room.rooms_name);
             for (let time of this.ts) {
                 if (!sec.includes(time) && !timeRoom.includes(time)) {
-                    Log.trace("Added");
                     this.scheduledRooms[room.rooms_name].push(time);
                     this.scheduledSections[section.courses_dept][section.courses_id].push(time);
                     rt[section.courses_uuid] = [room, section, time];
@@ -134,10 +131,12 @@ export default class Scheduler implements IScheduler {
         let that = this;
         let first = rooms[0];
         rooms.sort(function (a, b) {
-            if (that.distance[first.rooms_name][a.rooms_name] < that.distance[first.rooms_name][b.rooms_name]) {
+            // if (that.distance[first.rooms_name][a.rooms_name] < that.distance[first.rooms_name][b.rooms_name]) {
+            if (that.calcDist(first, a) < that.calcDist(first, b)) {
                 return 1;
             }
-            if (that.distance[first.rooms_name][a.rooms_name] > that.distance[first.rooms_name][b.rooms_name]) {
+            // if (that.distance[first.rooms_name][a.rooms_name] > that.distance[first.rooms_name][b.rooms_name]) {
+            if (that.calcDist(first, a) > that.calcDist(first, b)) {
                 return -1;
             }
             return 0;

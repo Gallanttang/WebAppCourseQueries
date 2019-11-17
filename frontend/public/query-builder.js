@@ -125,7 +125,7 @@ CampusExplorer.buildQuery = function () {
         orderBy = "UP"
     }
 
-    // GROUPS
+// GROUPS
     groupsPanel = activePanel.item(0).getElementsByClassName("form-group groups").item(0).children[1];
     for (let child of groupsPanel.children) {
         if (child.getElementsByTagName("input").item(0).checked) {

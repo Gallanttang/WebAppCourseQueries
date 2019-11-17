@@ -98,9 +98,7 @@ export default class Server {
     public static put(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
             let encodedData = req.body.toString("base64");
-            Log.info(req);
-            Server.insightFacade.addDataset(req.params.id, encodedData, req.params.kind)
-                .then(function (response: any) {
+            Server.insightFacade.addDataset(req.params.id, encodedData, req.params.kind).then(function (response: any) {
                     res.json(200, {result: response});
                     Log.info("Server::addDataset - responding 200");
                     return next();
@@ -110,7 +108,7 @@ export default class Server {
                 return next();
             });
         } catch (err) {
-            Log.error("Server::addDataset - UNEXPECTED ERROR responding 400" + err.message);
+            Log.error("Server::addDataset - UNEXPECTED ERROR responding 400 " + err.message);
             res.json(400, {error: err.message});
             return next();
         }
@@ -156,7 +154,6 @@ export default class Server {
      */
     public static post(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
-            Log.info(req.body);
             Server.insightFacade.performQuery(req.body).then(function (response: any) {
                     Log.info("Server::performQuery - responding 200");
                     res.json(200, {result: response});
@@ -179,8 +176,7 @@ export default class Server {
      */
     public static get(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
-            Server.insightFacade.listDatasets().then(
-                function (response: any) {
+            Server.insightFacade.listDatasets().then( function (response: any) {
                     Log.info("Server::listDataset - responding 200");
                     res.json(200, {result: response});
                     return next();

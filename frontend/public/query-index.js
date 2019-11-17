@@ -10,6 +10,7 @@
 
 let submit = document.getElementById("submit-button");
 submit.addEventListener("click", handleQuery);
+
 function handleQuery() {
     let q = CampusExplorer.buildQuery();
     CampusExplorer.sendQuery(q).then((response) => {
