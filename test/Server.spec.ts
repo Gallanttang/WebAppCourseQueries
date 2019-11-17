@@ -57,23 +57,23 @@ describe("Facade D3", function () {
         Log.test(`After: ${this.test.parent.title}`);
     });
 
-    // it ("GET test for listing zero datasets", function () {
-    //     try {
-    //         return chai.request("http://localhost:4321")
-    //             .get("/dataset")
-    //             .then(function (res: Response) {
-    //                 Log.test(res.status);
-    //                 expect(res.status).to.be.equal(200);
-    //                 expect(res.body.result).to.deep.equals([]);
-    //             })
-    //             .catch(function (err) {
-    //                 Log.error(err);
-    //                 expect.fail(err);
-    //             });
-    //     } catch (err) {
-    //         Log.error("could not return from chai request" + err);
-    //     }
-    // });
+    it ("GET test for listing zero datasets", function () {
+        try {
+            return chai.request("http://localhost:4321")
+                .get("/datasets")
+                .then(function (res: Response) {
+                    Log.test(res.status);
+                    expect(res.status).to.be.equal(200);
+                    expect(res.body.result).to.deep.equals([]);
+                })
+                .catch(function (err) {
+                    Log.error(err);
+                    expect.fail(err);
+                });
+        } catch (err) {
+            Log.error("could not return from chai request" + err);
+        }
+    });
 
     // Sample on how to format PUT requests
     // The other endpoints work similarly. You should be able to find all instructions at the chai-http documentation
@@ -179,7 +179,7 @@ describe("Facade D3", function () {
     // it("DELETE test for valid c1 courses dataset", function () {
     //     try {
     //         return chai.request("http://localhost:4321")
-    //             .del("/dataset/c1")
+    //             .del("/datasets/c1")
     //             // .send(datasets["courses"])
     //             // .set("Content-Type", "application/x-zip-compressed")
     //             .then(function (res: Response) {
@@ -198,7 +198,7 @@ describe("Facade D3", function () {
     // it("DELETE test for valid r1 rooms dataset", function () {
     //     try {
     //         return chai.request("http://localhost:4321")
-    //             .del("/dataset/r1")
+    //             .del("/datasets/r1")
     //             // .send(datasets["rooms"])
     //             // .set("Content-Type", "application/x-zip-compressed")
     //             .then(function (res: Response) {
@@ -225,11 +225,11 @@ describe("Facade D3", function () {
                     expect.fail(res);
                 })
                 .catch(function (err) {
-                    Log.error(err);
+                    Log.error(err.message);
                     expect(err.status).to.be.equal(404);
                 });
         } catch (err) {
-            Log.error("could not return from chai request" + err);
+            Log.error("could not return from chai request" + err.message);
         }
     });
 
@@ -337,7 +337,7 @@ describe("Facade D3", function () {
                     expect.fail(res);
                 })
                 .catch(function (err) {
-                    Log.error(err);
+                    Log.error(err.message);
                     expect(err.status).to.be.equal(400);
                 });
         } catch (err) {

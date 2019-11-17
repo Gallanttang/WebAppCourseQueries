@@ -50,7 +50,6 @@ export default class Server {
         return new Promise(function (fulfill, reject) {
             try {
                 Log.info("Server::start() - start");
-                // todo instantiate insightFacade here
                 Server.insightFacade = new InsightFacade();
                 that.rest = restify.createServer({
                     name: "insightUBC",
@@ -69,7 +68,7 @@ export default class Server {
                 that.rest.put("/dataset/:id/:kind", Server.put);
                 that.rest.del("/dataset/:id/", Server.delete);
                 that.rest.post("/query", Server.post);
-                that.rest.get("/dataset", Server.get);
+                that.rest.get("/datasets", Server.get);
                 // This must be the last endpoint!
                 that.rest.get("/.*", Server.getStatic);
                 that.rest.listen(that.port, function () {
@@ -110,7 +109,7 @@ export default class Server {
                 return next();
             });
         } catch (err) {
-            Log.error("Server::put - responding 400");
+            Log.error("Server::addDataset - UNEXPECTED ERROR responding 400" + err.message);
             res.json(400, {error: err.message});
             return next();
         }
@@ -126,24 +125,24 @@ export default class Server {
         try {
             Server.insightFacade.removeDataset(req.params.id)
                 .then(function (response: any) {
-                    Log.info("Server::addDataset - responding 200");
+                    Log.info("Server::deleteDataset - responding 200");
                     res.json(200, {result: response});
                     return next();
                 }).catch(function (err: any) {
                 if (err instanceof InsightError) {
-                    Log.info("Server::addDataset - responding 400");
+                    Log.info("Server::removeDataset - responding 400");
                     res.json(400, {result: err.message});
                 } else if (err instanceof NotFoundError) {
-                    Log.info("Server::addDataset - responding 404");
+                    Log.info("Server::removeDataset - responding 404");
                     res.json(404, {result: err.message});
                 } else { // some other error
-                    Log.info("Server::addDataset ERROR - responding 400" + err);
+                    Log.info("Server::removeDataset UNEXPECTED ERROR - responding 400" + err.message);
                     res.json(400, {result: err.message});
                 }
                 return next();
             });
         } catch (err) {
-            Log.info("Server::addDataset ERROR - responding 400" + err);
+            Log.info("Server::removeDataset UNEXPECTED ERROR - responding 400" + err.message);
             res.json(400, {result: err.message});
             return next();
         }
@@ -158,7 +157,7 @@ export default class Server {
         try {
             Server.insightFacade.performQuery(req.params.query)
                 .then(function (response: any) {
-                    Log.info("Server::addDataset - responding 200");
+                    Log.info("Server::performQuery - responding 200");
                     res.json(200, {result: response});
                     return next();
                 }).catch((err: any) => {
@@ -167,7 +166,7 @@ export default class Server {
                 return next();
             });
         } catch (err) {
-            Log.error("Server::query - ERROR responding 400: " + err);
+            Log.error("Server::performQuery - UNEXPECTED ERROR responding 400" + err.message);
             res.json(400, {error: err.message});
             return next();
         }
@@ -186,12 +185,12 @@ export default class Server {
                     return next();
                 }).catch((err: any) => {
                 // this should never happen because listDatasets should always resolve
-                Log.error("Server::get() - ERROR responding 200: " + err);
+                Log.error("Server::listDataset - ERROR responding 200: " + err.message);
                 res.json(200, {result: err.message});
                 return next();
             });
         } catch (err) {
-            Log.error("Server::get() - ERROR responding 200: " + err);
+            Log.error("Server::listDataset - ERROR responding 200: " + err.message);
             res.json(200, {result: err.message});
             return next();
         }
