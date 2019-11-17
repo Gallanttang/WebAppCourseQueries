@@ -98,6 +98,7 @@ export default class Server {
     public static put(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
             let encodedData = req.body.toString("base64");
+            Log.info(req);
             Server.insightFacade.addDataset(req.params.id, encodedData, req.params.kind)
                 .then(function (response: any) {
                     res.json(200, {result: response});
@@ -155,8 +156,8 @@ export default class Server {
      */
     public static post(req: restify.Request, res: restify.Response, next: restify.Next): Promise<any> {
         try {
-            Server.insightFacade.performQuery(req.params.query)
-                .then(function (response: any) {
+            Log.info(req.body);
+            Server.insightFacade.performQuery(req.body).then(function (response: any) {
                     Log.info("Server::performQuery - responding 200");
                     res.json(200, {result: response});
                     return next();
