@@ -53,6 +53,7 @@ export default class ValidatorTransformation extends Validator {
             }
             try {
                 this.checkDataset(grouping);
+                this.checkSingleKey(grouping);
             } catch (err) {
                 throw new InsightError("Invalid Key " + grouping + " in Group");
             }
