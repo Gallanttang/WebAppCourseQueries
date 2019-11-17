@@ -131,19 +131,19 @@ export default class Server {
                 }).catch(function (err: any) {
                 if (err instanceof InsightError) {
                     Log.info("Server::removeDataset - responding 400");
-                    res.json(400, {result: err.message});
+                    res.json(400, {error: err.message});
                 } else if (err instanceof NotFoundError) {
                     Log.info("Server::removeDataset - responding 404");
-                    res.json(404, {result: err.message});
+                    res.json(404, {error: err.message});
                 } else { // some other error
                     Log.info("Server::removeDataset UNEXPECTED ERROR - responding 400" + err.message);
-                    res.json(400, {result: err.message});
+                    res.json(400, {error: err.message});
                 }
                 return next();
             });
         } catch (err) {
             Log.info("Server::removeDataset UNEXPECTED ERROR - responding 400" + err.message);
-            res.json(400, {result: err.message});
+            res.json(400, {error: err.message});
             return next();
         }
     }
