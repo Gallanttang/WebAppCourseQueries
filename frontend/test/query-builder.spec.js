@@ -13,5 +13,4 @@ describe("buildQuery test suite", function () {
             }
         }
     }
-
 });
