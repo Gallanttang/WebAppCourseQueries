@@ -90,23 +90,6 @@ export default class Scheduler implements IScheduler {
         }
     }
 
-    // private addCheck(section: SchedSection, room: SchedRoom, dist: number): any[] {
-    //     let nearby: string[] = Object.keys(this.scheduledRooms);
-    //     let min: number = dist;
-    //     if (nearby.length < 1) {
-    //         return [true, 0];
-    //     }
-    //     for (let near of nearby) {
-    //         if (near === room.rooms_name) {
-    //             return [true, 0];
-    //         }
-    //         if (min >= this.distance[near][room.rooms_name]) {
-    //             min = this.distance[near][room.rooms_name];
-    //         }
-    //     }
-    //     let rt: boolean = min <= dist;
-    //     return [rt, min];
-    // }
 
     private getDistance(rooms: SchedRoom[]) {
         for (let i = 0; i < rooms.length; i++) {
