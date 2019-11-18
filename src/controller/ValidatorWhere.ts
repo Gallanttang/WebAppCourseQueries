@@ -9,11 +9,8 @@ export default class ValidatorWhere extends Validator {
 
     public checkValid (filter: any) {
         let keys: string[] = super.getKeys(filter);
-        if (keys.length > 1) {
+        if (keys.length !== 1) {
             throw new InsightError("Invalid Filter, contains more than 1 filter");
-        }
-        if (keys.length === 0) {
-            return;
         }
         if (keys[0] === "IS") {
             this.checkSCOMP(filter[keys[0]]);
