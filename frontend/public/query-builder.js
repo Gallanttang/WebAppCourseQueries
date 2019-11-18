@@ -117,6 +117,7 @@ CampusExplorer.buildQuery = function () {
             orders.push(type + "_" + child.value);
         }
     }
+
     orderBy = activePanel.item(0).getElementsByClassName("control descending").item(0);
     orderBy = orderBy.getElementsByTagName("input").item(0);
     orderBy = orderBy.checked; // if true = descending
