@@ -131,12 +131,12 @@ export default class Scheduler implements IScheduler {
         let that = this;
         let first = rooms[0];
         rooms.sort(function (a, b) {
-            // if (that.distance[first.rooms_name][a.rooms_name] < that.distance[first.rooms_name][b.rooms_name]) {
-            if (that.calcDist(first, a) < that.calcDist(first, b)) {
+            if (that.distance[first.rooms_name][a.rooms_name] < that.distance[first.rooms_name][b.rooms_name]) {
+            // if (that.calcDist(first, a) < that.calcDist(first, b)) {
                 return 1;
             }
-            // if (that.distance[first.rooms_name][a.rooms_name] > that.distance[first.rooms_name][b.rooms_name]) {
-            if (that.calcDist(first, a) > that.calcDist(first, b)) {
+            if (that.distance[first.rooms_name][a.rooms_name] > that.distance[first.rooms_name][b.rooms_name]) {
+            // if (that.calcDist(first, a) > that.calcDist(first, b)) {
                 return -1;
             }
             return 0;
