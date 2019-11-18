@@ -92,7 +92,7 @@ CampusExplorer.buildQuery = function () {
         delete condition[outerMostFilter];
     }
 
-    // COLUMNS
+// COLUMNS
     let columnsPanel, groupsPanel, checkedGroups = [], columns = [];
     let orderBy;
     columnsPanel = activePanel.item(0).getElementsByClassName("form-group columns").item(0).children;
@@ -117,7 +117,8 @@ CampusExplorer.buildQuery = function () {
             orders.push(type + "_" + child.value);
         }
     }
-    orderBy = document.getElementById(type + "-order");
+    orderBy = activePanel.item(0).getElementsByClassName("control descending").item(0)
+    orderBy = orderBy.getElementsByTagName("input").item(0);
     orderBy = orderBy.checked; // if true = descending
     if (orderBy) {
         orderBy = "DOWN";
@@ -125,7 +126,7 @@ CampusExplorer.buildQuery = function () {
         orderBy = "UP"
     }
 
-// GROUPS
+    // GROUPS
     groupsPanel = activePanel.item(0).getElementsByClassName("form-group groups").item(0).children[1];
     for (let child of groupsPanel.children) {
         if (child.getElementsByTagName("input").item(0).checked) {
