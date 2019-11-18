@@ -40,7 +40,6 @@ export default class ValidatorWhere extends Validator {
         } catch (err) {
             throw err;
         }
-        // ([a-zA-Z]|[0-9]|[,]|[_]|\s)
         if (!/^[*]?[^*]*[*]?$/.test(scomp[keys[0]])) {
             throw new InsightError("IS filter has an invalid entry: " + scomp[keys[0]]);
         }
